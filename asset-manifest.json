@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/Ultima_Onboarding/static/css/main.cff31919.css",
+    "main.js": "/Ultima_Onboarding/static/js/main.36d99118.js",
+    "index.html": "/Ultima_Onboarding/index.html",
+    "main.cff31919.css.map": "/Ultima_Onboarding/static/css/main.cff31919.css.map",
+    "main.36d99118.js.map": "/Ultima_Onboarding/static/js/main.36d99118.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.cff31919.css",
+    "static/js/main.36d99118.js"
+  ]
+}
