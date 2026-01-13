@@ -7,7 +7,7 @@ import {
   RefreshCw, 
   FileText, 
   Briefcase, 
-  Tool,
+  Wrench,
   ChevronLeft,
   ChevronRight,
   X
@@ -62,7 +62,7 @@ export default function Onboarding({ content }) {
     <RefreshCw size={20} />,
     <FileText size={20} />,
     <Briefcase size={20} />,
-    <Tool size={20} />
+    <Wrench size={20} />
   ];
 
   return (
