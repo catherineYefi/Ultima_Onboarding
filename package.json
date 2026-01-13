@@ -3,17 +3,22 @@
   "version": "1.0.0",
   "homepage": "https://catherineyefi.github.io/Ultima_Onboarding",
   "description": "ULTIMA 9.0 Onboarding – Strategic Onboarding System",
-  "keywords": ["react", "onboarding", "ultima"],
+  "keywords": [
+    "react",
+    "onboarding",
+    "ultima"
+  ],
   "main": "src/index.js",
   "dependencies": {
+    "lucide-react": "0.294.0",
     "react": "18.2.0",
     "react-dom": "18.2.0",
-    "lucide-react": "0.294.0"
+    "react-scripts": "^5.0.1"
   },
   "devDependencies": {
     "@babel/runtime": "7.13.8",
-    "typescript": "4.1.3",
-    "gh-pages": "^6.1.1"
+    "gh-pages": "^6.1.1",
+    "typescript": "4.1.3"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -23,5 +28,10 @@
     "predeploy": "npm run build",
     "deploy": "gh-pages -d build"
   },
-  "browserslist": [">0.2%", "not dead", "not ie <= 11", "not op_mini all"]
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ]
 }

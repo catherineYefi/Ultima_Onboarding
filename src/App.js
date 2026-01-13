@@ -4,6 +4,7 @@ import content from "./content";
 // Import all components
 import Navbar from "./components/Navbar";
 import Hero from "./components/Hero";
+import Onboarding from "./components/Onboarding";
 import AboutUltima from "./components/AboutUltima";
 import CycleTimeline from "./components/CycleTimeline";
 import Documents from "./components/Documents";
@@ -110,6 +111,8 @@ export default function App() {
       />
 
       <Hero content={content} scrollToSection={scrollToSection} />
+
+      <Onboarding content={content} />
 
       <AboutUltima content={content} />
 
