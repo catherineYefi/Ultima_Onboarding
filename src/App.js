@@ -29,21 +29,35 @@ export default function App() {
   const [activeTab, setActiveTab] = useState("bi-meetings");
   const [promptExpanded, setPromptExpanded] = useState(false);
 
-  // Track scroll progress
+  // Track scroll progress (с защитой на window)
   useEffect(() => {
+    if (typeof window === "undefined" || typeof document === "undefined") return;
+
     const handleScroll = () => {
       const totalScroll =
         document.documentElement.scrollHeight - window.innerHeight;
-      const currentScroll = window.pageYOffset;
-      setScrollProgress((currentScroll / totalScroll) * 100);
+      const currentScroll = window.pageYOffset || document.documentElement.scrollTop || 0;
+      const progress = totalScroll > 0 ? (currentScroll / totalScroll) * 100 : 0;
+      setScrollProgress(progress);
     };
 
-    window.addEventListener("scroll", handleScroll);
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    handleScroll();
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Intersection Observer for active section
+  // Intersection Observer for active section (с graceful fallback)
   useEffect(() => {
+    if (
+      typeof window === "undefined" ||
+      typeof document === "undefined" ||
+      !("IntersectionObserver" in window)
+    ) {
+      // Фоллбек: если нет IO, просто держим активным hero
+      setActiveSection("hero");
+      return;
+    }
+
     const observers = content.navItems.map((item) => {
       const element = document.getElementById(item.id);
       if (!element) return null;
@@ -66,7 +80,7 @@ export default function App() {
 
   // Utility functions
   const scrollToSection = (sectionId) => {
-    const element = document.getElementById(sectionId);
+    const element = typeof document !== "undefined" && document.getElementById(sectionId);
     if (element) {
       element.scrollIntoView({ behavior: "smooth" });
     }
@@ -81,9 +95,11 @@ export default function App() {
 
   const copyPrompt = async () => {
     try {
-      await navigator.clipboard.writeText(content.aiMentorPrompt);
-      setCopiedPrompt(true);
-      setTimeout(() => setCopiedPrompt(false), 2000);
+      if (navigator?.clipboard?.writeText) {
+        await navigator.clipboard.writeText(content.aiMentorPrompt);
+        setCopiedPrompt(true);
+        setTimeout(() => setCopiedPrompt(false), 2000);
+      }
     } catch (err) {
       console.error("Failed to copy:", err);
     }
