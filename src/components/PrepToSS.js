@@ -21,6 +21,71 @@ export default function PrepToSS({
   copyPrompt,
   downloadPrompt,
 }) {
+  // ---------- НОРМАЛИЗАЦИЯ ДАННЫХ ----------
+  const isArr = (v) => Array.isArray(v);
+  const toArr = (v) => (Array.isArray(v) ? v : []);
+
+  const rawPrep = content?.sections?.prepSS ?? {};
+
+  const prep = {
+    nextStep: {
+      title: rawPrep?.nextStep?.title ?? "Подготовка к стратегической сессии",
+      description:
+        rawPrep?.nextStep?.description ??
+        "Ключевой этап перед офлайн СС — пройди шаги подготовки.",
+      cta: {
+        text: rawPrep?.nextStep?.cta?.text ?? "Перейти к шагам",
+      },
+    },
+    why:
+      rawPrep?.why ??
+      "Качество СС определяется не днём работы, а подготовкой к нему.",
+    readinessChecklists: toArr(rawPrep?.readinessChecklists).map((c, i) => ({
+      id: c?.id ?? `check-${i}`,
+      title: c?.title ?? `Шаг ${i + 1}`,
+      items: toArr(c?.items?.filter(Boolean) ?? c?.deliverables),
+    })),
+    ssCriteria: {
+      title: rawPrep?.ssCriteria?.title ?? "Критерии готовности к СС",
+      items: toArr(rawPrep?.ssCriteria?.items).map(String),
+    },
+    biMeetings: toArr(rawPrep?.biMeetings).map((m, i) => ({
+      title: m?.title ?? `Встреча ${i + 1}`,
+      goal: m?.goal ?? "",
+    })),
+    booster: {
+      description:
+        rawPrep?.booster?.description ??
+        "Мини-курс для прояснения продукта, экономики и стратегии.",
+      modules: toArr(rawPrep?.booster?.modules).map(String),
+    },
+    aiMentor: {
+      description:
+        rawPrep?.aiMentor?.description ??
+        "Используй AI-наставника, чтобы быстро собрать и структурировать материалы.",
+      features: toArr(rawPrep?.aiMentor?.features).map(String),
+      result: toArr(rawPrep?.aiMentor?.result).map(String),
+      instructions: toArr(rawPrep?.aiMentor?.instructions).map((it, i) => ({
+        title: it?.title ?? `Шаг ${i + 1}`,
+        text: it?.text ?? "",
+      })),
+    },
+  };
+
+  const links = {
+    booster: { url: content?.links?.booster?.url ?? "#" },
+    rules: { url: content?.links?.rules?.url ?? "#" },
+    nda: { url: content?.links?.nda?.url ?? "#" },
+  };
+
+  const aiPrompt =
+    content?.aiMentorPrompt ??
+    `Я — AI-наставник ULTIMA. Помоги подготовиться к Start-СС:
+— собери P&L за 3 месяца,
+— выпиши ключевые метрики,
+— зафиксируй WIG/OKR и приборы контроля.`;
+
+  // ---------- РЕНДЕР ----------
   return (
     <section id="prep-ss" className="section highlight-section">
       <div className="container">
@@ -36,21 +101,16 @@ export default function PrepToSS({
             <ArrowRight size={32} />
           </div>
           <div className="next-step-content">
-            <h3>{content.sections.prepSS.nextStep.title}</h3>
-            <p>{content.sections.prepSS.nextStep.description}</p>
+            <h3>{prep.nextStep.title}</h3>
+            <p>{prep.nextStep.description}</p>
             <button
               onClick={() => {
                 const aiSection = document.querySelector(".prompt-section");
-                if (aiSection) {
-                  aiSection.scrollIntoView({
-                    behavior: "smooth",
-                    block: "center",
-                  });
-                }
+                aiSection?.scrollIntoView({ behavior: "smooth", block: "center" });
               }}
               className="cta-button primary"
             >
-              {content.sections.prepSS.nextStep.cta.text}
+              {prep.nextStep.cta.text}
               <ArrowRight size={20} />
             </button>
           </div>
@@ -58,25 +118,35 @@ export default function PrepToSS({
 
         <div className="section-block fade-in">
           <h3>Зачем готовиться?</h3>
-          <p>{content.sections.prepSS.why}</p>
+          <p>{prep.why}</p>
         </div>
 
         {/* Readiness Checklists */}
         <div className="readiness-checklists fade-in">
           <h3>Чек-листы готовности к встречам</h3>
           <div className="checklists-grid">
-            {content.sections.prepSS.readinessChecklists.map(
-              (checklist, idx) => (
-                <div key={checklist.id} className="checklist-card">
+            {prep.readinessChecklists.length === 0 ? (
+              <div className="checklist-card">
+                <div className="checklist-header">
+                  <div className="checklist-number">—</div>
+                  <h4>Чек-листы появятся позже</h4>
+                </div>
+                <div className="checklist-bring">
+                  Свяжись с куратором, если нужно ускорить публикацию.
+                </div>
+              </div>
+            ) : (
+              prep.readinessChecklists.map((checklist, idx) => (
+                <div key={checklist.id || idx} className="checklist-card">
                   <div className="checklist-header">
                     <div className="checklist-number">{idx + 1}</div>
                     <h4>{checklist.title}</h4>
                   </div>
                   <ul className="checklist-items">
-                    {checklist.items.map((item, itemIdx) => (
+                    {toArr(checklist.items).map((item, itemIdx) => (
                       <li key={itemIdx}>
                         <CheckCircle2 size={16} />
-                        <span>{item}</span>
+                        <span>{String(item)}</span>
                       </li>
                     ))}
                   </ul>
@@ -85,16 +155,16 @@ export default function PrepToSS({
                     формат, главное факты
                   </div>
                 </div>
-              )
+              ))
             )}
           </div>
         </div>
 
         {/* SS Readiness Criteria */}
         <div className="ss-criteria fade-in">
-          <h3>{content.sections.prepSS.ssCriteria.title}</h3>
+          <h3>{prep.ssCriteria.title}</h3>
           <div className="criteria-grid">
-            {content.sections.prepSS.ssCriteria.items.map((item, idx) => (
+            {prep.ssCriteria.items.map((item, idx) => (
               <div key={idx} className="criteria-item">
                 <div className="criteria-check">✓</div>
                 <span>{item}</span>
@@ -114,14 +184,12 @@ export default function PrepToSS({
               <Users size={32} className="step-icon" />
               <div className="step-title-block">
                 <h4>Встречи с БИ</h4>
-                <p className="step-outcome">
-                  Готовность к стратегической сессии
-                </p>
+                <p className="step-outcome">Готовность к стратегической сессии</p>
               </div>
             </div>
             <div className="step-content">
               <p className="step-description">3 встречи с Бизнес-Инженером</p>
-              {content.sections.prepSS.biMeetings.map((meeting, idx) => (
+              {prep.biMeetings.map((meeting, idx) => (
                 <div key={idx} className="meeting-item">
                   <div className="meeting-number">{idx + 1}</div>
                   <div className="meeting-content">
@@ -148,14 +216,14 @@ export default function PrepToSS({
               </div>
             </div>
             <div className="step-content">
-              <p>{content.sections.prepSS.booster.description}</p>
+              <p>{prep.booster.description}</p>
               <ul>
-                {content.sections.prepSS.booster.modules.map((module, idx) => (
+                {prep.booster.modules.map((module, idx) => (
                   <li key={idx}>{module}</li>
                 ))}
               </ul>
               <a
-                href={content.links.booster.url}
+                href={links.booster.url}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="cta-button primary"
@@ -179,23 +247,21 @@ export default function PrepToSS({
               </div>
             </div>
             <div className="step-content">
-              <p>{content.sections.prepSS.aiMentor.description}</p>
+              <p>{prep.aiMentor.description}</p>
 
               <div className="ai-features">
                 <h5>Как это работает:</h5>
                 <ul>
-                  {content.sections.prepSS.aiMentor.features.map(
-                    (feature, idx) => (
-                      <li key={idx}>{feature}</li>
-                    )
-                  )}
+                  {prep.aiMentor.features.map((feature, idx) => (
+                    <li key={idx}>{feature}</li>
+                  ))}
                 </ul>
               </div>
 
               <div className="ai-result">
                 <h5>Результат подготовки:</h5>
                 <ul>
-                  {content.sections.prepSS.aiMentor.result.map((item, idx) => (
+                  {prep.aiMentor.result.map((item, idx) => (
                     <li key={idx}>{item}</li>
                   ))}
                 </ul>
@@ -204,14 +270,10 @@ export default function PrepToSS({
               <div className="prompt-section">
                 <h5>Промпт AI-наставника:</h5>
                 <div
-                  className={`prompt-box ${
-                    promptExpanded ? "expanded" : "collapsed"
-                  }`}
+                  className={`prompt-box ${promptExpanded ? "expanded" : "collapsed"}`}
                 >
                   <pre>
-                    {promptExpanded
-                      ? content.aiMentorPrompt
-                      : content.aiMentorPrompt.substring(0, 300) + "..."}
+                    {promptExpanded ? aiPrompt : aiPrompt.slice(0, 300) + "..."}
                   </pre>
                   {!promptExpanded && (
                     <p className="prompt-hint">
@@ -220,7 +282,7 @@ export default function PrepToSS({
                   )}
                 </div>
                 <button
-                  onClick={() => setPromptExpanded(!promptExpanded)}
+                  onClick={() => setPromptExpanded?.(!promptExpanded)}
                   className="expand-button"
                 >
                   {promptExpanded ? (
@@ -237,17 +299,10 @@ export default function PrepToSS({
                 </button>
                 <div className="prompt-actions">
                   <button onClick={copyPrompt} className="cta-button secondary">
-                    {copiedPrompt ? (
-                      <CheckCircle2 size={20} />
-                    ) : (
-                      <Copy size={20} />
-                    )}
+                    {copiedPrompt ? <CheckCircle2 size={20} /> : <Copy size={20} />}
                     {copiedPrompt ? "Скопировано!" : "Скопировать промпт"}
                   </button>
-                  <button
-                    onClick={downloadPrompt}
-                    className="cta-button secondary"
-                  >
+                  <button onClick={downloadPrompt} className="cta-button secondary">
                     <Download size={20} />
                     Скачать .txt
                   </button>
@@ -256,14 +311,12 @@ export default function PrepToSS({
 
               <div className="instructions">
                 <h5>Инструкция использования:</h5>
-                {content.sections.prepSS.aiMentor.instructions.map(
-                  (instruction, idx) => (
-                    <div key={idx} className="instruction-item">
-                      <strong>{instruction.title}</strong>
-                      <p>{instruction.text}</p>
-                    </div>
-                  )
-                )}
+                {prep.aiMentor.instructions.map((instruction, idx) => (
+                  <div key={idx} className="instruction-item">
+                    <strong>{instruction.title}</strong>
+                    <p>{instruction.text}</p>
+                  </div>
+                ))}
               </div>
             </div>
           </div>
