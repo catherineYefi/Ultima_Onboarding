@@ -1,16 +1,15 @@
 import React, { useState, useEffect } from "react";
 import rawContent from "./content";
 
-// Import all components
+// Components
 import Navbar from "./components/Navbar";
 import Hero from "./components/Hero";
-import StartHere from "./components/StartHere";
 import Onboarding from "./components/Onboarding";
 import AboutUltima from "./components/AboutUltima";
 import AboutProgram from "./components/AboutProgram";
 import CycleTimeline from "./components/CycleTimeline";
 import Documents from "./components/Documents";
-import Rules from "./components/Rules";
+// ⚠️ Rules секцию УБИРАЕМ из рендера
 import Formula from "./components/Formula";
 import PrepToSS from "./components/PrepToSS";
 import SSOffline from "./components/SSOffline";
@@ -20,16 +19,13 @@ import FooterCTA from "./components/FooterCTA";
 import CalendarSection from "./components/CalendarSection";
 import MaterialsFAB from "./components/MaterialsFAB";
 
+// Новые «подстраницы»
+import RulesOverlay from "./components/RulesOverlay";
+import AIMentorOverlay from "./components/AIMentorOverlay";
+
 import "./styles.css";
 
-/** ---- НОРМАЛИЗАЦИЯ ДАННЫХ ИЗ content.js ----
- * Делает поля такими, какими их ожидают компоненты:
- * - content.links.{nda,rules,calendar,booster}
- * - content.sections.prepSS (из prepToSS)
- * - content.sections.ssOffline.{format,results}
- * - content.sections.mainCycle.rhythm -> массив
- * - content.aiMentorPrompt
- */
+/** ---------- НОРМАЛИЗАЦИЯ КОНТЕНТА ---------- */
 function normalizeContent(raw) {
   const safe = (v, fb) => (v === undefined || v === null ? fb : v);
 
@@ -41,35 +37,31 @@ function normalizeContent(raw) {
   const findDoc = (re) =>
     documents.find((d) => re.test((d?.title || "") + (d?.name || "")));
 
-  // ====== ВАЖНО: фиксированные ссылки/статусы по ТЗ ======
   const links = {
-    // NDA — живой линк
     nda: {
       available: true,
-      url: "https://drive.google.com/file/d/1s2I-HdtHI4TP1KS2yEEKaWYt7CMaGRgx/view?usp=drive_link",
+      url:
+        raw?.links?.nda?.url ||
+        "https://drive.google.com/file/d/1s2I-HdtHI4TP1KS2yEEKaWYt7CMaGRgx/view?usp=drive_link",
       label: "Открыть NDA",
     },
-    // Правила — ведём в секцию #rules (там попап)
     rules: {
+      // теперь открываем ОВЕРЛЕЙ, поэтому url не обязателен
       available: true,
-      url: "#rules",
+      url: "#rules", // не используется, но оставим
       label: "Открыть правила",
     },
-    // Календарь — в карточке документов показываем «СКОРО БУДЕТ»
     calendar: {
       available: false,
       url: "#calendar",
       label: "СКОРО БУДЕТ",
     },
-    // Booster — ссылка из задания
     booster: {
       url: "https://nkl6yv.csb.app/",
     },
-    // возможность переопределить через raw.links при желании
-    ...(raw.links || {}),
+    ...safe(raw.links, {}),
   };
 
-  // prepSS из prepToSS
   const prepFrom = raw?.sections?.prepSS || raw?.sections?.prepToSS || {};
   const readiness =
     prepFrom?.readinessChecklists ||
@@ -96,7 +88,6 @@ function normalizeContent(raw) {
     ...(raw?.sections?.prepSS || {}),
   };
 
-  // ssOffline: добавим format/results по умолчанию
   const ssOffline = {
     ...(raw?.sections?.ssOffline || {}),
     format:
@@ -108,11 +99,10 @@ function normalizeContent(raw) {
         : [
             "Определены WIG/OKR",
             "Настроены приборы контроля",
-            "Собрана дорожная карта на 6 месяцев",
+            "Собрана дорожная карта на 12 недель",
           ],
   };
 
-  // mainCycle.rhythm: ожидается массив; у тебя rhythm={ description, meetings:[...] }
   const rhythmRaw = raw?.sections?.mainCycle?.rhythm;
   const rhythmArray = Array.isArray(rhythmRaw)
     ? rhythmRaw
@@ -133,10 +123,7 @@ function normalizeContent(raw) {
     links,
     aiMentorPrompt:
       raw?.aiMentorPrompt ||
-      `Я — AI-наставник ULTIMA. Помоги мне подготовиться к Start-СС: 
-— собери P&L за 3 месяца, 
-— выпиши ключевые метрики, 
-— зафиксируй WIG/OKR и приборы контроля.`,
+      `Ты — СС-НАСТАВНИК (Ultima). Веди участника по 17 слайдам, проверяй L1/L2/L3, не пускай дальше, пока не «Готово». В финале — аудит PDF и вердикт.`,
     sections: {
       ...(raw?.sections || {}),
       prepSS,
@@ -147,10 +134,8 @@ function normalizeContent(raw) {
 }
 
 export default function App() {
-  // Нормализованный контент
   const content = normalizeContent(rawContent);
 
-  // States
   const [activeSection, setActiveSection] = useState("hero");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [scrollProgress, setScrollProgress] = useState(0);
@@ -159,7 +144,6 @@ export default function App() {
   const [activeTab, setActiveTab] = useState("bi-meetings");
   const [promptExpanded, setPromptExpanded] = useState(false);
 
-  // Track scroll progress
   useEffect(() => {
     if (typeof window === "undefined" || typeof document === "undefined") return;
     const handleScroll = () => {
@@ -174,7 +158,6 @@ export default function App() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Intersection Observer for active section
   useEffect(() => {
     if (
       typeof window === "undefined" ||
@@ -197,7 +180,6 @@ export default function App() {
     return () => observers.forEach((o) => o?.disconnect());
   }, [content]);
 
-  // Utility functions
   const scrollToSection = (sectionId) => {
     const el = typeof document !== "undefined" && document.getElementById(sectionId);
     if (el) el.scrollIntoView({ behavior: "smooth" });
@@ -240,15 +222,18 @@ export default function App() {
       />
 
       <Hero content={content} scrollToSection={scrollToSection} />
-      <StartHere content={content} scrollToSection={scrollToSection} />
       <Onboarding content={content} />
       <AboutUltima content={content} />
       <AboutProgram content={content} scrollToSection={scrollToSection} />
+
       <CalendarSection />
       <CycleTimeline content={content} />
+
       <Documents content={content} />
-      <Rules content={content} openAccordions={openAccordions} toggleAccordion={toggleAccordion} />
+
+      {/* Rules СЕКЦИЮ убрали. Правила открываются как оверлей. */}
       <Formula content={content} />
+
       <PrepToSS
         content={content}
         activeTab={activeTab}
@@ -259,10 +244,17 @@ export default function App() {
         copyPrompt={copyPrompt}
         downloadPrompt={downloadPrompt}
       />
+
       <SSOffline content={content} />
       <MainCycle content={content} />
       <Final content={content} />
+
       <FooterCTA content={content} scrollToSection={scrollToSection} setActiveTab={setActiveTab} />
+
+      {/* Оверлеи-подстраницы */}
+      <RulesOverlay />
+      <AIMentorOverlay content={content} />
+
       <MaterialsFAB content={content} />
     </div>
   );
