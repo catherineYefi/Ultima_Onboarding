@@ -21,39 +21,7 @@ export default function PrepToSS({
   copyPrompt,
   downloadPrompt,
 }) {
-  // ---- SAFE READS ----
   const prep = content?.sections?.prepSS || {};
-
-  const nextStep = prep?.nextStep || {
-    title: "Подготовка к стратегической сессии",
-    description:
-      "Пройди шаги подготовки перед Start-СС: встречи с БИ, материалы, чек-листы.",
-    cta: { text: "Перейти к шагам" },
-  };
-
-  const why =
-    prep?.why ||
-    "Качество СС определяется не днём работы, а подготовкой к ней.";
-
-  const readinessChecklists = Array.isArray(prep?.readinessChecklists)
-    ? prep.readinessChecklists
-    : [];
-
-  const ssCriteriaTitle = prep?.ssCriteria?.title || "Критерии готовности к СС";
-  const ssCriteriaItems = Array.isArray(prep?.ssCriteria?.items)
-    ? prep.ssCriteria.items
-    : [];
-
-  const biMeetings = Array.isArray(prep?.biMeetings) ? prep.biMeetings : [];
-
-  const booster = prep?.booster || {};
-  const boosterDesc =
-    booster?.description ||
-    "Короткий интенсив перед стартом: проясняем продукт, экономику и стратегию.";
-  const boosterModules = Array.isArray(booster?.modules) ? booster.modules : [];
-  const boosterUrl =
-    content?.links?.booster?.url || "https://nkl6yv.csb.app/";
-
   const aiPrompt = content?.aiMentorPrompt || "";
 
   const openAIMentor = () => {
@@ -75,132 +43,104 @@ export default function PrepToSS({
             <ArrowRight size={32} />
           </div>
           <div className="next-step-content">
-            <h3>{nextStep.title}</h3>
-            <p>{nextStep.description}</p>
+            <h3>{prep?.nextStep?.title || "Подготовка к стратегической сессии"}</h3>
+            <p>{prep?.nextStep?.description || "Выполни шаги подготовки перед Start-СС."}</p>
             <button
               onClick={() => {
                 const aiSection = document.querySelector(".prompt-section");
-                if (aiSection) {
-                  aiSection.scrollIntoView({
-                    behavior: "smooth",
-                    block: "center",
-                  });
-                }
+                aiSection?.scrollIntoView({ behavior: "smooth", block: "center" });
               }}
               className="cta-button primary"
             >
-              {nextStep?.cta?.text || "Перейти"}
+              {prep?.nextStep?.cta?.text || "Перейти к шагам"}
               <ArrowRight size={20} />
             </button>
           </div>
         </div>
 
+        {/* WHY */}
         <div className="section-block fade-in">
           <h3>Зачем готовиться?</h3>
-          <p>{why}</p>
+          <p>{prep?.why || "Качество СС определяется не днём работы, а подготовкой к ней."}</p>
         </div>
 
         {/* Readiness Checklists */}
         <div className="readiness-checklists fade-in">
           <h3>Чек-листы готовности к встречам</h3>
           <div className="checklists-grid">
-            {readinessChecklists.map((checklist, idx) => (
-              <div key={checklist?.id || idx} className="checklist-card">
-                <div className="checklist-header">
-                  <div className="checklist-number">{idx + 1}</div>
-                  <h4>{checklist?.title || `Шаг ${idx + 1}`}</h4>
-                </div>
-                <ul className="checklist-items">
-                  {(Array.isArray(checklist?.items) ? checklist.items : []).map(
-                    (item, itemIdx) => (
-                      <li key={itemIdx}>
+            {(Array.isArray(prep?.readinessChecklists) ? prep.readinessChecklists : []).map(
+              (checklist, idx) => (
+                <div key={checklist?.id || idx} className="checklist-card">
+                  <div className="checklist-header">
+                    <div className="checklist-number">{idx + 1}</div>
+                    <h4>{checklist?.title || `Шаг ${idx + 1}`}</h4>
+                  </div>
+                  <ul className="checklist-items">
+                    {(Array.isArray(checklist?.items) ? checklist.items : []).map((item, i2) => (
+                      <li key={i2}>
                         <CheckCircle2 size={16} />
                         <span>{item}</span>
                       </li>
-                    )
-                  )}
-                </ul>
-                <div className="checklist-bring">
-                  <strong>Что принести:</strong> скрин/таблица/файл — любой
-                  формат, главное факты
+                    ))}
+                  </ul>
+                  <div className="checklist-bring">
+                    <strong>Что принести:</strong> скрин/таблица/файл — факты важнее формата
+                  </div>
                 </div>
-              </div>
-            ))}
+              )
+            )}
           </div>
         </div>
 
-        {/* SS Readiness Criteria */}
-        <div className="ss-criteria fade-in">
-          <h3>{ssCriteriaTitle}</h3>
-          <div className="criteria-grid">
-            {ssCriteriaItems.map((item, idx) => (
-              <div key={idx} className="criteria-item">
-                <div className="criteria-check">✓</div>
-                <span>{item}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Step-by-Step Preparation */}
+        {/* Steps */}
         <div className="prep-steps fade-in">
           <h3 className="steps-title">Пошаговая подготовка</h3>
 
-          {/* Step 1: BI Meetings */}
+          {/* Step 1 */}
           <div className="prep-step">
             <div className="step-header">
               <div className="step-number">1</div>
               <Users size={32} className="step-icon" />
               <div className="step-title-block">
-                <h4>Встречи с БИ</h4>
+                <h4>Встречи группы</h4>
                 <p className="step-outcome">Готовность к стратегической сессии</p>
               </div>
             </div>
             <div className="step-content">
-              <p className="step-description">3 встречи с Бизнес-Инженером</p>
-              {biMeetings.length === 0 ? (
-                <p className="muted">Список встреч будет добавлен.</p>
-              ) : (
-                biMeetings.map((meeting, idx) => (
-                  <div key={idx} className="meeting-item">
-                    <div className="meeting-number">{idx + 1}</div>
-                    <div className="meeting-content">
-                      <strong>
-                        Встреча №{idx + 1}: {meeting?.title || "Без названия"}
-                      </strong>
-                      <p>{meeting?.goal || "Цель встречи будет уточнена."}</p>
-                    </div>
+              <p className="step-description">Синхронизация, артефакты, краткие ревью</p>
+              {(Array.isArray(prep?.biMeetings) ? prep.biMeetings : []).map((meeting, idx) => (
+                <div key={idx} className="meeting-item">
+                  <div className="meeting-number">{idx + 1}</div>
+                  <div className="meeting-content">
+                    <strong>Встреча №{idx + 1}: {meeting?.title || "Без названия"}</strong>
+                    <p>{meeting?.goal || "Цель будет уточнена."}</p>
                   </div>
-                ))
-              )}
+                </div>
+              ))}
             </div>
           </div>
 
-          {/* Step 2: Booster */}
+          {/* Step 2 */}
           <div className="prep-step highlight">
             <div className="step-header">
               <div className="step-number">2</div>
               <Zap size={32} className="step-icon" />
               <div className="step-title-block">
                 <h4>Pre-Ultima Booster</h4>
-                <p className="step-outcome">
-                  Прояснение продукта, экономики и стратегии
-                </p>
+                <p className="step-outcome">Прояснение продукта, экономики и стратегии</p>
               </div>
             </div>
             <div className="step-content">
-              <p>{boosterDesc}</p>
-              {boosterModules.length > 0 ? (
+              <p>{prep?.booster?.description || "Короткий интенсив перед стартом."}</p>
+              {Array.isArray(prep?.booster?.modules) && prep.booster.modules.length > 0 ? (
                 <ul>
-                  {boosterModules.map((module, idx) => (
-                    <li key={idx}>{module}</li>
-                  ))}
+                  {prep.booster.modules.map((m, i) => <li key={i}>{m}</li>)}
                 </ul>
               ) : (
                 <p className="muted">Модули будут опубликованы позже.</p>
               )}
               <a
-                href={boosterUrl}
+                href={content?.links?.booster?.url || "https://nkl6yv.csb.app/"}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="cta-button primary"
@@ -210,45 +150,42 @@ export default function PrepToSS({
             </div>
           </div>
 
-          {/* Step 3: AI Mentor */}
+          {/* Step 3 — AI Mentor */}
           <div className="prep-step highlight">
             <div className="step-header">
               <div className="step-number">3</div>
               <Brain size={32} className="step-icon" />
               <div className="step-title-block">
                 <h4>AI-наставник</h4>
-                <p className="step-outcome">
-                  Материалы собраны и структурированы
-                </p>
+                <p className="step-outcome">Материалы собраны и структурированы</p>
               </div>
             </div>
             <div className="step-content">
               <p>
-                AI-наставник = твой персональный «строгий трекер» для подготовки
-                к стратегической сессии. Его задача — провести тебя по 17
-                слайдам, проверять качество на трёх уровнях и не пускать дальше,
-                пока всё не идеально. В финале проверит PDF-версию и даст
-                вердикт: «ГОТОВО» или список правок.
+                AI-наставник = твой персональный «строгий трекер» для подготовки к стратегической сессии.
+                Ведёт по 17 слайдам, ставит гейты L1/L2/L3, и в финале проверяет PDF: «ГОТОВО» или список правок.
               </p>
 
               <div className="prompt-section">
                 <h5>Промпт AI-наставника:</h5>
+
+                {/* ВАЖНО: управление высотой прямо здесь — без зависимости от CSS */}
                 <div
-                  className={`prompt-box ${
-                    promptExpanded ? "expanded" : "collapsed"
-                  }`}
+                  className="prompt-box"
+                  style={{
+                    border: "1px solid rgba(255,255,255,0.12)",
+                    borderRadius: 12,
+                    padding: 12,
+                    background: "rgba(255,255,255,0.04)",
+                    maxHeight: promptExpanded ? "none" : 240,
+                    overflow: promptExpanded ? "visible" : "hidden",
+                  }}
                 >
-                  <pre>
-                    {promptExpanded
-                      ? aiPrompt
-                      : (aiPrompt || "").substring(0, 300) + "..."}
+                  <pre style={{ whiteSpace: "pre-wrap", margin: 0 }}>
+                    {promptExpanded ? aiPrompt : (aiPrompt || "").slice(0, 300) + (aiPrompt?.length > 300 ? "…" : "")}
                   </pre>
-                  {!promptExpanded && (
-                    <p className="prompt-hint">
-                      Показан фрагмент. Полная версия — по кнопке.
-                    </p>
-                  )}
                 </div>
+
                 <button
                   onClick={() => setPromptExpanded(!promptExpanded)}
                   className="expand-button"
@@ -263,15 +200,10 @@ export default function PrepToSS({
                     </>
                   )}
                 </button>
+
                 <div className="prompt-actions">
                   <button onClick={copyPrompt} className="cta-button secondary">
-                    {copiedPrompt ? (
-                      "Скопировано!"
-                    ) : (
-                      <>
-                        <Copy size={18} /> Скопировать
-                      </>
-                    )}
+                    {copiedPrompt ? "Скопировано!" : <><Copy size={18} /> Скопировать</>}
                   </button>
                   <button onClick={downloadPrompt} className="cta-button secondary">
                     <Download size={18} /> Скачать .txt

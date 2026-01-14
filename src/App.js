@@ -1,15 +1,12 @@
 import React, { useState, useEffect } from "react";
 import rawContent from "./content";
 
-// Components
 import Navbar from "./components/Navbar";
 import Hero from "./components/Hero";
-// ⛔️ Onboarding — УДАЛЁН
 import AboutUltima from "./components/AboutUltima";
 import AboutProgram from "./components/AboutProgram";
 import CycleTimeline from "./components/CycleTimeline";
 import Documents from "./components/Documents";
-// ⛔️ Rules (секция) — не используем, открываем как overlay
 import Formula from "./components/Formula";
 import PrepToSS from "./components/PrepToSS";
 import SSOffline from "./components/SSOffline";
@@ -19,7 +16,6 @@ import FooterCTA from "./components/FooterCTA";
 import CalendarSection from "./components/CalendarSection";
 import MaterialsFAB from "./components/MaterialsFAB";
 
-// Overlays (подстраницы)
 import RulesOverlay from "./components/RulesOverlay";
 import AIMentorOverlay from "./components/AIMentorOverlay";
 
@@ -27,8 +23,6 @@ import "./styles.css";
 
 /** ---------- НОРМАЛИЗАЦИЯ КОНТЕНТА ---------- */
 function normalizeContent(raw) {
-  const safe = (v, fb) => (v === undefined || v === null ? fb : v);
-
   const links = {
     nda: {
       available: true,
@@ -37,19 +31,9 @@ function normalizeContent(raw) {
         "https://drive.google.com/file/d/1s2I-HdtHI4TP1KS2yEEKaWYt7CMaGRgx/view?usp=drive_link",
       label: "Открыть NDA",
     },
-    rules: {
-      available: true,
-      url: "#rules",
-      label: "Открыть правила",
-    },
-    calendar: {
-      available: false,
-      url: "#calendar",
-      label: "СКОРО БУДЕТ",
-    },
-    booster: {
-      url: "https://nkl6yv.csb.app/",
-    },
+    rules: { available: true, url: "#rules", label: "Открыть правила" },
+    calendar: { available: false, url: "#calendar", label: "СКОРО БУДЕТ" },
+    booster: { url: "https://nkl6yv.csb.app/" },
     ...(raw.links || {}),
   };
 
@@ -69,7 +53,7 @@ function normalizeContent(raw) {
       title: prepFrom?.title || "Подготовка к стратегической сессии",
       description:
         prepFrom?.note ||
-        "Пройди шаги подготовки перед Start-СС: встречи с БИ, материалы, чек-листы.",
+        "Пройди шаги подготовки перед Start-СС: встречи, материалы, чек-листы.",
       cta: { text: "Перейти к шагам" },
     },
     why:
@@ -81,8 +65,7 @@ function normalizeContent(raw) {
 
   const ssOffline = {
     ...(raw?.sections?.ssOffline || {}),
-    format:
-      raw?.sections?.ssOffline?.format || "2 дня офлайн (Start-СС: день 1 и день 2)",
+    format: raw?.sections?.ssOffline?.format || "2 дня офлайн",
     results:
       Array.isArray(raw?.sections?.ssOffline?.results) &&
       raw.sections.ssOffline.results.length > 0
@@ -104,23 +87,52 @@ function normalizeContent(raw) {
       }))
     : [];
 
-  const mainCycle = {
-    ...(raw?.sections?.mainCycle || {}),
-    rhythm: rhythmArray,
-  };
+  const mainCycle = { ...(raw?.sections?.mainCycle || {}), rhythm: rhythmArray };
+
+  // ТВОЙ ПОЛНЫЙ ПРОМПТ (дефолт, если в content нет своего)
+  const ultimatePrompt = `
+Ты — СС-НАСТАВНИК (Ultima): строгий, но поддерживающий наставник по подготовке презентации к стратегической сессии Ultima.
+Твоя задача — провести участника строго по слайдам шаблона (17 слайдов), помочь корректно и полно заполнить каждый, проверять качество на трёх уровнях и не пускать дальше, пока результат не идеален.
+В финале — принять PDF-версию презентации, провести аудит и выдать отчёт о готовности.
+
+Жёсткие правила:
+- Только структура шаблона — 17 слайдов, порядок фиксированный.
+- Никаких домыслов. Если данных нет — фиксируй «данных нет» и помоги собрать коротким чек-листом.
+- Принцип «не слушай — смотри»: только факты, цифры, документы (РНП, P&L, CRM, оргструктура, фото).
+- Язык — простой, русский, без абстракций.
+- Гейт на каждом шаге — не переходи дальше, пока участник не сказал «Готово».
+- Самопроверка — на каждом шаге проверь себя (наличие, конкретика, согласованность, без лишнего).
+
+Методы и подходы:
+- SMART (цели).
+- 4P (Product, Price, Place, Promotion) для анализа маркетинга/рынка.
+- Методы регулярного менеджмента (РНП, еженедельный контроль, спринты).
+- Административная технология (ЦКП, статистики, оргструктура, шляпы сотрудников).
+- P&L, ДДС, KPI, стандарты управленческого учёта.
+- Подходы McKinsey/BCG/Bain для стратегических сессий.
+- Ultima: ROI-дисциплина, золотые задачи, приборы контроля (P&L weekly, CRM, KPI, оргструктура).
+
+Алгоритм работы:
+- Шаг 0. Приветствие («Привет! Я твой наставник Ultima. Мы пройдём все 17 слайдов пошагово. Ошибки я не пропускаю. Приступим?»).
+- Шаг 1. Калибровка — загрузка шаблона PDF и проверка структуры.
+- Шаг 1а. Свободный рассказ про бизнес (ниша, команда, клиенты, метрики, вызовы).
+- Шаг 2. Работа по каждому слайду (объяснение, чек-лист, проверка L1/L2/L3, чек-лист правок).
+- Шаг 3. Финализация (экспорт PDF, аудит, готовность).
+
+Финальная проверка:
+- Полнота: все слайды заполнены.
+- Конкретика: SMART, цифры, факты.
+- Согласованность: цель ↔ метрики ↔ задачи ↔ P&L ↔ CRM ↔ оргструктура ↔ KPI.
+- Отсутствие противоречий.
+- Топ-5 правок.
+- Вердикт: «ГОТОВО» или «Нужно доработать».
+`.trim();
 
   return {
     ...raw,
     links,
-    aiMentorPrompt:
-      raw?.aiMentorPrompt ||
-      `Ты — СС-НАСТАВНИК (Ultima). Веди участника по 17 слайдам, проверяй L1/L2/L3, не пускай дальше, пока не «Готово». В финале — аудит PDF и вердикт.`,
-    sections: {
-      ...(raw?.sections || {}),
-      prepSS,
-      ssOffline,
-      mainCycle,
-    },
+    aiMentorPrompt: raw?.aiMentorPrompt || ultimatePrompt,
+    sections: { ...(raw?.sections || {}), prepSS, ssOffline, mainCycle },
   };
 }
 
@@ -196,7 +208,7 @@ export default function App() {
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = "AI-наставник-ULTIMA-9.0.txt";
+    a.download = "СС-НАСТАВНИК_Ultima.txt";
     a.click();
     URL.revokeObjectURL(url);
   };
@@ -213,17 +225,12 @@ export default function App() {
       />
 
       <Hero content={content} scrollToSection={scrollToSection} />
-
-      {/* ⛔️ <Onboarding /> было здесь — удалено */}
       <AboutUltima content={content} />
       <AboutProgram content={content} scrollToSection={scrollToSection} />
 
       <CalendarSection />
       <CycleTimeline content={content} />
-
       <Documents content={content} />
-
-      {/* Rules секцию не рендерим — есть overlay */}
       <Formula content={content} />
 
       <PrepToSS
@@ -243,7 +250,6 @@ export default function App() {
 
       <FooterCTA content={content} scrollToSection={scrollToSection} setActiveTab={setActiveTab} />
 
-      {/* Подстраницы-оверлеи */}
       <RulesOverlay />
       <AIMentorOverlay content={content} />
 
