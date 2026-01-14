@@ -38,25 +38,31 @@ function normalizeContent(raw) {
   const findDoc = (re) =>
     documents.find((d) => re.test((d?.title || "") + (d?.name || "")));
 
+  // ====== ВАЖНО: фиксированные ссылки/статусы по ТЗ ======
   const links = {
+    // NDA — живой линк
     nda: {
-      available: !!findDoc(/nda/i),
-      url: safe(findDoc(/nda/i)?.link, "#"),
-      label: "Скоро",
-    },
-    rules: {
-      available: !!findDoc(/правил|регламент/i),
-      url: safe(findDoc(/правил|регламент/i)?.link, "#"),
-      label: "Скоро",
-    },
-    calendar: {
       available: true,
+      url: "https://drive.google.com/file/d/1s2I-HdtHI4TP1KS2yEEKaWYt7CMaGRgx/view?usp=drive_link",
+      label: "Открыть NDA",
+    },
+    // Правила — ведём в секцию #rules (там попап)
+    rules: {
+      available: true,
+      url: "#rules",
+      label: "Открыть правила",
+    },
+    // Календарь — в карточке документов показываем «СКОРО БУДЕТ»
+    calendar: {
+      available: false,
       url: "#calendar",
-      label: "Откроется позже",
+      label: "СКОРО БУДЕТ",
     },
+    // Booster — ссылка из задания
     booster: {
-      url: "#prep-ss",
+      url: "https://nkl6yv.csb.app/",
     },
+    // возможность переопределить через raw.links при желании
     ...(raw.links || {}),
   };
 
