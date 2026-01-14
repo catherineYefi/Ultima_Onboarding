@@ -1,83 +1,106 @@
 import React from "react";
 import { Menu, X } from "lucide-react";
 
+/**
+ * Navbar — сокращённое меню (5 пунктов) + прогресс-бар скролла.
+ * ТЗ:
+ * - Пункты в порядке: Главная / Начать / Онбординг / Подготовка / О программе
+ * - Sticky, прозрачный фон с blur
+ * - Прогресс-бар сверху показывает прогресс прокрутки
+ * - Мобильное меню: гамбургер -> сайдбар справа
+ */
 export default function Navbar({
   activeSection,
   mobileMenuOpen,
   setMobileMenuOpen,
   scrollToSection,
-  content,
   scrollProgress,
 }) {
+  const menuItems = [
+    { id: "hero", label: "Главная" },
+    { id: "start-here", label: "🚀 Начать" },
+    { id: "onboarding", label: "Онбординг" },
+    { id: "prep-ss", label: "Подготовка к СС" },
+    { id: "about", label: "О программе" },
+  ];
+
   return (
     <>
-      {/* Progress Bar */}
-      <div className="progress-bar">
-        <div
-          className="progress-fill"
-          style={{ width: `${scrollProgress}%` }}
-        />
-      </div>
+      {/* Progress bar */}
+      <div
+        className="progress-bar-top"
+        style={{ width: `${Math.min(Math.max(scrollProgress || 0, 0), 100)}%` }}
+        aria-hidden="true"
+      />
 
-      {/* Navigation */}
-      <nav className="navbar">
-        <div className="container">
-          <div className="nav-content">
-            <div className="nav-brand">ULTIMA 9.0</div>
-
-            {/* Desktop Navigation */}
-            <div
-              className="nav-links desktop-only"
-              role="navigation"
-              aria-label="Основная навигация"
-            >
-              {content.navItems.map((item) => (
-                <button
-                  key={item.id}
-                  onClick={() => scrollToSection(item.id)}
-                  className={`nav-link ${
-                    activeSection === item.id ? "active" : ""
-                  }`}
-                  aria-label={`Перейти к секции ${item.title}`}
-                  aria-current={activeSection === item.id ? "page" : undefined}
-                >
-                  {item.title}
-                </button>
-              ))}
-            </div>
-
-            {/* Mobile Menu Button */}
-            <button
-              className="mobile-menu-button mobile-only"
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              aria-label={mobileMenuOpen ? "Закрыть меню" : "Открыть меню"}
-              aria-expanded={mobileMenuOpen}
-            >
-              {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
-            </button>
+      <nav className="navbar" role="navigation" aria-label="Главная навигация">
+        <div className="navbar-container">
+          {/* Brand */}
+          <div className="navbar-brand" onClick={() => scrollToSection?.("hero")} role="button" tabIndex={0}>
+            <h1 className="brand-title">ULTIMA 9.0</h1>
+            <span className="brand-subtitle">Онбординг</span>
           </div>
 
-          {/* Mobile Menu */}
-          {mobileMenuOpen && (
-            <div className="mobile-menu">
-              {content.navItems.map((item) => (
+          {/* Desktop Menu */}
+          <div className="navbar-menu desktop-only">
+            {menuItems.map((item) => (
+              <button
+                key={item.id}
+                onClick={() => scrollToSection?.(item.id)}
+                className={`menu-item ${activeSection === item.id ? "active" : ""}`}
+                aria-current={activeSection === item.id ? "page" : undefined}
+              >
+                {item.label}
+              </button>
+            ))}
+          </div>
+
+          {/* Mobile Menu Toggle */}
+          <button
+            className="mobile-menu-toggle"
+            onClick={() => setMobileMenuOpen?.(!mobileMenuOpen)}
+            aria-label={mobileMenuOpen ? "Закрыть меню" : "Открыть меню"}
+          >
+            {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+          </button>
+        </div>
+      </nav>
+
+      {/* Mobile Menu Overlay + Sidebar */}
+      {mobileMenuOpen && (
+        <>
+          <div
+            className="mobile-menu-overlay"
+            onClick={() => setMobileMenuOpen?.(false)}
+            aria-hidden="true"
+          />
+          <div className="mobile-menu" role="dialog" aria-modal="true" aria-label="Навигация">
+            <div className="mobile-menu-header">
+              <h3>Навигация</h3>
+              <button onClick={() => setMobileMenuOpen?.(false)} aria-label="Закрыть меню">
+                <X size={24} />
+              </button>
+            </div>
+            <div className="mobile-menu-items">
+              {menuItems.map((item) => (
                 <button
                   key={item.id}
                   onClick={() => {
-                    scrollToSection(item.id);
-                    setMobileMenuOpen(false);
+                    scrollToSection?.(item.id);
+                    setMobileMenuOpen?.(false);
                   }}
-                  className={`mobile-nav-link ${
-                    activeSection === item.id ? "active" : ""
-                  }`}
+                  className={`mobile-menu-item ${activeSection === item.id ? "active" : ""}`}
                 >
-                  {item.title}
+                  {item.label}
                 </button>
               ))}
             </div>
-          )}
-        </div>
-      </nav>
+            <div className="mobile-menu-footer">
+              <p>Остальные разделы доступны при прокрутке</p>
+            </div>
+          </div>
+        </>
+      )}
     </>
   );
 }

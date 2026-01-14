@@ -4,8 +4,10 @@ import rawContent from "./content";
 // Import all components
 import Navbar from "./components/Navbar";
 import Hero from "./components/Hero";
+import StartHere from "./components/StartHere";
 import Onboarding from "./components/Onboarding";
 import AboutUltima from "./components/AboutUltima";
+import AboutProgram from "./components/AboutProgram";
 import CycleTimeline from "./components/CycleTimeline";
 import Documents from "./components/Documents";
 import Rules from "./components/Rules";
@@ -16,6 +18,7 @@ import MainCycle from "./components/MainCycle";
 import Final from "./components/Final";
 import FooterCTA from "./components/FooterCTA";
 import CalendarSection from "./components/CalendarSection";
+import MaterialsFAB from "./components/MaterialsFAB";
 
 import "./styles.css";
 
@@ -237,8 +240,10 @@ export default function App() {
       />
 
       <Hero content={content} scrollToSection={scrollToSection} />
+      <StartHere content={content} scrollToSection={scrollToSection} />
       <Onboarding content={content} />
       <AboutUltima content={content} />
+      <AboutProgram content={content} scrollToSection={scrollToSection} />
       <CalendarSection />
       <CycleTimeline content={content} />
       <Documents content={content} />
@@ -258,6 +263,7 @@ export default function App() {
       <MainCycle content={content} />
       <Final content={content} />
       <FooterCTA content={content} scrollToSection={scrollToSection} setActiveTab={setActiveTab} />
+      <MaterialsFAB content={content} />
     </div>
   );
 }

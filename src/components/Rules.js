@@ -1,7 +1,14 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 export default function Rules() {
   const [open, setOpen] = useState(false);
+
+  // открыть попап по глобальному событию
+  useEffect(() => {
+    const handler = () => setOpen(true);
+    window.addEventListener("openRules", handler);
+    return () => window.removeEventListener("openRules", handler);
+  }, []);
 
   return (
     <section id="rules" className="section container">
