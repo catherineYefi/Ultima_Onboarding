@@ -4,12 +4,12 @@ import rawContent from "./content";
 // Components
 import Navbar from "./components/Navbar";
 import Hero from "./components/Hero";
-import Onboarding from "./components/Onboarding";
+// ⛔️ Onboarding — УДАЛЁН
 import AboutUltima from "./components/AboutUltima";
 import AboutProgram from "./components/AboutProgram";
 import CycleTimeline from "./components/CycleTimeline";
 import Documents from "./components/Documents";
-// ⚠️ Rules секцию УБИРАЕМ из рендера
+// ⛔️ Rules (секция) — не используем, открываем как overlay
 import Formula from "./components/Formula";
 import PrepToSS from "./components/PrepToSS";
 import SSOffline from "./components/SSOffline";
@@ -19,7 +19,7 @@ import FooterCTA from "./components/FooterCTA";
 import CalendarSection from "./components/CalendarSection";
 import MaterialsFAB from "./components/MaterialsFAB";
 
-// Новые «подстраницы»
+// Overlays (подстраницы)
 import RulesOverlay from "./components/RulesOverlay";
 import AIMentorOverlay from "./components/AIMentorOverlay";
 
@@ -28,14 +28,6 @@ import "./styles.css";
 /** ---------- НОРМАЛИЗАЦИЯ КОНТЕНТА ---------- */
 function normalizeContent(raw) {
   const safe = (v, fb) => (v === undefined || v === null ? fb : v);
-
-  const documents =
-    raw?.sections?.about?.documents && Array.isArray(raw.sections.about.documents)
-      ? raw.sections.about.documents
-      : [];
-
-  const findDoc = (re) =>
-    documents.find((d) => re.test((d?.title || "") + (d?.name || "")));
 
   const links = {
     nda: {
@@ -46,9 +38,8 @@ function normalizeContent(raw) {
       label: "Открыть NDA",
     },
     rules: {
-      // теперь открываем ОВЕРЛЕЙ, поэтому url не обязателен
       available: true,
-      url: "#rules", // не используется, но оставим
+      url: "#rules",
       label: "Открыть правила",
     },
     calendar: {
@@ -59,7 +50,7 @@ function normalizeContent(raw) {
     booster: {
       url: "https://nkl6yv.csb.app/",
     },
-    ...safe(raw.links, {}),
+    ...(raw.links || {}),
   };
 
   const prepFrom = raw?.sections?.prepSS || raw?.sections?.prepToSS || {};
@@ -222,7 +213,8 @@ export default function App() {
       />
 
       <Hero content={content} scrollToSection={scrollToSection} />
-      <Onboarding content={content} />
+
+      {/* ⛔️ <Onboarding /> было здесь — удалено */}
       <AboutUltima content={content} />
       <AboutProgram content={content} scrollToSection={scrollToSection} />
 
@@ -231,7 +223,7 @@ export default function App() {
 
       <Documents content={content} />
 
-      {/* Rules СЕКЦИЮ убрали. Правила открываются как оверлей. */}
+      {/* Rules секцию не рендерим — есть overlay */}
       <Formula content={content} />
 
       <PrepToSS
@@ -251,7 +243,7 @@ export default function App() {
 
       <FooterCTA content={content} scrollToSection={scrollToSection} setActiveTab={setActiveTab} />
 
-      {/* Оверлеи-подстраницы */}
+      {/* Подстраницы-оверлеи */}
       <RulesOverlay />
       <AIMentorOverlay content={content} />
 
