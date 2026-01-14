@@ -11,16 +11,6 @@ import {
   ArrowRight,
 } from "lucide-react";
 
-/**
- * AboutProgram — единый аккордеон «О программе»
- * Секции:
- *  - Что такое ULTIMA (кратко из content.sections.about)
- *  - Цикл сезона (коротко из content.sections.mainCycle / ssOffline)
- *  - Дорожная карта (3 этапа: Start-СС → Главный цикл → Выпускной)
- *  - Правила (кнопка ведёт к секции #rules, где попап с правилами)
- *  - Формула сезона (если есть в content.sections.formula)
- *  - Выпускной (кратко из content.sections.final)
- */
 export default function AboutProgram({ content, scrollToSection }) {
   const about = content?.sections?.about ?? {};
   const ssOffline = content?.sections?.ssOffline ?? {};
@@ -40,6 +30,9 @@ export default function AboutProgram({ content, scrollToSection }) {
     }
   };
 
+  const openRulesOverlay = () =>
+    window.dispatchEvent(new CustomEvent("openRules"));
+
   const items = [
     {
       id: "about",
@@ -54,7 +47,9 @@ export default function AboutProgram({ content, scrollToSection }) {
           <ul className="ap-list">
             <li>Результат: WIG/OKR, дорожная карта, приборы контроля</li>
             <li>Управление: недельный ритм, дедлайны, отчётность</li>
-            <li>Команда: группа предпринимателей, трекеры и БИ</li>
+            <li>Команда: лидер и группа предпринимателей (без БИ)</li>
+            <li>Плюс: 3 офлайн-мастермайнда с экспертами в год для Нечто ULTIMA</li>
+            <li>Размер группы: 8 участников</li>
           </ul>
           <button className="cta-button secondary" onClick={() => go("#about")}>
             Подробнее в разделе «О программе» <ArrowRight size={16} />
@@ -86,10 +81,17 @@ export default function AboutProgram({ content, scrollToSection }) {
             </li>
           </ul>
           <div className="ap-actions">
-            <button className="cta-button outline" onClick={() => go("#cycle-timeline")}>
+            {/* было outline (тёмный текст), ставим secondary (светлый) */}
+            <button
+              className="cta-button secondary"
+              onClick={() => go("#cycle-timeline")}
+            >
               Дорожная карта <ArrowRight size={16} />
             </button>
-            <button className="cta-button outline" onClick={() => go("#main-cycle")}>
+            <button
+              className="cta-button secondary"
+              onClick={() => go("#main-cycle")}
+            >
               Ритм встреч <ArrowRight size={16} />
             </button>
           </div>
@@ -104,7 +106,7 @@ export default function AboutProgram({ content, scrollToSection }) {
         <div className="ap-body">
           <ol className="ap-steps">
             <li><strong>Start-СС:</strong> WIG/OKR → приборы контроля → план на 12 недель</li>
-            <li><strong>Главный цикл:</strong> еженедельные спринты, контроль метрик, BI/трекинг</li>
+            <li><strong>Главный цикл:</strong> еженедельные спринты, контроль метрик, работа с трекером, лидером и группой</li>
             <li><strong>Выпускной:</strong> PDF-презентация, дашборд, P&L за сезон, план 90 дней</li>
           </ol>
           <button className="cta-button secondary" onClick={() => go("#prep-ss")}>
@@ -120,15 +122,16 @@ export default function AboutProgram({ content, scrollToSection }) {
       body: (
         <div className="ap-body">
           <p className="ap-lead">
-            Режим неизбежности, фокус на ROI и прозрачность. Полные правила доступны в попапе.
+            Режим неизбежности, фокус на ROI и прозрачность. Полные правила открываются в отдельной подстранице.
           </p>
           <ul className="ap-list">
             <li><strong>Дисциплина:</strong> посещаемость, дедлайны, артефакты</li>
             <li><strong>Коммуникации:</strong> ответ ≤ 12 часов, тишина = красный флаг</li>
-            <li><strong>Цена слова:</strong> фиксированная в декларации ответственность</li>
+            <li><strong>Цена слова:</strong> ответственность из декларации</li>
           </ul>
           <div className="ap-actions">
-            <button className="cta-button primary" onClick={() => go("#rules")}>
+            {/* открываем overlay */}
+            <button className="cta-button primary" onClick={openRulesOverlay}>
               Открыть правила
             </button>
             <button className="cta-button" onClick={() => go("#org-start")}>
@@ -153,7 +156,7 @@ export default function AboutProgram({ content, scrollToSection }) {
             <li>Метрики → приборы контроля и дашборды</li>
             <li>Гипотезы → спринты, ретроспективы, коррекции</li>
           </ul>
-          <button className="cta-button outline" onClick={() => go("#formula")}>
+          <button className="cta-button secondary" onClick={() => go("#formula")}>
             Подробнее о формуле <ArrowRight size={16} />
           </button>
         </div>

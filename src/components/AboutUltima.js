@@ -1,13 +1,6 @@
 import React from "react";
-import { Target, LineChart, Users, CheckCircle2 } from "lucide-react";
+import { Target, LineChart, Users, CheckCircle2, GraduationCap } from "lucide-react";
 
-/**
- * ABOUT ULTIMA — краткое позиционирование
- * - 1 абзац: что это
- * - 3 value-cards: Результат, Управление, Команда
- * - мини-метрики (если есть в content.sections.about.metrics)
- * - безопасные дефолты при отсутствии полей
- */
 export default function AboutUltima({ content }) {
   const about = content?.sections?.about ?? {};
 
@@ -36,17 +29,20 @@ export default function AboutUltima({ content }) {
       title: "Команда",
       text:
         about?.valueTeam ??
-        "Группа предпринимателей, трекеры и БИ. Сильная обратная связь и поддержка для быстрого движения.",
+        "Лидер и группа предпринимателей без БИ. Сильная обратная связь и поддержка.",
+    },
+    {
+      icon: <GraduationCap size={24} />,
+      title: "Мастермайнды",
+      text: "3 офлайн-мастермайнда с экспертами в год для Нечто ULTIMA.",
     },
   ];
 
-  const metrics = Array.isArray(about?.metrics)
-    ? about.metrics
-    : [
-        { label: "Длительность сезона", value: "12 недель" },
-        { label: "Группы", value: "10–12 человек" },
-        { label: "Формат", value: "онлайн + офлайн СС" },
-      ];
+  const metrics = [
+    { label: "Длительность сезона", value: "12 недель" },
+    { label: "Размер группы", value: "8 участников" },
+    { label: "Формат", value: "онлайн + офлайн СС" },
+  ];
 
   return (
     <section id="about" className="section container about-ultima">

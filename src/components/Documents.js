@@ -3,9 +3,7 @@ import { FileText, Calendar, ExternalLink } from "lucide-react";
 
 export default function Documents({ content }) {
   const links = content?.links || {};
-  const openRules = () => {
-    window.dispatchEvent(new CustomEvent("openRules"));
-  };
+  const openRules = () => window.dispatchEvent(new CustomEvent("openRules"));
 
   return (
     <section id="org-start" className="section">
@@ -31,7 +29,7 @@ export default function Documents({ content }) {
             </a>
           </div>
 
-          {/* Правила — открываем ОВЕРЛЕЙ */}
+          {/* Правила — открываем overlay */}
           <div className="doc-card">
             <FileText size={32} />
             <h3>Правила ULTIMA</h3>
@@ -41,7 +39,7 @@ export default function Documents({ content }) {
             </button>
           </div>
 
-          {/* Календарь (пока «скоро будет») */}
+          {/* Календарь */}
           <div className="doc-card" aria-disabled={!links?.calendar?.available}>
             <Calendar size={32} />
             <h3>Календарь Нечто</h3>

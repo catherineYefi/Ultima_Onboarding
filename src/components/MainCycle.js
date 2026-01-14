@@ -9,17 +9,6 @@ import {
   ArrowRight,
 } from "lucide-react";
 
-/**
- * Главный цикл (12 недель)
- * Ожидаемые поля в content.sections.mainCycle (все необязательны):
- * {
- *   title?: string,
- *   lead?: string,
- *   rhythm?: Array<{ title: string, description?: string }>,
- *   metrics?: Array<{ name: string, desc?: string }>,
- *   cta?: { label: string, href: string }
- * }
- */
 export default function MainCycle({ content, scrollToSection }) {
   const mc = content?.sections?.mainCycle ?? {};
 
@@ -28,11 +17,11 @@ export default function MainCycle({ content, scrollToSection }) {
     mc?.lead ??
     "Работаем в недельном ритме: встречи, артефакты, метрики. Фокус — устранение узких мест и достижение WIG/OKR.";
 
-  const rhythm = Array.isArray(mc?.rhythm)
+  const rhythm = Array.isArray(mc?.rhythm) && mc.rhythm.length > 0
     ? mc.rhythm
     : [
-        { title: "Еженедельная встреча десятки", description: "Синхронизация, разбор прогресса, корректировки." },
-        { title: "Встреча с БИ", description: "Декомпозиция задач и проработка решений." },
+        { title: "Еженедельная встреча группы", description: "Синхронизация, разбор прогресса, корректировки." },
+        { title: "Работа с трекером и лидером", description: "Декомпозиция задач, планирование спринта." },
         { title: "Отчётность", description: "P&L weekly, приборы контроля, обновление дашборда." },
       ];
 
@@ -60,7 +49,9 @@ export default function MainCycle({ content, scrollToSection }) {
     <section id="main-cycle" className="section container main-cycle">
       <div className="section-header fade-in">
         <h2>{title}</h2>
-        <p className="section-subtitle">{lead}</p>
+        <p className="section-subtitle">
+          Плотная работа с <strong>трекером</strong>, <strong>лидером</strong> и <strong>группой</strong>. Каждые 2 недели — контроль прогресса.
+        </p>
       </div>
 
       {/* Ритм встреч */}
@@ -104,7 +95,7 @@ export default function MainCycle({ content, scrollToSection }) {
       {/* CTA */}
       {cta?.label && (
         <div className="cycle-cta fade-in">
-          <button className="cta-button primary outline" onClick={() => go(cta.href)}>
+          <button className="cta-button secondary" onClick={() => go(cta.href)}>
             {cta.label} <ArrowRight size={18} />
           </button>
         </div>
