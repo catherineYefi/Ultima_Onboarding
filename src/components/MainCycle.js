@@ -1,105 +1,151 @@
 import React from "react";
 import {
-  Clock,
+  RefreshCw,
   Users,
+  UserCheck,
   BarChart2,
   Activity,
-  CheckSquare,
-  Target,
   ArrowRight,
 } from "lucide-react";
 
-export default function MainCycle({ content, scrollToSection }) {
+/**
+ * Рендерим rhythm как ОБЪЕКТ:
+ * mainCycle.rhythm = {
+ *   meetings: [{ format, focus }, ...],
+ *   additional: [string, ...]
+ * }
+ * + блок expertSessions
+ */
+export default function MainCycle({ content }) {
   const mc = content?.sections?.mainCycle ?? {};
-
-  const title = mc?.title ?? "Главный цикл (12 недель)";
-  const lead =
-    mc?.lead ??
-    "Работаем в недельном ритме: встречи, артефакты, метрики. Фокус — устранение узких мест и достижение WIG/OKR.";
-
-  const rhythm = Array.isArray(mc?.rhythm) && mc.rhythm.length > 0
-    ? mc.rhythm
-    : [
-        { title: "Еженедельная встреча группы", description: "Синхронизация, разбор прогресса, корректировки." },
-        { title: "Работа с трекером и лидером", description: "Декомпозиция задач, планирование спринта." },
-        { title: "Отчётность", description: "P&L weekly, приборы контроля, обновление дашборда." },
-      ];
-
-  const metrics = Array.isArray(mc?.metrics) && mc.metrics.length > 0
-    ? mc.metrics
-    : [
-        { name: "WIG/OKR", desc: "Главные цели сезона и ключевые результаты." },
-        { name: "Unit-экономика", desc: "CAC, LTV, маржинальность, окупаемость каналов." },
-        { name: "Темп роста", desc: "Недельный прирост MRR/Revenue, конверсия воронки." },
-      ];
-
-  const cta = mc?.cta ?? { label: "К дорожной карте", href: "#cycle-timeline" };
-
-  const go = (href) => {
-    if (!href) return;
-    if (href.startsWith("#")) {
-      const id = href.slice(1);
-      scrollToSection?.(id);
-    } else {
-      window.open(href, "_blank", "noopener,noreferrer");
-    }
-  };
+  const rhythm = mc?.rhythm && typeof mc.rhythm === "object" ? mc.rhythm : null;
 
   return (
-    <section id="main-cycle" className="section container main-cycle">
-      <div className="section-header fade-in">
-        <h2>{title}</h2>
-        <p className="section-subtitle">
-          Плотная работа с <strong>трекером</strong>, <strong>лидером</strong> и <strong>группой</strong>. Каждые 2 недели — контроль прогресса.
-        </p>
-      </div>
-
-      {/* Ритм встреч */}
-      <div className="cycle-rhythm fade-in">
-        <h3 className="block-title">
-          <Clock size={20} /> Недельный ритм
-        </h3>
-        <div className="rhythm-grid">
-          {rhythm.map((r, i) => (
-            <div key={i} className="rhythm-card">
-              <div className="rhythm-icon">
-                {i % 3 === 0 && <Users size={22} />}
-                {i % 3 === 1 && <CheckSquare size={22} />}
-                {i % 3 === 2 && <Activity size={22} />}
-              </div>
-              <h4>{r?.title || `Шаг ${i + 1}`}</h4>
-              {r?.description && <p>{r.description}</p>}
-            </div>
-          ))}
+    <section id="main-cycle" className="section">
+      <div className="container">
+        <div className="section-header fade-in">
+          <RefreshCw size={32} className="section-icon" />
+          <h2>Основной цикл работы</h2>
+          <p className="section-subtitle">6 месяцев регулярного внедрения</p>
         </div>
-      </div>
 
-      {/* Метрики и контроль */}
-      <div className="cycle-metrics fade-in">
-        <h3 className="block-title">
-          <BarChart2 size={20} /> Метрики и контроль
-        </h3>
-        <div className="metrics-grid">
-          {metrics.map((m, i) => (
-            <div key={i} className="metric-card">
-              <div className="metric-icon"><Target size={20} /></div>
-              <div className="metric-texts">
-                <div className="metric-name">{m?.name || "Метрика"}</div>
-                {m?.desc && <div className="metric-desc">{m.desc}</div>}
-              </div>
+        {/* Описание ритма по месяцам */}
+        <div className="rhythm-description fade-in">
+          <h3>Как устроен ритм встреч:</h3>
+          <div className="rhythm-months">
+            <div className="rhythm-card">
+              <h4>Месяц 1: Плотный старт</h4>
+              <p>Встречи с трекером <strong>каждую неделю</strong>.</p>
+              <p className="rhythm-goal">
+                Задача: быстро запустить внедрение после Start-СС,
+                не дать стратегии остаться на бумаге.
+              </p>
             </div>
-          ))}
-        </div>
-      </div>
 
-      {/* CTA */}
-      {cta?.label && (
+            <div className="rhythm-card">
+              <h4>Месяцы 2–6: Устойчивый ритм</h4>
+              <p>Встречи <strong>каждую неделю</strong>, но чередование:</p>
+              <ul>
+                <li>Неделя 1 → встреча с трекером</li>
+                <li>Неделя 2 → встреча с лидером группы</li>
+              </ul>
+              <p className="rhythm-count">
+                Итого за сезон: ~14–15 встреч с трекером + ~10 встреч с лидером.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* Форматы встреч из rhythm.meetings */}
+        <div className="meeting-formats fade-in">
+          <h3>Два формата встреч:</h3>
+          <div className="cards-grid">
+            {(Array.isArray(rhythm?.meetings) ? rhythm.meetings : []).map(
+              (item, idx) => (
+                <div key={idx} className="card">
+                  <h4>{item?.format || "Формат"}</h4>
+                  {item?.focus && (
+                    <p>
+                      <strong>Фокус:</strong> {item.focus}
+                    </p>
+                  )}
+                </div>
+              )
+            )}
+          </div>
+        </div>
+
+        {/* Дополнительные элементы из rhythm.additional */}
+        {Array.isArray(rhythm?.additional) && rhythm.additional.length > 0 && (
+          <div className="additional-elements fade-in">
+            <h3>Дополнительно:</h3>
+            <ul>
+              {rhythm.additional.map((item, idx) => (
+                <li key={idx}>{item}</li>
+              ))}
+            </ul>
+          </div>
+        )}
+
+        {/* Приборы/контроль (упрощённый блок) */}
+        <div className="cycle-metrics fade-in">
+          <h3 className="block-title">
+            <BarChart2 size={20} /> Приборы и контроль
+          </h3>
+          <div className="metrics-grid">
+            {[
+              { name: "P&L weekly", desc: "еженедельный контроль финансов" },
+              { name: "CRM", desc: "воронка и конверсии" },
+              { name: "KPI", desc: "персональные и командные" },
+            ].map((m, i) => (
+              <div key={i} className="metric-card">
+                <div className="metric-icon">
+                  {i === 0 && <Activity size={18} />}
+                  {i === 1 && <Users size={18} />}
+                  {i === 2 && <UserCheck size={18} />}
+                </div>
+                <div className="metric-texts">
+                  <div className="metric-name">{m.name}</div>
+                  <div className="metric-desc">{m.desc}</div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Эфиры с экспертами */}
+        {mc?.expertSessions && (
+          <div className="expert-sessions fade-in">
+            <h3>{mc.expertSessions.title || "Эфиры с топ-экспертами"}</h3>
+            <p className="muted">
+              {mc.expertSessions.description ||
+                "Дополнительные образовательные сессии только для участников ULTIMA"}
+            </p>
+            <ul className="ap-list">
+              <li>
+                <strong>Формат: </strong>
+                {mc.expertSessions.format ||
+                  "Онлайн-эфиры по управлению, маркетингу, продажам, HR"}
+              </li>
+              <li>
+                <strong>Частота: </strong>
+                {mc.expertSessions.frequency || "В течение сезона"}
+              </li>
+              <li>
+                <strong>Доступ: </strong>
+                {mc.expertSessions.access ||
+                  "Записи доступны в закрытом разделе портала"}
+              </li>
+            </ul>
+          </div>
+        )}
+
         <div className="cycle-cta fade-in">
-          <button className="cta-button secondary" onClick={() => go(cta.href)}>
-            {cta.label} <ArrowRight size={18} />
-          </button>
+          <a href="#cycle-timeline" className="cta-button secondary">
+            К дорожной карте <ArrowRight size={18} />
+          </a>
         </div>
-      )}
+      </div>
     </section>
   );
 }

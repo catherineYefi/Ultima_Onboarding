@@ -37,6 +37,29 @@ export default function PrepToSS({
           <p className="section-subtitle">Ключевой этап перед офлайн СС</p>
         </div>
 
+        {/* АКЦЕНТ: три параллельных направления */}
+        <div className="card fade-in" style={{ marginBottom: 16 }}>
+          <h3>3 параллельных направления работы (2–3 недели до Start-СС):</h3>
+          <ol className="final-list dots" style={{ marginTop: 8 }}>
+            <li>
+              <strong>Работа с Бизнес-Инженером (БИ)</strong> — 3 встречи на
+              группу. Собираем фактуру и цифры бизнеса.
+            </li>
+            <li>
+              <strong>Pre-Ultima Booster</strong> (самостоятельно) — интерактивный
+              мини-курс для прояснения продукта, экономики и стратегии.
+            </li>
+            <li>
+              <strong>AI-наставник</strong> (самостоятельно) — работа по 17
+              слайдам презентации, проверка на 3 уровнях качества.
+            </li>
+          </ol>
+          <p className="muted" style={{ marginTop: 8 }}>
+            💡 <strong>Важно:</strong> БИ работает только на этапе подготовки к
+            Start-СС. В течение 6 месяцев сезона БИ не участвует.
+          </p>
+        </div>
+
         {/* Next Step Block */}
         <div className="next-step-block fade-in">
           <div className="next-step-icon">
@@ -102,12 +125,12 @@ export default function PrepToSS({
               <div className="step-number">1</div>
               <Users size={32} className="step-icon" />
               <div className="step-title-block">
-                <h4>Встречи группы</h4>
+                <h4>Встречи с БИ</h4>
                 <p className="step-outcome">Готовность к стратегической сессии</p>
               </div>
             </div>
             <div className="step-content">
-              <p className="step-description">Синхронизация, артефакты, краткие ревью</p>
+              <p className="step-description">3 встречи с Бизнес-Инженером</p>
               {(Array.isArray(prep?.biMeetings) ? prep.biMeetings : []).map((meeting, idx) => (
                 <div key={idx} className="meeting-item">
                   <div className="meeting-number">{idx + 1}</div>
@@ -117,6 +140,9 @@ export default function PrepToSS({
                   </div>
                 </div>
               ))}
+              <p className="muted" style={{ marginTop: 8 }}>
+                💡 БИ участвует только на этапе подготовки к Start-СС.
+              </p>
             </div>
           </div>
 
@@ -168,8 +194,6 @@ export default function PrepToSS({
 
               <div className="prompt-section">
                 <h5>Промпт AI-наставника:</h5>
-
-                {/* ВАЖНО: управление высотой прямо здесь — без зависимости от CSS */}
                 <div
                   className="prompt-box"
                   style={{
