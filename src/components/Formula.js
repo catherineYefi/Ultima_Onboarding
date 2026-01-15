@@ -1,187 +1,210 @@
-import React, { useState } from "react";
-import { Triangle } from "lucide-react";
+import React from "react";
+import {
+  Gauge,
+  Users,
+  Workflow,
+  Target,
+  ClipboardCheck,
+  Settings2,
+  Sparkles,
+  Map,
+  ArrowRight,
+  BarChart2,
+  ShieldCheck,
+} from "lucide-react";
+
+/**
+ * Формула неизбежности результата
+ * По ТЗ: 4 элемента (без внешнего «адвайзери-борда» как отдельного пункта),
+ * + бадди-система; светлые CTA-кнопки на тёмном фоне.
+ */
+const ICONS = {
+  Gauge: <Gauge size={18} />,
+  Users: <Users size={18} />,
+  Workflow: <Workflow size={18} />,
+  Target: <Target size={18} />,
+  ClipboardCheck: <ClipboardCheck size={18} />,
+  Settings2: <Settings2 size={18} />,
+  Sparkles: <Sparkles size={18} />,
+  BarChart2: <BarChart2 size={18} />,
+  ShieldCheck: <ShieldCheck size={18} />,
+};
 
 export default function Formula({ content }) {
-  const [hoveredLevel, setHoveredLevel] = useState(null);
+  const f = content?.sections?.formula ?? {};
 
-  const pyramidLevels = [
-    {
-      id: 1,
-      title: "Трекер",
-      description:
-        "Управляет процессом, задаёт темп, фокусирует на золотых задачах",
-      width: 180,
-      y: 0,
-      opacity: 0.9,
-    },
-    {
-      id: 2,
-      title: "Бизнес Ассистент",
-      description:
-        "Ведёт протоколы, контролирует сроки, помогает в организации",
-      width: 280,
-      y: 90,
-      opacity: 0.8,
-    },
-    {
-      id: 3,
-      title: "Лидер Группы",
-      description: "Выбранный участниками, держит фокус и командный дух",
-      width: 380,
-      y: 180,
-      opacity: 0.7,
-    },
-    {
-      id: 4,
-      title: "Группа предпринимателей",
-      description:
-        "8 человек, каждый с амбициями и опытом, готовый давать и брать по максимуму",
-      width: 480,
-      y: 270,
-      opacity: 0.6,
-    },
-    {
-      id: 5,
-      title: "Адвайзери-борд",
-      description:
-        "Совет трекеров и экспертов, к которому можно обратиться за стратегическим советом или проверкой гипотез",
-      width: 580,
-      y: 360,
-      opacity: 0.5,
-    },
-  ];
+  const title = f?.title ?? "Формула неизбежности результата";
+  const subtitle =
+    f?.subtitle ??
+    "Трекер + Лидер + Группа (8 человек) + Ассистент → рост по приборам (P&L weekly, CRM, KPI, оргструктура)";
+
+  const pillars =
+    Array.isArray(f?.pillars) && f.pillars.length > 0
+      ? f.pillars
+      : [
+          {
+            icon: "Gauge",
+            title: "Приборы контроля",
+            text: "P&L weekly, CRM, KPI и оргструктура: видим факты, управляем по данным.",
+          },
+          {
+            icon: "Users",
+            title: "Группа и лидер",
+            text: "ROI-дисциплина, взаимная ответственность и фокус на результат (8 человек).",
+          },
+          {
+            icon: "Workflow",
+            title: "Спринтовая работа",
+            text: "12 недель после Start-СС: постановка «золотых задач» и зачёт по чек-листу.",
+          },
+        ];
+
+  const instruments =
+    Array.isArray(f?.instruments) && f.instruments.length > 0
+      ? f.instruments
+      : [
+          { name: "P&L weekly", desc: "Недельный отчёт по финансам: выручка, маржа, расходы." },
+          { name: "CRM воронка", desc: "Конверсии, сделки, темп заполнения и завершения." },
+          { name: "KPI", desc: "Лидовые, продуктовые и операционные показатели." },
+          { name: "Оргструктура", desc: "Роли, зоны ответственности, «шляпы» и ЦКП." },
+        ];
+
+  const flow =
+    Array.isArray(f?.flow) && f.flow.length > 0
+      ? f.flow
+      : [
+          {
+            title: "Цели и фокус",
+            points: [
+              "Формулируем WIG/OKR с измеримыми критериями",
+              "Определяем «золотые задачи» на 2 недели",
+            ],
+          },
+          {
+            title: "Ритм и отчётность",
+            points: [
+              "Каждую неделю — обновление приборов контроля",
+              "Разбор узких мест, корректировка плана",
+            ],
+          },
+          {
+            title: "Защита результата",
+            points: [
+              "Подтверждённый рост по метрикам и P&L",
+              "Итоговая презентация и план на 90 дней",
+            ],
+          },
+        ];
+
+  const ctaPrimary = f?.ctaPrimary ?? {
+    label: "Смотреть ритм встреч",
+    href: "#main-cycle",
+  };
+  const ctaSecondary = f?.ctaSecondary ?? {
+    label: "Дорожная карта 12 недель",
+    href: "#cycle-timeline",
+  };
+
+  const go = (href) => {
+    if (!href) return;
+    if (href.startsWith("#")) {
+      const id = href.slice(1);
+      document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+    } else {
+      window.open(href, "_blank", "noopener,noreferrer");
+    }
+  };
 
   return (
     <section id="formula" className="section">
       <div className="container">
-        <div className="section-header fade-in">
-          <Triangle size={32} className="section-icon" />
-          <h2>Формула неизбежности результата</h2>
-          <p className="section-subtitle">5 уровней системы ULTIMA</p>
+        <div className="section-header">
+          <h2>{title}</h2>
+          <p className="section-subtitle">{subtitle}</p>
         </div>
 
-        <div className="pyramid-glass-container fade-in">
-          <div className="pyramid-wrapper">
-            {/* SVG Pyramid */}
-            <svg viewBox="0 0 700 480" className="pyramid-glass-svg">
-              <defs>
-                {/* Glass gradient */}
-                <linearGradient
-                  id="glass-gradient"
-                  x1="0%"
-                  y1="0%"
-                  x2="0%"
-                  y2="100%"
-                >
-                  <stop offset="0%" stopColor="rgba(99, 102, 241, 0.4)" />
-                  <stop offset="100%" stopColor="rgba(139, 92, 246, 0.4)" />
-                </linearGradient>
-
-                {/* Glow filter */}
-                <filter id="glow-filter">
-                  <feGaussianBlur stdDeviation="6" result="coloredBlur" />
-                  <feMerge>
-                    <feMergeNode in="coloredBlur" />
-                    <feMergeNode in="SourceGraphic" />
-                  </feMerge>
-                </filter>
-              </defs>
-
-              {/* Pyramid levels */}
-              {pyramidLevels.map((level, idx) => {
-                const centerX = 350;
-                const halfWidth = level.width / 2;
-                const height = 85;
-                const nextLevel = pyramidLevels[idx + 1];
-                const nextY = nextLevel ? nextLevel.y : level.y + height;
-                const nextHalfWidth = nextLevel
-                  ? nextLevel.width / 2
-                  : halfWidth;
-
-                return (
-                  <g
-                    key={level.id}
-                    className="pyramid-glass-level"
-                    onMouseEnter={() => setHoveredLevel(level.id)}
-                    onMouseLeave={() => setHoveredLevel(null)}
-                    style={{ cursor: "pointer" }}
-                  >
-                    {/* Glass trapezoid */}
-                    <path
-                      d={`
-                        M ${centerX - halfWidth} ${level.y + 15}
-                        L ${centerX + halfWidth} ${level.y + 15}
-                        L ${centerX + nextHalfWidth} ${nextY + 15}
-                        L ${centerX - nextHalfWidth} ${nextY + 15}
-                        Z
-                      `}
-                      fill="url(#glass-gradient)"
-                      stroke="rgba(99, 102, 241, 0.6)"
-                      strokeWidth="2"
-                      opacity={hoveredLevel === level.id ? 1 : level.opacity}
-                      filter="url(#glow-filter)"
-                      className="glass-shape"
-                    />
-
-                    {/* Level number circle - внутри слева */}
-                    <circle
-                      cx={centerX - halfWidth + 40}
-                      cy={level.y + 50}
-                      r="22"
-                      fill="rgba(15, 15, 30, 0.9)"
-                      stroke="rgba(99, 102, 241, 0.8)"
-                      strokeWidth="2"
-                    />
-                    <text
-                      x={centerX - halfWidth + 40}
-                      y={level.y + 50}
-                      textAnchor="middle"
-                      dominantBaseline="central"
-                      fill="white"
-                      fontSize="18"
-                      fontWeight="700"
-                    >
-                      {level.id}
-                    </text>
-
-                    {/* Text inside pyramid */}
-                    <text
-                      x={centerX}
-                      y={level.y + 50}
-                      textAnchor="middle"
-                      dominantBaseline="central"
-                      fill="white"
-                      fontSize="18"
-                      fontWeight="700"
-                      className="pyramid-text"
-                    >
-                      {level.title}
-                    </text>
-                  </g>
-                );
-              })}
-            </svg>
-
-            {/* Hover descriptions - справа */}
-            {hoveredLevel && (
-              <div className="pyramid-hover-description">
-                {pyramidLevels.find((l) => l.id === hoveredLevel) && (
-                  <>
-                    <div className="hover-desc-number">{hoveredLevel}</div>
-                    <h4>
-                      {pyramidLevels.find((l) => l.id === hoveredLevel).title}
-                    </h4>
-                    <p>
-                      {
-                        pyramidLevels.find((l) => l.id === hoveredLevel)
-                          .description
-                      }
-                    </p>
-                  </>
-                )}
+        <div className="cards-grid">
+          {pillars.map((p, i) => (
+            <div key={i} className="doc-card">
+              <div className="ap-icon">
+                {p?.icon && ICONS[p.icon] ? ICONS[p.icon] : <Sparkles size={18} />}
               </div>
-            )}
+              <h3>{p?.title || "Без названия"}</h3>
+              <p className="doc-subtitle">{p?.text || "Описание будет позже."}</p>
+
+              {i === 0 && (
+                <button className="cta-button secondary" onClick={() => go("#main-cycle")}>
+                  Смотреть ритм встреч
+                </button>
+              )}
+              {i === 1 && (
+                <button className="cta-button secondary" onClick={() => go("#ss-offline")}>
+                  Стартовая СС офлайн
+                </button>
+              )}
+              {i === 2 && (
+                <button className="cta-button secondary" onClick={() => go("#cycle-timeline")}>
+                  Дорожная карта 12 недель
+                </button>
+              )}
+            </div>
+          ))}
+        </div>
+
+        <div className="cycle-metrics" style={{ marginTop: 18 }}>
+          <h3 className="block-title">
+            <BarChart2 size={20} /> Инструменты и контроль
+          </h3>
+          <div className="metrics-grid">
+            {instruments.map((m, i) => (
+              <div key={i} className="metric-card">
+                <div className="metric-icon"><ShieldCheck size={18} /></div>
+                <div className="metric-texts">
+                  <div className="metric-name">{m?.name || "Инструмент"}</div>
+                  {m?.desc && <div className="metric-desc">{m.desc}</div>}
+                </div>
+              </div>
+            ))}
           </div>
+        </div>
+
+        <div className="cycle-rhythm" style={{ marginTop: 18 }}>
+          <h3 className="block-title">
+            <Settings2 size={20} /> Как работает формула
+          </h3>
+          <div className="rhythm-grid">
+            {flow.map((step, i) => (
+              <div key={i} className="rhythm-card">
+                <div className="rhythm-icon"><Target size={20} /></div>
+                <h4>{step?.title || `Шаг ${i + 1}`}</h4>
+                <ul className="final-list dots" style={{ marginTop: 8 }}>
+                  {(Array.isArray(step?.points) ? step.points : []).map((pt, j) => (
+                    <li key={j}>{pt}</li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="final-cta" style={{ marginTop: 20 }}>
+          {ctaPrimary?.label && (
+            <button
+              className="cta-button secondary"
+              onClick={() => go(ctaPrimary.href)}
+            >
+              {ctaPrimary.label} <ArrowRight size={18} />
+            </button>
+          )}
+          {ctaSecondary?.label && (
+            <button
+              className="cta-button secondary"
+              onClick={() => go(ctaSecondary.href)}
+              style={{ marginLeft: 8 }}
+            >
+              {ctaSecondary.label} <Map size={18} />
+            </button>
+          )}
         </div>
       </div>
     </section>
