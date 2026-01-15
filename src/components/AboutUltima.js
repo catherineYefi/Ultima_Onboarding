@@ -1,48 +1,68 @@
 import React from "react";
-import { Target, LineChart, Users, CheckCircle2, GraduationCap } from "lucide-react";
+import { Target, LineChart, Users, CheckCircle2, Sparkles } from "lucide-react";
 
+/**
+ * ABOUT ULTIMA — секция "Что такое ULTIMA?"
+ *
+ * Правки по ТЗ:
+ * - В явном виде указаны: 3 офлайн мастермайнда (ММ) в год для участников ULTIMA
+ * - Количество участников в группе: 8 (не 10–12)
+ * - Безопасные дефолты — если каких-то полей нет в content, рендерим осмысленные значения
+ *
+ * Ожидаемые (необязательные) поля:
+ *   content.sections.about = {
+ *     title?: string
+ *     lead?: string
+ *     valueResult?: string
+ *     valueMgmt?: string
+ *     valueTeam?: string
+ *     metrics?: Array<{ label: string, value: string }>
+ *   }
+ */
 export default function AboutUltima({ content }) {
   const about = content?.sections?.about ?? {};
 
   const title = about?.title ?? "Что такое ULTIMA?";
   const lead =
     about?.lead ??
-    "ULTIMA — это управляемый сезон стратегической работы над ростом бизнеса: цели, метрики, дисциплина исполнения. Фокус на ROI и предсказуемом результате.";
+    "ULTIMA — стратегический контур роста на 6 месяцев: цели, метрики, дисциплина и командная поддержка. Для участников ULTIMA доступны 3 офлайн мастермайнда (ММ) в год с экспертами экосистемы — в дополнение к регулярной работе сезона.";
 
+  // карточки-ценности
   const values = [
     {
       icon: <Target size={24} />,
       title: "Результат",
       text:
         about?.valueResult ??
-        "Чёткая формулировка WIG/OKR, дорожная карта и приборы контроля. Никакой «активности ради активности».",
+        "WIG/OKR, дорожная карта и приборы контроля. Делаем только то, что приближает к результату — без «активности ради активности».",
     },
     {
       icon: <LineChart size={24} />,
       title: "Управление",
       text:
         about?.valueMgmt ??
-        "Ритм встреч, понятные дедлайны, отчётность в воркбуке и дашбордах. Управляем прогрессом каждую неделю.",
+        "Недельный ритм встреч, дедлайны и отчётность в приборах (P&L weekly, CRM, KPI). Управляем по фактам и цифрам.",
     },
     {
       icon: <Users size={24} />,
       title: "Команда",
       text:
         about?.valueTeam ??
-        "Лидер и группа предпринимателей без БИ. Сильная обратная связь и поддержка.",
-    },
-    {
-      icon: <GraduationCap size={24} />,
-      title: "Мастермайнды",
-      text: "3 офлайн-мастермайнда с экспертами в год для Нечто ULTIMA.",
+        "Группа предпринимателей (8 человек), трекер и лидер. Сильная обратная связь, поддержка и взаимная ответственность.",
     },
   ];
 
-  const metrics = [
-    { label: "Длительность сезона", value: "12 недель" },
-    { label: "Размер группы", value: "8 участников" },
-    { label: "Формат", value: "онлайн + офлайн СС" },
-  ];
+  // метрики (если нет своих — даём дефолты по ТЗ)
+  const metrics = Array.isArray(about?.metrics) && about.metrics.length > 0
+    ? about.metrics
+    : [
+        { label: "Длительность сезона", value: "6 месяцев" },
+        { label: "Размер группы", value: "8 человек" },
+        {
+          label: "Формат",
+          value: "Онлайн-ритм + офлайн Start-СС/Final-СС + 3 офлайн ММ в год",
+        },
+      ];
 
   return (
     <section id="about" className="section container about-ultima">
@@ -54,7 +74,7 @@ export default function AboutUltima({ content }) {
       <div className="about-values fade-in">
         {values.map((v, i) => (
           <div key={i} className="about-card">
-            <div className="about-card-icon">{v.icon}</div>
+            <div className="about-card-icon">{v.icon || <Sparkles size={24} />}</div>
             <h3>{v.title}</h3>
             <p>{v.text}</p>
           </div>

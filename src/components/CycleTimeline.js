@@ -1,162 +1,137 @@
+// src/components/CycleTimeline.js
 import React from "react";
 import {
+  Map,
+  Target,
+  Calendar as CalendarIcon,
+  RefreshCw,
   Flag,
-  Rocket,
-  CalendarCheck,
-  Trophy,
-  LineChart,
-  TrendingUp,
-  ClipboardCheck,
   ArrowRight,
+  Users,
+  CheckCircle2,
 } from "lucide-react";
 
 /**
- * Цикл сезона — дорожная карта
+ * CycleTimeline — визуализация цикла сезона.
  *
- * Ожидаемая структура в content.sections.cycleTimeline (необязательна):
- * {
- *   intro?: string,
- *   stages?: [
- *     {
- *       id: "start-ss" | "main-cycle" | "graduation",
- *       title: string,
- *       subtitle?: string,
- *       icon?: "start" | "cycle" | "grad",
- *       points?: string[],
- *       cta?: { label: string, href: string } // href может быть "#prep-ss", "#calendar" и т.п.
- *     }, ...
- *   ]
- * }
+ * По ТЗ:
+ * - Убраны упоминания БИ из 12-недельной дорожной карты (БИ — только на подготовке).
+ * - Уточнён ритм основного цикла:
+ *    Месяц 1 — трекер каждую неделю;
+ *    Месяцы 2–6 — чередование: неделя с трекером / неделя с лидером;
+ *    Бадди-созвоны раз в 2 недели.
+ * - CTA-кнопки используют вариант secondary (светлый текст на тёмном фоне).
+ *
+ * Источник данных: content.sections.cycle (+ частично content.sections.mainCycle.rhythm.additional)
  */
 export default function CycleTimeline({ content, scrollToSection }) {
-  const ct = content?.sections?.cycleTimeline ?? {};
+  const cycle = content?.sections?.cycle ?? {};
+  const mcRhythm = content?.sections?.mainCycle?.rhythm ?? {};
 
-  const defStages = [
-    {
-      id: "start-ss",
-      title: "Start-СС (2 дня офлайн)",
-      subtitle: "Фокус, экономика, карта работ",
-      icon: "start",
-      points: [
-        "Финализируем WIG/OKR",
-        "Ставим приборы контроля",
-        "Собираем дорожную карту на 12 недель",
-      ],
-      cta: { label: "Подготовиться", href: "#prep-ss" },
-    },
-    {
-      id: "main-cycle",
-      title: "Главный цикл (12 недель)",
-      subtitle: "Ритм встреч и отчётности",
-      icon: "cycle",
-      points: [
-        "Неделя 1–12: спринты и контроль метрик",
-        "Работа с БИ и трекерами",
-        "Фокус на ROI и устранение узких мест",
-      ],
-      cta: { label: "О ритме встреч", href: "#main-cycle" },
-    },
-    {
-      id: "graduation",
-      title: "Выпускной",
-      subtitle: "Итоги и новые горизонты",
-      icon: "grad",
-      points: [
-        "Презентация результатов",
-        "Ретроспектива и план роста",
-        "Следующие шаги после сезона",
-      ],
-      cta: { label: "Что подготовить", href: "#final" },
-    },
-  ];
+  const title = cycle?.title ?? "Цикл сезона";
+  const note =
+    cycle?.note ??
+    "Важно: группы работают асинхронно. Даты Start-СС и основного цикла определяются индивидуально для каждой группы.";
 
-  const stages = Array.isArray(ct?.stages) && ct.stages.length > 0 ? ct.stages : defStages;
-  const intro =
-    ct?.intro ??
-    "Движемся по понятной траектории: сначала фокусируемся на стратегии и метриках на Start-СС, затем работаем по недельному ритму и завершаем сезон выпускным.";
+  // Стадии цикла — берём из контента, иначе дефолт из ТЗ
+  const stages =
+    Array.isArray(cycle?.stages) && cycle.stages.length > 0
+      ? cycle.stages
+      : [
+          {
+            title: "Подготовка к СС",
+            description:
+              "3 встречи с БИ + Pre-Ultima Booster + AI-наставник. БИ участвует только на этапе подготовки.",
+            icon: <Target size={18} />,
+          },
+          {
+            title: "Start-СС (2 дня offline)",
+            description:
+              "Фиксируем точку А, выбираем WIG, настраиваем приборы и собираем дорожную карту.",
+            icon: <Flag size={18} />,
+          },
+          {
+            title: "Основной цикл (6 месяцев)",
+            description:
+              "Месяц 1 — трекер каждую неделю; Месяцы 2–6 — чередование: неделя с трекером / неделя с лидером; Бадди-созвоны раз в 2 недели.",
+            icon: <RefreshCw size={18} />,
+          },
+          {
+            title: "Final-СС (на слёте)",
+            description:
+              "Презентация результата, подтверждённые метрики, план следующего цикла.",
+            icon: <CalendarIcon size={18} />,
+          },
+        ];
 
-  const iconFor = (name) => {
-    switch (name) {
-      case "start":
-        return <Rocket size={24} />;
-      case "cycle":
-        return <LineChart size={24} />;
-      case "grad":
-        return <Trophy size={24} />;
-      default:
-        return <Flag size={24} />;
-    }
-  };
+  const additional =
+    Array.isArray(mcRhythm?.additional) && mcRhythm.additional.length > 0
+      ? mcRhythm.additional
+      : [
+          "Бадди-созвоны раз в 2 недели",
+          "Еженедельный апдейт приборов: P&L, CRM, KPI",
+          "2–3 слёта Нечто за сезон (мастермайнды и стратегические сессии)",
+        ];
 
-  const go = (href) => {
-    if (!href) return;
-    if (href.startsWith("#")) {
-      const id = href.slice(1);
-      scrollToSection?.(id);
-    } else {
-      window.open(href, "_blank", "noopener,noreferrer");
-    }
+  const goto = (id) => () => {
+    if (!id) return;
+    const el = document.getElementById(id);
+    el?.scrollIntoView({ behavior: "smooth" });
   };
 
   return (
-    <section id="cycle-timeline" className="section container cycle-timeline">
+    <section id="cycle-timeline" className="section container">
       <div className="section-header fade-in">
-        <h2>Дорожная карта сезона</h2>
-        <p className="section-subtitle">{intro}</p>
+        <h2>{title}</h2>
+        <p className="section-subtitle">
+          Движение от подготовки к Start-СС до финальной защиты результата
+        </p>
       </div>
 
-      <ol className="timeline fade-in" aria-label="Этапы сезона ULTIMA">
-        {stages.map((s, idx) => (
-          <li key={s.id || idx} className="timeline-item">
-            <div className="timeline-marker" aria-hidden="true">
-              <div className="timeline-pin" />
+      {/* Карточки стадий */}
+      <div className="timeline-grid fade-in">
+        {stages.map((s, i) => (
+          <div key={i} className="timeline-card">
+            <div className="timeline-icon">{s.icon || <Map size={18} />}</div>
+            <div className="timeline-content">
+              <h3>{s.title || `Этап ${i + 1}`}</h3>
+              <p>{s.description}</p>
             </div>
-
-            <div className="timeline-card">
-              <div className="timeline-card-header">
-                <div className="timeline-icon">{iconFor(s.icon)}</div>
-                <div className="timeline-titles">
-                  <h3>{s.title || "Этап"}</h3>
-                  {s.subtitle && <p className="timeline-subtitle">{s.subtitle}</p>}
-                </div>
-              </div>
-
-              {Array.isArray(s.points) && s.points.length > 0 && (
-                <ul className="timeline-points">
-                  {s.points.map((p, i) => (
-                    <li key={i}>
-                      <TrendingUp size={16} />
-                      <span>{String(p)}</span>
-                    </li>
-                  ))}
-                </ul>
-              )}
-
-              {s.cta?.label && (
-                <button
-                  className="cta-button primary outline"
-                  onClick={() => go(s.cta?.href)}
-                  aria-label={s.cta?.label}
-                >
-                  {s.cta.label} <ArrowRight size={18} />
-                </button>
-              )}
-            </div>
-          </li>
+          </div>
         ))}
-      </ol>
-
-      {/* Мини-шаги под таймлайном — если нужно подсветить рутину */}
-      <div className="timeline-hints fade-in">
-        <div className="hint">
-          <CalendarCheck size={18} />
-          Недельный ритм встреч и отчётности
-        </div>
-        <div className="hint">
-          <ClipboardCheck size={18} />
-          Материалы и дедлайны фиксируем в воркбуке
-        </div>
       </div>
+
+      {/* Доп. элементы главного цикла */}
+      <div className="cycle-extras fade-in">
+        <h3 className="block-title">
+          <Users size={20} /> Дополнительно в главном цикле
+        </h3>
+        <ul className="final-list dots">
+          {additional.map((a, idx) => (
+            <li key={idx}>
+              <CheckCircle2 size={16} style={{ marginRight: 6, verticalAlign: -2 }} />
+              {a}
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      {/* CTA — светлый текст на тёмном фоне */}
+      <div className="final-cta fade-in" style={{ marginTop: 16 }}>
+        <button className="cta-button secondary" onClick={goto("ss-offline")}>
+          Программа Start-СС <ArrowRight size={16} />
+        </button>
+        <button
+          className="cta-button secondary"
+          onClick={goto("main-cycle")}
+          style={{ marginLeft: 8 }}
+        >
+          Ритм встреч (6 месяцев) <ArrowRight size={16} />
+        </button>
+      </div>
+
+      {/* Примечание */}
+      <div className="muted" style={{ marginTop: 14 }}>{note}</div>
     </section>
   );
 }

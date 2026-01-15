@@ -1,24 +1,39 @@
-import React, { useState } from "react";
+// src/components/AboutProgram.js
+import React, { useMemo } from "react";
 import {
   Info,
   Target,
   LineChart,
-  ListChecks,
-  FileText,
-  GraduationCap,
+  Users,
+  CheckCircle2,
   ChevronDown,
   ChevronUp,
   ArrowRight,
+  FileText,
 } from "lucide-react";
 
-export default function AboutProgram({ content, scrollToSection }) {
+/**
+ * AboutProgram — единый аккордеон «О программе»
+ *
+ * По ТЗ:
+ *  - «Что такое ULTIMA?» — добавлено про 3 мастермайнда (ММ) в год только для ULTIMA,
+ *    и про размер группы — 8 участников.
+ *  - «Цикл сезона» — CTA-кнопки как secondary (светлый текст).
+ *  - «Правила» — кнопка открывает RulesOverlay через onOpenRules.
+ *
+ * Пропсы:
+ *  - content
+ *  - scrollToSection?: (id: string) => void
+ *  - onOpenRules?: () => void — открыть overlay правил
+ */
+export default function AboutProgram({ content, scrollToSection, onOpenRules }) {
   const about = content?.sections?.about ?? {};
   const ssOffline = content?.sections?.ssOffline ?? {};
   const mainCycle = content?.sections?.mainCycle ?? {};
   const finalSec = content?.sections?.final ?? {};
   const formula = content?.sections?.formula ?? {};
 
-  const [openId, setOpenId] = useState("about");
+  const [openId, setOpenId] = React.useState("about");
 
   const go = (href) => {
     if (!href) return;
@@ -30,8 +45,34 @@ export default function AboutProgram({ content, scrollToSection }) {
     }
   };
 
-  const openRulesOverlay = () =>
-    window.dispatchEvent(new CustomEvent("openRules"));
+  const metrics = useMemo(() => {
+    const base = Array.isArray(about?.metrics) ? about.metrics : [];
+    // гарантируем нужные уточнения по ТЗ
+    const defaults = [
+      { label: "Длительность сезона", value: "6 месяцев" },
+      { label: "Группы", value: "8 человек" },
+      { label: "Формат", value: "онлайн + офлайн СС" },
+      { label: "Экосистема", value: "3 мастермайнда (ММ) в год" },
+    ];
+    // если у пользователя уже есть метрики — не ломаем их, но добавим/заменим «Группы» и «Экосистема»
+    const override = (arr, label, value) => {
+      const idx = arr.findIndex((m) => String(m?.label).toLowerCase() === String(label).toLowerCase());
+      if (idx >= 0) {
+        const copy = [...arr];
+        copy[idx] = { ...(copy[idx] || {}), value };
+        return copy;
+      }
+      return [...arr, { label, value }];
+    };
+    let out = base.length ? [...base] : [];
+    out = override(out, "Группы", "8 человек");
+    out = override(out, "Экосистема", "3 мастермайнда (ММ) в год");
+    if (!out.some((m) => String(m?.label).toLowerCase() === "длительность сезона"))
+      out.push({ label: "Длительность сезона", value: "6 месяцев" });
+    if (!out.some((m) => String(m?.label).toLowerCase() === "формат"))
+      out.push({ label: "Формат", value: "онлайн + офлайн СС" });
+    return out;
+  }, [about?.metrics]);
 
   const items = [
     {
@@ -42,18 +83,27 @@ export default function AboutProgram({ content, scrollToSection }) {
         <div className="ap-body">
           <p className="ap-lead">
             {about?.lead ??
-              "ULTIMA — это управляемый сезон стратегической работы над ростом бизнеса: цели, метрики, дисциплина выполнения. Фокус — ROI и предсказуемый результат."}
+              "ULTIMA — это управляемый сезон стратегической работы над ростом бизнеса: цели, метрики, дисциплина исполнения и командная ответственность."}
           </p>
           <ul className="ap-list">
             <li>Результат: WIG/OKR, дорожная карта, приборы контроля</li>
             <li>Управление: недельный ритм, дедлайны, отчётность</li>
-            <li>Команда: лидер и группа предпринимателей (без БИ)</li>
-            <li>Плюс: 3 офлайн-мастермайнда с экспертами в год для Нечто ULTIMA</li>
-            <li>Размер группы: 8 участников</li>
+            <li>Команда: группа предпринимателей (8 человек), лидер и трекер</li>
+            <li>Экосистема: 3 мастермайнда (ММ) в год только для участников ULTIMA</li>
           </ul>
-          <button className="cta-button secondary" onClick={() => go("#about")}>
-            Подробнее в разделе «О программе» <ArrowRight size={16} />
-          </button>
+
+          {/* мини-метрики */}
+          <div className="about-metrics" style={{ marginTop: 10 }}>
+            {metrics.map((m, i) => (
+              <div key={i} className="metric">
+                <CheckCircle2 size={18} />
+                <div>
+                  <div className="metric-value">{m.value}</div>
+                  <div className="metric-label">{m.label}</div>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       ),
     },
@@ -66,52 +116,26 @@ export default function AboutProgram({ content, scrollToSection }) {
           <ul className="ap-list">
             <li>
               <strong>Start-СС:</strong>{" "}
-              {ssOffline?.format ||
-                "2 дня офлайн: фокус, экономика, карта работ"}
+              {ssOffline?.format || "2 дня офлайн: фокус, экономика, карта работ"}
             </li>
             <li>
-              <strong>Главный цикл (12 недель):</strong>{" "}
-              {mainCycle?.lead ||
-                "Ритм встреч, отчётность, устранение узких мест"}
+              <strong>Главный цикл (6 месяцев):</strong>{" "}
+              {mainCycle?.lead || "Недельный ритм: месяц 1 — трекер каждую неделю; далее чередование трекер/лидер. Бадди — раз в 2 недели."}
             </li>
             <li>
               <strong>Выпускной:</strong>{" "}
-              {finalSec?.lead ||
-                "Презентация результата, подтверждённые метрики, план 90 дней"}
+              {finalSec?.lead || "Презентация результата, подтверждённые метрики, план 90 дней"}
             </li>
           </ul>
           <div className="ap-actions">
-            {/* было outline (тёмный текст), ставим secondary (светлый) */}
-            <button
-              className="cta-button secondary"
-              onClick={() => go("#cycle-timeline")}
-            >
+            {/* secondary — светлый текст на тёмном фоне */}
+            <button className="cta-button secondary" onClick={() => go("#cycle-timeline")}>
               Дорожная карта <ArrowRight size={16} />
             </button>
-            <button
-              className="cta-button secondary"
-              onClick={() => go("#main-cycle")}
-            >
+            <button className="cta-button secondary" onClick={() => go("#main-cycle")}>
               Ритм встреч <ArrowRight size={16} />
             </button>
           </div>
-        </div>
-      ),
-    },
-    {
-      id: "roadmap",
-      icon: <Target size={20} />,
-      title: "Дорожная карта",
-      body: (
-        <div className="ap-body">
-          <ol className="ap-steps">
-            <li><strong>Start-СС:</strong> WIG/OKR → приборы контроля → план на 12 недель</li>
-            <li><strong>Главный цикл:</strong> еженедельные спринты, контроль метрик, работа с трекером, лидером и группой</li>
-            <li><strong>Выпускной:</strong> PDF-презентация, дашборд, P&L за сезон, план 90 дней</li>
-          </ol>
-          <button className="cta-button secondary" onClick={() => go("#prep-ss")}>
-            Начать с подготовки <ArrowRight size={16} />
-          </button>
         </div>
       ),
     },
@@ -122,20 +146,22 @@ export default function AboutProgram({ content, scrollToSection }) {
       body: (
         <div className="ap-body">
           <p className="ap-lead">
-            Режим неизбежности, фокус на ROI и прозрачность. Полные правила открываются в отдельной подстранице.
+            Режим неизбежности, фокус на ROI и прозрачность. Полные правила представлены в подстранице.
           </p>
           <ul className="ap-list">
-            <li><strong>Дисциплина:</strong> посещаемость, дедлайны, артефакты</li>
-            <li><strong>Коммуникации:</strong> ответ ≤ 12 часов, тишина = красный флаг</li>
-            <li><strong>Цена слова:</strong> ответственность из декларации</li>
+            <li><strong>Дисциплина:</strong> посещаемость, дедлайны, обязательные артефакты</li>
+            <li><strong>Коммуникации:</strong> ответ ≤ 12 часов, тишина — красный флаг</li>
+            <li><strong>Цена слова:</strong> фиксированная ответственность из декларации</li>
           </ul>
           <div className="ap-actions">
-            {/* открываем overlay */}
-            <button className="cta-button primary" onClick={openRulesOverlay}>
+            <button
+              className="cta-button primary"
+              onClick={() => (typeof onOpenRules === "function" ? onOpenRules() : go("#org-start"))}
+            >
               Открыть правила
             </button>
             <button className="cta-button" onClick={() => go("#org-start")}>
-              Документы и материалы
+              Документы и материалы <ArrowRight size={16} />
             </button>
           </div>
         </div>
@@ -143,13 +169,13 @@ export default function AboutProgram({ content, scrollToSection }) {
     },
     {
       id: "formula",
-      icon: <ListChecks size={20} />,
+      icon: <Target size={20} />,
       title: "Формула сезона",
       body: (
         <div className="ap-body">
           <p className="ap-lead">
             {formula?.lead ||
-              "Формула — это связь целей, метрик, гипотез и ритма исполнения. Делаем только то, что приближает к WIG/OKR."}
+              "Формула — связка целей, метрик, гипотез и ритма исполнения. Фокус только на том, что приближает к WIG/OKR."}
           </p>
           <ul className="ap-list">
             <li>Цели (WIG/OKR) → ключевые драйверы роста</li>
@@ -162,26 +188,6 @@ export default function AboutProgram({ content, scrollToSection }) {
         </div>
       ),
     },
-    {
-      id: "final",
-      icon: <GraduationCap size={20} />,
-      title: "Выпускной",
-      body: (
-        <div className="ap-body">
-          <p className="ap-lead">
-            Краткий питч, подтверждённые цифры, ясные следующие шаги. Готовим финальный пакет артефактов.
-          </p>
-          <ul className="ap-list">
-            <li>PDF-презентация результата (15–20 слайдов)</li>
-            <li>Дашборд метрик, P&L за сезон</li>
-            <li>План на 90 дней</li>
-          </ul>
-          <button className="cta-button secondary" onClick={() => go("#final")}>
-            К списку артефактов <ArrowRight size={16} />
-          </button>
-        </div>
-      ),
-    },
   ];
 
   return (
@@ -189,7 +195,7 @@ export default function AboutProgram({ content, scrollToSection }) {
       <div className="section-header fade-in">
         <h2>О программе</h2>
         <p className="section-subtitle">
-          Коротко о содержании сезона ULTIMA: как идём к результату и что нужно от вас.
+          Коротко о содержании сезона ULTIMA: как идём к результату и что потребуется от вас.
         </p>
       </div>
 

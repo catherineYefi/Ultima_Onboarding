@@ -1,106 +1,115 @@
+// src/components/Navbar.js
 import React from "react";
 import { Menu, X } from "lucide-react";
 
 /**
- * Navbar — сокращённое меню (5 пунктов) + прогресс-бар скролла.
- * ТЗ:
- * - Пункты в порядке: Главная / Начать / Онбординг / Подготовка / О программе
- * - Sticky, прозрачный фон с blur
- * - Прогресс-бар сверху показывает прогресс прокрутки
- * - Мобильное меню: гамбургер -> сайдбар справа
+ * Navbar — верхняя навигация.
+ *
+ * По ТЗ:
+ * - Убираем пункт "Правила" из навигации (теперь это подстраница/overlay из "Организационный старт").
+ * - Сохраняем индикатор прогресса прокрутки.
+ * - Мобильное меню.
+ *
+ * Пропсы:
+ *  - activeSection: string — текущая активная секция (для подсветки)
+ *  - mobileMenuOpen: bool — состояние мобильного меню
+ *  - setMobileMenuOpen(fn): setter
+ *  - scrollToSection(id): прокрутка к секции
+ *  - content: объект из content.js (берём navItems)
+ *  - scrollProgress: number 0..100 — прогресс прокрутки для топ-бар индикатора
  */
 export default function Navbar({
   activeSection,
   mobileMenuOpen,
   setMobileMenuOpen,
   scrollToSection,
-  scrollProgress,
+  content,
+  scrollProgress = 0,
 }) {
-  const menuItems = [
-    { id: "hero", label: "Главная" },
-    { id: "start-here", label: "🚀 Начать" },
-    { id: "onboarding", label: "Онбординг" },
-    { id: "prep-ss", label: "Подготовка к СС" },
-    { id: "about", label: "О программе" },
-  ];
+  const allItems = Array.isArray(content?.navItems) ? content.navItems : [];
+
+  // скрываем "rules" из навигации
+  const navItems = allItems.filter((it) => String(it?.id).toLowerCase() !== "rules");
+
+  const clickNav = (id) => (e) => {
+    e.preventDefault();
+    setMobileMenuOpen?.(false);
+    if (!id) return;
+    const el = document.getElementById(id);
+    if (el) el.scrollIntoView({ behavior: "smooth" });
+    else scrollToSection?.(id);
+  };
+
+  const logoSrc = `${process.env.PUBLIC_URL || ""}/logo192.png`;
 
   return (
-    <>
-      {/* Progress bar */}
+    <header className="navbar">
+      {/* progress bar */}
       <div
-        className="progress-bar-top"
-        style={{ width: `${Math.min(Math.max(scrollProgress || 0, 0), 100)}%` }}
-        aria-hidden="true"
+        className="scroll-progress"
+        style={{ width: `${Math.max(0, Math.min(100, scrollProgress))}%` }}
       />
 
-      <nav className="navbar" role="navigation" aria-label="Главная навигация">
-        <div className="navbar-container">
-          {/* Brand */}
-          <div className="navbar-brand" onClick={() => scrollToSection?.("hero")} role="button" tabIndex={0}>
-            <h1 className="brand-title">ULTIMA 9.0</h1>
-            <span className="brand-subtitle">Онбординг</span>
-          </div>
-
-          {/* Desktop Menu */}
-          <div className="navbar-menu desktop-only">
-            {menuItems.map((item) => (
-              <button
-                key={item.id}
-                onClick={() => scrollToSection?.(item.id)}
-                className={`menu-item ${activeSection === item.id ? "active" : ""}`}
-                aria-current={activeSection === item.id ? "page" : undefined}
-              >
-                {item.label}
-              </button>
-            ))}
-          </div>
-
-          {/* Mobile Menu Toggle */}
-          <button
-            className="mobile-menu-toggle"
-            onClick={() => setMobileMenuOpen?.(!mobileMenuOpen)}
-            aria-label={mobileMenuOpen ? "Закрыть меню" : "Открыть меню"}
-          >
-            {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
-          </button>
-        </div>
-      </nav>
-
-      {/* Mobile Menu Overlay + Sidebar */}
-      {mobileMenuOpen && (
-        <>
-          <div
-            className="mobile-menu-overlay"
-            onClick={() => setMobileMenuOpen?.(false)}
-            aria-hidden="true"
+      <div className="container nav-inner">
+        {/* logo/title */}
+        <a href="#hero" className="brand" onClick={clickNav("hero")} aria-label="На главную">
+          <img
+            src={logoSrc}
+            alt="ULTIMA"
+            className="brand-logo"
+            onError={(e) => {
+              // если нет логотипа, просто скрываем img
+              e.currentTarget.style.display = "none";
+            }}
           />
-          <div className="mobile-menu" role="dialog" aria-modal="true" aria-label="Навигация">
-            <div className="mobile-menu-header">
-              <h3>Навигация</h3>
-              <button onClick={() => setMobileMenuOpen?.(false)} aria-label="Закрыть меню">
-                <X size={24} />
-              </button>
-            </div>
-            <div className="mobile-menu-items">
-              {menuItems.map((item) => (
-                <button
-                  key={item.id}
-                  onClick={() => {
-                    scrollToSection?.(item.id);
-                    setMobileMenuOpen?.(false);
-                  }}
-                  className={`mobile-menu-item ${activeSection === item.id ? "active" : ""}`}
-                >
-                  {item.label}
-                </button>
-              ))}
-            </div>
-            <div className="mobile-menu-footer">
-              <p>Остальные разделы доступны при прокрутке</p>
-            </div>
-          </div>
-        </>
+          <span className="brand-title">ULTIMA 9.0</span>
+        </a>
+
+        {/* desktop nav */}
+        <nav className="nav-links">
+          {navItems.map((item) => {
+            const isActive = activeSection === item.id;
+            return (
+              <a
+                key={item.id}
+                href={`#${item.id}`}
+                className={`nav-link ${isActive ? "active" : ""}`}
+                onClick={clickNav(item.id)}
+              >
+                {item.title || item.id}
+              </a>
+            );
+          })}
+        </nav>
+
+        {/* mobile toggle */}
+        <button
+          className="mobile-toggle"
+          onClick={() => setMobileMenuOpen?.(!mobileMenuOpen)}
+          aria-label={mobileMenuOpen ? "Закрыть меню" : "Открыть меню"}
+        >
+          {mobileMenuOpen ? <X size={22} /> : <Menu size={22} />}
+        </button>
+      </div>
+
+      {/* mobile menu panel */}
+      {mobileMenuOpen && (
+        <div className="mobile-menu">
+          {navItems.map((item) => {
+            const isActive = activeSection === item.id;
+            return (
+              <a
+                key={item.id}
+                href={`#${item.id}`}
+                className={`mobile-link ${isActive ? "active" : ""}`}
+                onClick={clickNav(item.id)}
+              >
+                {item.title || item.id}
+              </a>
+            );
+          })}
+        </div>
       )}
-    </>
+    </header>
   );
 }

@@ -1,81 +1,109 @@
 import React from "react";
-import { ArrowRight, CheckCircle2 } from "lucide-react";
+import { ArrowRight, PlayCircle, CheckCircle2 } from "lucide-react";
 
+/**
+ * HERO — главный экран лендинга ULTIMA.
+ *
+ * Правки по ТЗ:
+ * - Акцентная строка: «6 месяцев • 2 стратсессии • Еженедельные встречи • 3 мастермайнда (ММ) в год»
+ * - Буллеты: добавлен «3 ММ + эфиры с топ-экспертами только для ULTIMA»
+ * - Кнопка по умолчанию ведёт в онбординг (как первый шаг для новичка)
+ * - Вторая кнопка: к подготовке Start-СС
+ *
+ * Пропсы:
+ *  - content: объект из content.js
+ *  - scrollToSection?: (id: string) => void
+ */
 export default function Hero({ content, scrollToSection }) {
-  const hero = content?.sections?.hero ?? {};
+  const hero = content?.hero || {};
   const title =
-    hero?.title ??
-    "ULTIMA 9.0 — система управления ростом: цели, ритм, дисциплина, приборы";
+    hero.title ||
+    "ULTIMA — стратегический контур неизбежного результата";
   const subtitle =
-    hero?.subtitle ??
-    "6 месяцев управляемого внедрения: Start-СС → недельный ритм → Final-СС.";
-
-  const bullets =
-    Array.isArray(hero?.bullets) && hero.bullets.length > 0
-      ? hero.bullets
-      : [
-          "Фокус на факты, цифры и приборы контроля",
-          "Цикл 6 месяцев: Start-СС → работа → Final-СС",
-          "Трекер + Лидер группы + Ассистент + Бадди-система",
-          "3 мастермайнда (ММ) в год + эфиры с топ-экспертами только для ULTIMA",
-        ];
-
-  // Акцентная строка в хиро
+    hero.subtitle ||
+    "Не обучение. Не трекинг. Работа на конкретный бизнес-результат через систему, дисциплину и ответственность.";
+  const bullets = Array.isArray(hero.bullets) && hero.bullets.length > 0
+    ? hero.bullets
+    : [
+        "Фокус на факты, цифры и приборы контроля",
+        "Цикл 6 месяцев: Start-СС → работа → Final-СС",
+        "Трекер + Лидер группы + Ассистент + Бадди-система",
+        "3 мастермайнда (ММ) в год + эфиры с топ-экспертами только для ULTIMA",
+      ];
   const accent =
-    hero?.accent ??
+    hero.accent ||
     "6 месяцев • 2 стратсессии • Еженедельные встречи • 3 мастермайнда (ММ) в год";
 
-  const primaryCta = {
-    label: "К подготовке Start-СС",
-    href: "#prep-ss",
-  };
-
-  const go = (href) => {
-    if (!href) return;
-    if (href.startsWith("#")) {
-      const id = href.slice(1);
-      const el = document.getElementById(id);
-      el?.scrollIntoView({ behavior: "smooth" });
-      scrollToSection?.(id);
-    } else {
-      window.open(href, "_blank", "noopener,noreferrer");
+  const goto = (id) => () => {
+    if (!id) return;
+    if (typeof scrollToSection === "function") {
+      scrollToSection(id);
+      return;
     }
+    const el = document.getElementById(id);
+    el?.scrollIntoView({ behavior: "smooth" });
   };
 
   return (
-    <header id="hero" className="hero">
-      <div className="container">
-        <div className="hero-inner">
-          <div className="hero-content">
-            <div className="hero-accent">{accent}</div>
-            <h1 className="hero-title">{title}</h1>
-            <p className="hero-subtitle">{subtitle}</p>
+    <section id="hero" className="hero">
+      <div className="container hero-container">
+        {/* Левый столбец: текст */}
+        <div className="hero-left">
+          {/* Акцент-пилюля */}
+          <div className="hero-accent">{accent}</div>
 
-            <ul className="hero-bullets">
-              {bullets.map((b, i) => (
-                <li key={i}>
-                  <CheckCircle2 size={18} />
-                  <span>{b}</span>
-                </li>
-              ))}
-            </ul>
+          <h1 className="hero-title">{title}</h1>
+          <p className="hero-subtitle">{subtitle}</p>
 
-            <div className="hero-actions">
-              <button
-                className="cta-button primary"
-                onClick={() => go(primaryCta.href)}
-              >
-                {primaryCta.label} <ArrowRight size={18} />
-              </button>
+          {/* Буллеты */}
+          <ul className="hero-bullets">
+            {bullets.map((b, i) => (
+              <li key={i} className="hero-bullet">
+                <CheckCircle2 size={18} className="hero-bullet-icon" />
+                <span>{b}</span>
+              </li>
+            ))}
+          </ul>
+
+          {/* CTA блок */}
+          <div className="hero-cta">
+            {/* По умолчанию ведём новичка в онбординг */}
+            <button className="cta-button primary" onClick={goto("onboarding")}>
+              Узнать про онбординг <ArrowRight size={18} />
+            </button>
+
+            {/* Доп. кнопка — к подготовке Start-СС */}
+            <button
+              className="cta-button secondary"
+              onClick={goto("prep-ss")}
+              style={{ marginLeft: 8 }}
+            >
+              К подготовке Start-СС <PlayCircle size={18} />
+            </button>
+          </div>
+        </div>
+
+        {/* Правый столбец: декоративный блок (опционально) */}
+        <div className="hero-right">
+          <div className="hero-card stats">
+            <div className="stat">
+              <div className="stat-value">6&nbsp;мес.</div>
+              <div className="stat-label">длина сезона</div>
+            </div>
+            <div className="stat">
+              <div className="stat-value">8</div>
+              <div className="stat-label">участников в группе</div>
+            </div>
+            <div className="stat">
+              <div className="stat-value">3</div>
+              <div className="stat-label">офлайн-ММ в год</div>
             </div>
           </div>
 
-          <div className="hero-visual">
-            {/* место под иллюстрацию/градиент/логотип */}
-            <div className="hero-glow" />
-          </div>
+          {/* Можно добавить иллюстрацию/абстрактный градиент через CSS */}
+          <div className="hero-art" aria-hidden />
         </div>
       </div>
-    </header>
+    </section>
   );
 }

@@ -5273,3 +5273,112 @@ a:focus-visible,
 .fi-title { font-weight:700; }
 .fi-subtitle { color: #9aa3b2; font-size: .9rem; }
 .fi-right { display:grid; place-items:center; }
+/* ============================================
+   MAIN CYCLE STYLES
+   ============================================ */
+
+/* Rhythm Description */
+.rhythm-description { margin-bottom: var(--spacing-2xl); }
+.rhythm-description h3 {
+  text-align: center; margin-bottom: var(--spacing-xl);
+  color: #667eea; font-size: 1.5rem;
+}
+
+.rhythm-phases {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: var(--spacing-lg); max-width: 960px; margin: 0 auto var(--spacing-xl) auto;
+}
+
+.rhythm-card {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px; padding: var(--spacing-xl); transition: all 0.3s ease;
+}
+.rhythm-card:hover { border-color: rgba(102, 126, 234, 0.3); transform: translateY(-2px); }
+.rhythm-card.highlight {
+  background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+  border-color: rgba(102, 126, 234, 0.3);
+}
+.rhythm-card h4 { margin: 0 0 var(--spacing-md) 0; color: #fff; font-size: 1.25rem; font-weight: 600; }
+
+.rhythm-detail { margin: var(--spacing-sm) 0; color: var(--text-secondary); line-height: 1.6; }
+.rhythm-detail strong { color: #667eea; }
+
+.rhythm-goal {
+  margin-top: var(--spacing-md); padding-top: var(--spacing-md);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  font-size: 0.9375rem; color: var(--text-secondary); line-height: 1.6;
+}
+
+.rhythm-list { list-style: none; padding: 0; margin: var(--spacing-sm) 0; }
+.rhythm-list li {
+  padding: 6px 0 6px 24px; position: relative; color: var(--text-secondary); font-size: 0.9375rem;
+}
+.rhythm-list li::before {
+  content: "→"; position: absolute; left: 0; color: #667eea; font-weight: bold;
+}
+
+.rhythm-count {
+  margin-top: var(--spacing-md); padding: var(--spacing-sm) var(--spacing-md);
+  background: rgba(102, 126, 234, 0.1); border-radius: 8px; font-size: 0.9375rem; color: var(--text-secondary);
+}
+.rhythm-count strong { color: #fff; }
+
+/* Buddy Info */
+.buddy-info {
+  display: flex; align-items: center; gap: var(--spacing-md);
+  max-width: 720px; margin: var(--spacing-xl) auto; padding: var(--spacing-lg);
+  background: rgba(102, 126, 234, 0.05); border: 1px solid rgba(102, 126, 234, 0.2); border-radius: 12px;
+}
+.buddy-icon { flex-shrink: 0; color: #667eea; }
+.buddy-info p { margin: 0; color: var(--text-secondary); line-height: 1.6; }
+.buddy-info strong { color: #fff; }
+
+/* Meeting Formats */
+.meeting-formats { margin-bottom: var(--spacing-2xl); }
+.meeting-formats h3 {
+  text-align: center; margin-bottom: var(--spacing-xl); color: #fff; font-size: 1.5rem;
+}
+.card-icon { color: #667eea; margin-bottom: var(--spacing-sm); }
+
+/* Additional Elements */
+.additional-elements { margin-bottom: var(--spacing-2xl); }
+.additional-elements h3 {
+  text-align: center; margin-bottom: var(--spacing-lg); color: #fff; font-size: 1.5rem;
+}
+.additional-list { list-style: none; padding: 0; max-width: 720px; margin: 0 auto; }
+.additional-list li {
+  display: flex; align-items: flex-start; gap: var(--spacing-sm);
+  padding: var(--spacing-sm) 0; color: var(--text-secondary);
+}
+.additional-list li svg { flex-shrink: 0; color: #667eea; margin-top: 4px; }
+
+/* Meeting Structure */
+.meeting-structure { max-width: 960px; margin: 0 auto; }
+.meeting-structure h3 {
+  text-align: center; margin-bottom: var(--spacing-xl); color: #fff; font-size: 1.5rem;
+}
+.structure-steps { display: flex; flex-direction: column; gap: var(--spacing-md); }
+.structure-step {
+  display: flex; gap: var(--spacing-md); padding: var(--spacing-md);
+  background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px; transition: all 0.3s ease;
+}
+.structure-step:hover { border-color: rgba(102, 126, 234, 0.3); }
+.structure-step .step-number {
+  flex-shrink: 0; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 50%;
+  font-weight: 700; color: #fff; font-size: 1.125rem;
+}
+.structure-step .step-content h5 { margin: 0 0 6px 0; color: #fff; font-size: 1rem; font-weight: 600; }
+.structure-step .step-content p { margin: 0; color: var(--text-secondary); font-size: 0.9375rem; line-height: 1.6; }
+
+/* Mobile */
+@media (max-width: 768px) {
+  .rhythm-phases { grid-template-columns: 1fr; }
+  .rhythm-description h3,
+  .meeting-formats h3,
+  .additional-elements h3,
+  .meeting-structure h3 { font-size: 1.25rem; }
+  .buddy-info { flex-direction: column; text-align: center; }
+}
