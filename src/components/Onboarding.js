@@ -1,253 +1,127 @@
-import React, { useState, useEffect } from 'react';
-import { 
-  BookOpen, 
-  Calendar, 
-  CheckSquare, 
-  Target, 
-  RefreshCw, 
-  FileText, 
-  Briefcase, 
-  Wrench,
-  ChevronLeft,
-  ChevronRight,
-  X
-} from 'lucide-react';
+// src/components/Onboarding.js
+import React from "react";
+import { BookOpen, ListChecks, ExternalLink } from "lucide-react";
 
+/**
+ * Онбординг
+ * Безопасно работает с разными формами контента:
+ * - content.onboarding.{sections, checklist}
+ * - content.sections.onboarding.{sections, checklist}
+ * Если чего-то нет — подставляет дефолты из ТЗ.
+ */
 export default function Onboarding({ content }) {
-  const [activeSection, setActiveSection] = useState(0);
-  const [checklist, setChecklist] = useState(() => {
-    const saved = localStorage.getItem('ultima-onboarding-checklist');
-    if (saved) {
-      return JSON.parse(saved);
-    }
-    return content.onboarding.checklist.map((item, index) => ({
-      id: index,
-      text: item,
-      completed: false
-    }));
-  });
-  const [showModal, setShowModal] = useState(null);
+  // Нормализация источников
+  const ob =
+    (content && (content.onboarding || content.sections?.onboarding)) || {};
 
-  // Сохраняем чек-лист в localStorage
-  useEffect(() => {
-    localStorage.setItem('ultima-onboarding-checklist', JSON.stringify(checklist));
-  }, [checklist]);
+  // Sections (массив карточек онбординга)
+  const sections = Array.isArray(ob.sections) ? ob.sections : [];
 
-  // Считаем прогресс
-  const completedCount = checklist.filter(item => item.completed).length;
-  const progress = (completedCount / checklist.length) * 100;
-
-  // Переключение задачи
-  const toggleTask = (id) => {
-    setChecklist(checklist.map(item =>
-      item.id === id ? { ...item, completed: !item.completed } : item
-    ));
-  };
-
-  // Сброс прогресса
-  const resetProgress = () => {
-    if (window.confirm('Сбросить весь прогресс онбординга?')) {
-      setChecklist(checklist.map(item => ({ ...item, completed: false })));
-    }
-  };
-
-  const sections = content.onboarding.sections;
-  const currentSection = sections[activeSection];
-
-  const sectionIcons = [
-    <BookOpen size={20} />,
-    <Calendar size={20} />,
-    <CheckSquare size={20} />,
-    <Target size={20} />,
-    <RefreshCw size={20} />,
-    <FileText size={20} />,
-    <Briefcase size={20} />,
-    <Wrench size={20} />
+  // Чек-лист (верхний/дублирующий)
+  const defaultChecklist = [
+    "Подписал NDA",
+    "Вступил в чаты группы",
+    "Узнал про роль buddy (назначение на первой встрече)",
+    "Записал видео-визитку о бизнесе (2–3 минуты)",
+    'Заполнил "Точку А и Б"',
+    "Подготовил презентацию для Start-СС",
+    "Составил черновик декларации WIG",
+    "Определил первую золотую задачу",
   ];
+  const checklist = Array.isArray(ob.checklist) && ob.checklist.length > 0 ? ob.checklist : defaultChecklist;
+
+  // Универсальные рендеры частей секции
+  const renderDocuments = (docs) => {
+    if (!Array.isArray(docs) || docs.length === 0) return null;
+    return (
+      <ul className="documents-list">
+        {docs.map((d, i) => (
+          <li key={i} className="document-item">
+            <BookOpen size={18} />
+            <a href={d.link || "#"} target="_blank" rel="noopener noreferrer">
+              {d.title || "Документ"} <ExternalLink size={14} />
+            </a>
+          </li>
+        ))}
+      </ul>
+    );
+  };
+
+  const renderBulletItems = (items) => {
+    if (!Array.isArray(items) || items.length === 0) return null;
+    return (
+      <ul className="final-list dots">
+        {items.map((t, i) => (
+          <li key={i}>{String(t)}</li>
+        ))}
+      </ul>
+    );
+  };
+
+  const renderStages = (stages) => {
+    if (!Array.isArray(stages) || stages.length === 0) return null;
+    return (
+      <div className="rhythm-grid" style={{ marginTop: 8 }}>
+        {stages.map((st, i) => (
+          <div key={i} className="rhythm-card">
+            <h4>{st?.title || `Шаг ${i + 1}`}</h4>
+            {st?.description && <p>{st.description}</p>}
+          </div>
+        ))}
+      </div>
+    );
+  };
+
+  const renderGlossary = (content) => {
+    const terms = content?.terms;
+    if (!Array.isArray(terms) || terms.length === 0) return null;
+    return (
+      <div className="metrics-grid" style={{ marginTop: 8 }}>
+        {terms.map((t, i) => (
+          <div key={i} className="metric-card">
+            <div className="metric-icon"><ListChecks size={18} /></div>
+            <div className="metric-texts">
+              <div className="metric-name">{t.term || "Термин"}</div>
+              {t.definition && <div className="metric-desc">{t.definition}</div>}
+            </div>
+          </div>
+        ))}
+      </div>
+    );
+  };
 
   return (
-    <section id="onboarding" className="section onboarding-section">
-      <div className="container">
-        {/* Заголовок */}
-        <div className="section-header">
-          <h2>📚 Онбординг ULTIMA 9.0</h2>
-          <p>Пошаговое руководство для успешного старта в программе</p>
-        </div>
+    <section id="onboarding" className="section container">
+      <div className="section-header fade-in">
+        <h2>Онбординг</h2>
+        <p className="section-subtitle">
+          Быстрый старт в ULTIMA: документы, шаги и ожидания по программе.
+        </p>
+      </div>
 
-        {/* Прогресс-бар */}
-        <div className="onboarding-progress-card">
-          <div className="progress-header">
-            <div className="progress-info">
-              <span className="progress-label">📊 Ваш прогресс:</span>
-              <span className="progress-value">{Math.round(progress)}%</span>
-              <span className="progress-count">({completedCount}/{checklist.length})</span>
+      {/* Верхний чек-лист */}
+      <div className="card fade-in">
+        <h3 style={{ marginTop: 0 }}>Стартовый чек-лист</h3>
+        {renderBulletItems(checklist)}
+      </div>
+
+      {/* Разделы онбординга */}
+      <div className="cards-grid fade-in" style={{ marginTop: 16 }}>
+        {(sections.length > 0 ? sections : []).map((sec, idx) => {
+          const c = sec?.content || {};
+          return (
+            <div key={sec?.id || idx} className="doc-card">
+              <h3>{sec?.title || "Раздел"}</h3>
+              {sec?.subtitle && <p className="doc-subtitle">{sec.subtitle}</p>}
+              {c.text && <p>{c.text}</p>}
+              {renderBulletItems(c.items)}
+              {renderStages(c.stages)}
+              {/* Специальный случай: глоссарий */}
+              {sec?.id === "glossary" && renderGlossary(c)}
+              {renderDocuments(c.documents)}
             </div>
-            <button onClick={resetProgress} className="reset-button" title="Сбросить прогресс">
-              <RefreshCw size={16} />
-            </button>
-          </div>
-          <div className="progress-bar-container">
-            <div 
-              className="progress-bar-fill" 
-              style={{ width: `${progress}%` }}
-            />
-          </div>
-        </div>
-
-        {/* Основной контент */}
-        <div className="onboarding-content-wrapper">
-          {/* Навигация по секциям */}
-          <div className="onboarding-nav">
-            <h3>Разделы онбординга:</h3>
-            <div className="onboarding-sections-list">
-              {sections.map((section, index) => (
-                <button
-                  key={section.id}
-                  onClick={() => setActiveSection(index)}
-                  className={`section-tab ${activeSection === index ? 'active' : ''}`}
-                >
-                  <span className="section-icon">{sectionIcons[index]}</span>
-                  <span className="section-title">{section.title}</span>
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {/* Контент выбранной секции */}
-          <div className="onboarding-main-content">
-            {/* Заголовок секции */}
-            <div className="section-content-header">
-              <h3>{currentSection.title}</h3>
-              {currentSection.subtitle && (
-                <p className="section-subtitle">{currentSection.subtitle}</p>
-              )}
-            </div>
-
-            {/* Контент секции */}
-            <div className="section-content-body">
-              {/* Текстовый контент */}
-              {currentSection.content.text && (
-                <div className="content-text">
-                  <p>{currentSection.content.text}</p>
-                </div>
-              )}
-
-              {/* Список документов */}
-              {currentSection.content.documents && (
-                <div className="content-documents">
-                  <h4>📎 Документы и материалы:</h4>
-                  <div className="documents-list">
-                    {currentSection.content.documents.map((doc, index) => (
-                      <a
-                        key={index}
-                        href={doc.link}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="document-item"
-                      >
-                        <FileText size={20} />
-                        <span>{doc.title}</span>
-                      </a>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {/* Этапы/стадии */}
-              {currentSection.content.stages && (
-                <div className="content-stages">
-                  {currentSection.content.stages.map((stage, index) => (
-                    <div key={index} className="stage-item">
-                      <div className="stage-number">{index + 1}</div>
-                      <div className="stage-content">
-                        <h5>{stage.title}</h5>
-                        <p>{stage.description}</p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              )}
-
-              {/* Список пунктов */}
-              {currentSection.content.items && (
-                <div className="content-items">
-                  <ul>
-                    {currentSection.content.items.map((item, index) => (
-                      <li key={index}>{item}</li>
-                    ))}
-                  </ul>
-                </div>
-              )}
-
-              {/* Модальное окно */}
-              {currentSection.content.modal && (
-                <button
-                  onClick={() => setShowModal(currentSection.content.modal)}
-                  className="modal-trigger-button"
-                >
-                  {currentSection.content.modal.buttonText}
-                </button>
-              )}
-            </div>
-
-            {/* Навигация между секциями */}
-            <div className="section-navigation">
-              <button
-                onClick={() => setActiveSection(Math.max(0, activeSection - 1))}
-                disabled={activeSection === 0}
-                className="nav-button nav-prev"
-              >
-                <ChevronLeft size={20} />
-                <span>Предыдущий раздел</span>
-              </button>
-              <button
-                onClick={() => setActiveSection(Math.min(sections.length - 1, activeSection + 1))}
-                disabled={activeSection === sections.length - 1}
-                className="nav-button nav-next"
-              >
-                <span>Следующий раздел</span>
-                <ChevronRight size={20} />
-              </button>
-            </div>
-          </div>
-
-          {/* Чек-лист */}
-          <div className="onboarding-checklist">
-            <h3>✅ Ваш чек-лист старта</h3>
-            <div className="checklist-items">
-              {checklist.map((item) => (
-                <label key={item.id} className="checklist-item">
-                  <input
-                    type="checkbox"
-                    checked={item.completed}
-                    onChange={() => toggleTask(item.id)}
-                  />
-                  <span className={item.completed ? 'completed' : ''}>
-                    {item.text}
-                  </span>
-                </label>
-              ))}
-            </div>
-          </div>
-        </div>
-
-        {/* Модальное окно */}
-        {showModal && (
-          <div className="modal-overlay" onClick={() => setShowModal(null)}>
-            <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-              <button 
-                className="modal-close"
-                onClick={() => setShowModal(null)}
-              >
-                <X size={24} />
-              </button>
-              <h3>{showModal.title}</h3>
-              <div className="modal-body">
-                {showModal.content}
-              </div>
-            </div>
-          </div>
-        )}
+          );
+        })}
       </div>
     </section>
   );
