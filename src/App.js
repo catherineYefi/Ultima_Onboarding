@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import rawContent from "./content";
 
-// Import all components
+// Components
 import Navbar from "./components/Navbar";
 import Hero from "./components/Hero";
 import Onboarding from "./components/Onboarding";
@@ -17,9 +17,12 @@ import Final from "./components/Final";
 import FooterCTA from "./components/FooterCTA";
 import CalendarSection from "./components/CalendarSection";
 
+// СТИЛИ: сначала базовые, потом премиальные + мост
 import "./styles.css";
-import "./styles.overrides.css"; // <— добавлено: современные визуальные правки
+import "./styles-premium-v2.css";       // твой новый файл
+import "./styles-premium-bridge.css";   // наш бридж-слой
 
+// --- безопасная нормализация контента (как у нас было ранее) ---
 function normalizeContent(raw) {
   const safe = (v, fb) => (v === undefined || v === null ? fb : v);
 
@@ -33,25 +36,22 @@ function normalizeContent(raw) {
 
   const links = {
     nda: {
-      available: true,
-      url: "https://drive.google.com/file/d/1s2I-HdtHI4TP1KS2yEEKaWYt7CMaGRgx/view?usp=drive_link",
-      label: "Открыть NDA",
+      available: !!findDoc(/nda/i),
+      url: safe(findDoc(/nda/i)?.link, "#"),
+      label: "Скоро",
     },
     rules: {
-      available: true,
-      url: "#rules",
-      label: "Открыть правила",
+      available: !!findDoc(/правил|регламент/i),
+      url: safe(findDoc(/правил|регламент/i)?.link, "#"),
+      label: "Скоро",
     },
     calendar: {
       available: true,
       url: "#calendar",
-      label: "Открыть календарь",
+      label: "Откроется позже",
     },
     booster: {
-      url: "https://nkl6yv.csb.app/",
-    },
-    aiMentorGuide: {
-      url: "https://vagabond-cadmium-aba.notion.site/AI-277308771f1a8080afdbeb807f819be8?source=copy_link",
+      url: "#prep-ss",
     },
     ...(raw.links || {}),
   };
@@ -79,7 +79,7 @@ function normalizeContent(raw) {
       prepFrom?.why ||
       "Качество СС определяется не днём работы, а подготовкой к ней.",
     readinessChecklists: readiness,
-    ...(raw?.sections?.prepSS || raw?.sections?.prepToSS || {}),
+    ...(raw?.sections?.prepSS || {}),
   };
 
   const ssOffline = {
@@ -117,7 +117,10 @@ function normalizeContent(raw) {
     links,
     aiMentorPrompt:
       raw?.aiMentorPrompt ||
-      `Ты — СС-НАСТАВНИК (Ultima)…`,
+      `Я — AI-наставник ULTIMA. Помоги мне подготовиться к Start-СС: 
+— собери P&L за 3 месяца, 
+— выпиши ключевые метрики, 
+— зафиксируй WIG/OKR и приборы контроля.`,
     sections: {
       ...(raw?.sections || {}),
       prepSS,
@@ -205,7 +208,8 @@ export default function App() {
   };
 
   return (
-    <div className="app">
+    // делаем премиальный стиль глобальным
+    <div className="app premium">
       <Navbar
         activeSection={activeSection}
         mobileMenuOpen={mobileMenuOpen}
@@ -221,7 +225,7 @@ export default function App() {
       <CalendarSection />
       <CycleTimeline content={content} />
       <Documents content={content} />
-      <Rules content={content} openAccordions={openAccordions} toggleAccordion={toggleAccordion} />
+      <Rules content={content} />
       <Formula content={content} />
       <PrepToSS
         content={content}
