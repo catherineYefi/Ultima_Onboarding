@@ -138,11 +138,6 @@ export default function Formula({ content }) {
                   Стартовая СС офлайн
                 </button>
               )}
-              {i === 2 && (
-                <button className="cta-button secondary" onClick={() => go("#cycle-timeline")}>
-                  Дорожная карта 12 недель
-                </button>
-              )}
             </div>
           ))}
         </div>
