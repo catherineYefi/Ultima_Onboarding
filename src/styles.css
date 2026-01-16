@@ -3905,3 +3905,470 @@ a:focus-visible,
     max-height: 90vh;
   }
 }
+/* ===========================
+   INTRO COMPONENT STYLES
+   =========================== */
+
+.intro-formula {
+  margin-bottom: 3rem;
+}
+
+.intro-subtitle {
+  text-align: center;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 2rem;
+}
+
+.formula-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+}
+
+.formula-card {
+  padding: 1.5rem;
+  background: rgba(30, 36, 64, 0.6);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(102, 126, 234, 0.2);
+  border-radius: var(--radius-lg);
+  transition: all 0.3s ease;
+}
+
+.formula-card:hover {
+  border-color: rgba(102, 126, 234, 0.4);
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(102, 126, 234, 0.2);
+}
+
+.formula-card-icon {
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+  border-radius: var(--radius-md);
+  margin-bottom: 1rem;
+  color: white;
+}
+
+.formula-card-title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--primary);
+  margin-bottom: 0.5rem;
+}
+
+.formula-card-description {
+  font-size: 0.875rem;
+  line-height: 1.6;
+  color: var(--text-secondary);
+}
+
+/* Цикл программы */
+.intro-cycle {
+  margin-top: 3rem;
+}
+
+.cycle-info-card {
+  padding: 2rem;
+  background: rgba(30, 36, 64, 0.6);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(102, 126, 234, 0.2);
+  border-radius: var(--radius-lg);
+  text-align: center;
+}
+
+.cycle-duration {
+  font-size: 1.125rem;
+  margin-bottom: 1rem;
+  color: var(--text-primary);
+}
+
+.cycle-duration strong {
+  color: var(--primary);
+  font-size: 1.25rem;
+}
+
+.cycle-description {
+  font-size: 0.875rem;
+  line-height: 1.8;
+  color: var(--text-secondary);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .formula-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .intro-subtitle {
+    font-size: 1.125rem;
+  }
+}
+/* ===========================
+   FORMULA COMPONENT STYLES
+   =========================== */
+
+.formula-section {
+  margin-bottom: 3rem;
+}
+
+.formula-section-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 2rem;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+}
+
+.formula-components-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+
+.formula-component-card {
+  padding: 2rem;
+  background: rgba(30, 36, 64, 0.6);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(102, 126, 234, 0.2);
+  border-radius: var(--radius-lg);
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.formula-component-card:hover {
+  border-color: rgba(102, 126, 234, 0.4);
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(102, 126, 234, 0.2);
+}
+
+.formula-component-icon {
+  width: 56px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+  border-radius: var(--radius-md);
+  margin-bottom: 1.25rem;
+  color: white;
+}
+
+.formula-component-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--primary);
+  margin-bottom: 0.75rem;
+}
+
+.formula-component-description {
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  color: var(--text-secondary);
+  margin-bottom: 1.5rem;
+  flex-grow: 1;
+}
+
+.formula-cta-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.25rem;
+  background: transparent;
+  border: 1px solid rgba(102, 126, 234, 0.3);
+  border-radius: var(--radius-md);
+  color: var(--primary);
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-top: auto;
+}
+
+.formula-cta-button:hover {
+  background: rgba(102, 126, 234, 0.1);
+  border-color: rgba(102, 126, 234, 0.5);
+  transform: translateX(4px);
+}
+
+/* Приборы контроля */
+.instruments-section {
+  margin-top: 3rem;
+  padding-top: 3rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.instruments-lead {
+  text-align: center;
+  font-size: 1rem;
+  color: var(--text-secondary);
+  margin-bottom: 2rem;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.instruments-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.25rem;
+}
+
+.instrument-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 1.5rem;
+  background: rgba(30, 36, 64, 0.4);
+  border: 1px solid rgba(102, 126, 234, 0.15);
+  border-radius: var(--radius-md);
+  transition: all 0.3s ease;
+}
+
+.instrument-card:hover {
+  background: rgba(30, 36, 64, 0.6);
+  border-color: rgba(102, 126, 234, 0.3);
+  transform: translateY(-2px);
+}
+
+.instrument-icon {
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(102, 126, 234, 0.15);
+  border-radius: var(--radius-sm);
+  color: var(--primary);
+}
+
+.instrument-content {
+  flex: 1;
+}
+
+.instrument-name {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 0.25rem;
+}
+
+.instrument-desc {
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: var(--text-secondary);
+}
+
+/* Final CTA */
+.formula-final-cta {
+  margin-top: 3rem;
+  text-align: center;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .formula-components-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .instruments-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .formula-section-title {
+    font-size: 1.25rem;
+  }
+}
+/* ===========================
+   ROADMAP COMPONENT STYLES
+   =========================== */
+
+.roadmap-timeline {
+  position: relative;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.roadmap-stage {
+  position: relative;
+  display: flex;
+  gap: 1.5rem;
+  padding: 1.5rem 0;
+}
+
+.roadmap-stage-icon {
+  flex-shrink: 0;
+  width: 64px;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-lg);
+  color: white;
+  position: relative;
+  z-index: 2;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.roadmap-icon-primary {
+  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+}
+
+.roadmap-icon-secondary {
+  background: linear-gradient(135deg, #8b5cf6 0%, #ec4899 100%);
+}
+
+.roadmap-icon-accent {
+  background: linear-gradient(135deg, #06b6d4 0%, #3b82f6 100%);
+}
+
+.roadmap-icon-success {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+}
+
+.roadmap-stage-content {
+  flex: 1;
+  padding: 0.5rem 0;
+}
+
+.roadmap-stage-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.roadmap-stage-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.roadmap-stage-duration {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--primary);
+  padding: 0.25rem 0.75rem;
+  background: rgba(99, 102, 241, 0.15);
+  border-radius: var(--radius-sm);
+}
+
+.roadmap-stage-description {
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+.roadmap-connector {
+  position: absolute;
+  left: 32px;
+  top: 64px;
+  bottom: -1.5rem;
+  width: 2px;
+  background: linear-gradient(
+    to bottom,
+    rgba(99, 102, 241, 0.5) 0%,
+    rgba(139, 92, 246, 0.3) 50%,
+    rgba(99, 102, 241, 0.5) 100%
+  );
+  z-index: 1;
+}
+
+.roadmap-stage:last-child .roadmap-connector {
+  display: none;
+}
+
+/* Заметка */
+.roadmap-note {
+  margin-top: 3rem;
+  padding: 1.5rem;
+  background: rgba(99, 102, 241, 0.1);
+  border: 1px solid rgba(99, 102, 241, 0.3);
+  border-radius: var(--radius-lg);
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  max-width: 700px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.roadmap-note svg {
+  flex-shrink: 0;
+  color: var(--primary);
+  margin-top: 0.125rem;
+}
+
+.roadmap-note p {
+  margin: 0;
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  color: var(--text-secondary);
+}
+
+.roadmap-note strong {
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+/* Hover эффекты */
+.roadmap-stage:hover .roadmap-stage-icon {
+  transform: scale(1.05);
+  transition: transform 0.3s ease;
+}
+
+.roadmap-stage:hover .roadmap-stage-title {
+  color: var(--primary);
+  transition: color 0.3s ease;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .roadmap-stage {
+    gap: 1rem;
+  }
+
+  .roadmap-stage-icon {
+    width: 56px;
+    height: 56px;
+  }
+
+  .roadmap-connector {
+    left: 28px;
+  }
+
+  .roadmap-stage-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  .roadmap-stage-title {
+    font-size: 1.125rem;
+  }
+
+  .roadmap-stage-description {
+    font-size: 0.875rem;
+  }
+
+  .roadmap-note {
+    padding: 1.25rem;
+  }
+}
