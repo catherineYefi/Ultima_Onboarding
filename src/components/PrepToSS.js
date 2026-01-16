@@ -18,7 +18,10 @@ const AI_NOTION =
   "https://vagabond-cadmium-aba.notion.site/AI-277308771f1a8080afdbeb807f819be8?source=copy_link";
 
 export default function PrepToSS({
+  id = "prep-ss",
   content,
+  activeTab,
+  setActiveTab,
   promptExpanded,
   setPromptExpanded,
   copiedPrompt,
@@ -62,7 +65,7 @@ export default function PrepToSS({
     "Его задача — провести тебя по каждому из 17 слайдов, проверить качество на трёх уровнях и не пустить дальше, пока всё не идеально. В финале он проверит PDF-версию и даст вердикт: «ГОТОВО» или список правок.";
 
   return (
-    <section id="prep-ss" className="section highlight-section">
+    <section id={id} className="section highlight-section">
       <div className="container">
         <div className="section-header fade-in">
           <Target size={32} className="section-icon" />

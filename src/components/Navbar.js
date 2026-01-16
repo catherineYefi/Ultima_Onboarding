@@ -1,83 +1,96 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Menu, X } from "lucide-react";
 
-export default function Navbar({
-  activeSection,
-  mobileMenuOpen,
-  setMobileMenuOpen,
-  scrollToSection,
-  content,
-  scrollProgress,
-}) {
+/**
+ * Navbar компонент - sticky навигация с 3 основными разделами + бургер-меню
+ * 
+ * Props:
+ * - activeSection: текущая активная секция (для подсвечивания)
+ * - scrollToSection: функция для скролла к секции
+ */
+export default function Navbar({ activeSection, scrollToSection }) {
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  // Главные разделы (3 кнопки в навбаре)
+  const mainSections = [
+    { id: "onboarding", label: "Онбординг" },
+    { id: "about", label: "О программе" },
+    { id: "documents-nda", label: "Документы" },
+  ];
+
+  // Отслеживание скролла для sticky поведения
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 50);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  // Обработчик клика на раздел
+  const handleSectionClick = (sectionId) => {
+    scrollToSection(sectionId);
+    setIsMobileMenuOpen(false);
+  };
+
   return (
-    <>
-      {/* Progress Bar */}
-      <div className="progress-bar">
-        <div
-          className="progress-fill"
-          style={{ width: `${scrollProgress}%` }}
-        />
+    <nav className={`navbar ${isScrolled ? "navbar-scrolled" : ""}`}>
+      <div className="navbar-container">
+        {/* Логотип */}
+        <div 
+          className="navbar-logo"
+          onClick={() => scrollToSection("hero")}
+          role="button"
+          tabIndex="0"
+        >
+          ULTIMA 9.0
+        </div>
+
+        {/* Desktop меню */}
+        <ul className="navbar-menu">
+          {mainSections.map((section) => (
+            <li key={section.id}>
+              <button
+                className={`navbar-link ${
+                  activeSection === section.id ? "active" : ""
+                }`}
+                onClick={() => handleSectionClick(section.id)}
+              >
+                {section.label}
+              </button>
+            </li>
+          ))}
+        </ul>
+
+        {/* Mobile меню кнопка */}
+        <button
+          className="navbar-mobile-toggle"
+          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+          aria-label={isMobileMenuOpen ? "Закрыть меню" : "Открыть меню"}
+          aria-expanded={isMobileMenuOpen}
+        >
+          {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+        </button>
       </div>
 
-      {/* Navigation */}
-      <nav className="navbar">
-        <div className="container">
-          <div className="nav-content">
-            <div className="nav-brand">ULTIMA 9.0</div>
-
-            {/* Desktop Navigation */}
-            <div
-              className="nav-links desktop-only"
-              role="navigation"
-              aria-label="Основная навигация"
-            >
-              {content.navItems.map((item) => (
-                <button
-                  key={item.id}
-                  onClick={() => scrollToSection(item.id)}
-                  className={`nav-link ${
-                    activeSection === item.id ? "active" : ""
-                  }`}
-                  aria-label={`Перейти к секции ${item.title}`}
-                  aria-current={activeSection === item.id ? "page" : undefined}
-                >
-                  {item.title}
-                </button>
-              ))}
-            </div>
-
-            {/* Mobile Menu Button */}
+      {/* Mobile меню */}
+      {isMobileMenuOpen && (
+        <div className="navbar-mobile-menu">
+          {mainSections.map((section) => (
             <button
-              className="mobile-menu-button mobile-only"
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              aria-label={mobileMenuOpen ? "Закрыть меню" : "Открыть меню"}
-              aria-expanded={mobileMenuOpen}
+              key={section.id}
+              className={`navbar-mobile-link ${
+                activeSection === section.id ? "active" : ""
+              }`}
+              onClick={() => handleSectionClick(section.id)}
             >
-              {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+              {section.label}
             </button>
-          </div>
-
-          {/* Mobile Menu */}
-          {mobileMenuOpen && (
-            <div className="mobile-menu">
-              {content.navItems.map((item) => (
-                <button
-                  key={item.id}
-                  onClick={() => {
-                    scrollToSection(item.id);
-                    setMobileMenuOpen(false);
-                  }}
-                  className={`mobile-nav-link ${
-                    activeSection === item.id ? "active" : ""
-                  }`}
-                >
-                  {item.title}
-                </button>
-              ))}
-            </div>
-          )}
+          ))}
         </div>
-      </nav>
-    </>
+      )}
+    </nav>
   );
 }

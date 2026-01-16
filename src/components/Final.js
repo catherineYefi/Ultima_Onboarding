@@ -13,7 +13,7 @@ import {
  * FINAL — выпускной и сдача артефактов
  * По ТЗ: заполняем "Что сдаём", чек-лист, критерии. Светлые CTA допустимы, но тут outline primary ок.
  */
-export default function Final({ content, scrollToSection }) {
+export default function Final({ id = "final", content, scrollToSection }) {
   const fin = content?.sections?.final ?? {};
 
   const title = fin?.title ?? "Final-СС: подведение итогов";
@@ -64,7 +64,7 @@ export default function Final({ content, scrollToSection }) {
   };
 
   return (
-    <section id="final" className="section container final-section">
+    <section id={id} className="section container final-section">
       <div className="section-header fade-in">
         <h2>{title}</h2>
         <p className="section-subtitle">{lead}</p>

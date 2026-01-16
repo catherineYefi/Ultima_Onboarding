@@ -1,14 +1,14 @@
 import React from "react";
 import { ArrowRight } from "lucide-react";
 
-export default function Hero({ content, scrollToSection }) {
+export default function Hero({ id = "hero", content, scrollToSection }) {
   const hero = content?.hero || {};
 
   const go = (href) => {
     if (!href) return;
     if (href.startsWith("#")) {
-      const id = href.slice(1);
-      const el = document.getElementById(id);
+      const targetId = href.slice(1);
+      const el = document.getElementById(targetId);
       el?.scrollIntoView({ behavior: "smooth" });
     } else {
       window.open(href, "_blank", "noopener,noreferrer");
@@ -19,7 +19,7 @@ export default function Hero({ content, scrollToSection }) {
   const sCTA = hero?.ctaSecondary ?? { label: "Подготовка к Start-СС", href: "#prep-ss" };
 
   return (
-    <section id="hero" className="hero section-lg">
+    <section id={id} className="hero section-lg">
       <div className="container">
         <div className="hero-inner">
           <div className="hero-copy">

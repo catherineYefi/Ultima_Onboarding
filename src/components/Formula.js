@@ -30,7 +30,7 @@ const ICONS = {
   ShieldCheck: <ShieldCheck size={18} />,
 };
 
-export default function Formula({ content }) {
+export default function Formula({ id = "formula", content }) {
   const f = content?.sections?.formula ?? {};
 
   const title = f?.title ?? "Формула неизбежности результата";
@@ -112,7 +112,7 @@ export default function Formula({ content }) {
   };
 
   return (
-    <section id="formula" className="section">
+    <section id={id} className="section">
       <div className="container">
         <div className="section-header">
           <h2>{title}</h2>

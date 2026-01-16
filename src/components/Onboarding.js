@@ -6,7 +6,7 @@ import { BookOpen, ListChecks, ExternalLink } from "lucide-react";
  * Онбординг
  * Новая версия с табами вместо 3-х колонок для лучшей читаемости
  */
-export default function Onboarding({ content }) {
+export default function Onboarding({ id = "onboarding", content }) {
   const [activeTab, setActiveTab] = useState(0);
 
   // Нормализация источников
@@ -91,7 +91,7 @@ export default function Onboarding({ content }) {
   };
 
   return (
-    <section id="onboarding" className="section container">
+    <section id={id} className="section container">
       <div className="section-header">
         <h2>Онбординг</h2>
         <p className="section-subtitle">

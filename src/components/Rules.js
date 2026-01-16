@@ -1,8 +1,8 @@
 import React from "react";
 
-export default function Rules() {
+export default function Rules({ id = "rules" }) {
   return (
-    <section id="rules" className="section container">
+    <section id={id} className="section container">
       <h2 className="section-title">Правила ULTIMA</h2>
 
       <div style={{ background: 'linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%)', borderRadius: '12px', padding: '2rem', border: '1px solid rgba(102, 126, 234, 0.2)', display: 'inline-block' }}>

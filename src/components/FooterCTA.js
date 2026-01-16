@@ -1,9 +1,9 @@
 import React from "react";
 import { ExternalLink, ArrowRight } from "lucide-react";
 
-export default function FooterCTA({ content, scrollToSection, setActiveTab }) {
+export default function FooterCTA({ id = "footer", content, scrollToSection, setActiveTab }) {
   return (
-    <section className="section footer-cta">
+    <section id={id} className="section footer-cta">
       <div className="container">
         <div className="footer-cta-content fade-in">
           <h2>Готовы начать?</h2>

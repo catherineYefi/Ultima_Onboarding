@@ -1,9 +1,9 @@
 import React from "react";
 import { Calendar } from "lucide-react";
 
-export default function CycleTimeline({ content }) {
+export default function CycleTimeline({ id = "rhythm", content }) {
   return (
-    <section id="cycle" className="section">
+    <section id={id} className="section">
       <div className="container">
         <div className="section-header fade-in">
           <Calendar size={32} className="section-icon" />

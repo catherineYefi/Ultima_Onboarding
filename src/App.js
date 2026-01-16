@@ -3,7 +3,13 @@ import rawContent from "./content";
 
 // Components
 import Navbar from "./components/Navbar";
+import Sidebar from "./components/Sidebar";
+import ScrollToTop from "./components/ScrollToTop";
 import Hero from "./components/Hero";
+import Glossary from "./components/Glossary";
+import Intro from "./components/Intro";
+import Roadmap from "./components/Roadmap";
+import Checklist from "./components/Checklist";
 import Onboarding from "./components/Onboarding";
 import AboutUltima from "./components/AboutUltima";
 import CycleTimeline from "./components/CycleTimeline";
@@ -135,52 +141,58 @@ export default function App() {
   const content = normalizeContent(rawContent);
 
   const [activeSection, setActiveSection] = useState("hero");
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [scrollProgress, setScrollProgress] = useState(0);
+  const [progress, setProgress] = useState(0);
   const [openAccordions, setOpenAccordions] = useState({});
   const [copiedPrompt, setCopiedPrompt] = useState(false);
   const [activeTab, setActiveTab] = useState("bi-meetings");
   const [promptExpanded, setPromptExpanded] = useState(false);
 
+  // Все секции для отслеживания
+  const sectionIds = [
+    "hero", "glossary", "intro", "roadmap", "checklist", "prep-ss",
+    "about", "rhythm", "roles",
+    "documents-nda", "documents-presentation", "documents-calendar",
+  ];
+
+  // Отслеживание активной секции при скролле
   useEffect(() => {
-    if (typeof window === "undefined" || typeof document === "undefined") return;
     const handleScroll = () => {
-      const totalScroll =
-        document.documentElement.scrollHeight - window.innerHeight;
-      const currentScroll =
-        window.pageYOffset || document.documentElement.scrollTop || 0;
-      setScrollProgress(totalScroll > 0 ? (currentScroll / totalScroll) * 100 : 0);
+      let currentSection = "hero";
+      
+      for (const sectionId of sectionIds) {
+        const element = document.getElementById(sectionId);
+        if (element) {
+          const rect = element.getBoundingClientRect();
+          // Если секция в верхней части viewport (с офсетом для navbar)
+          if (rect.top <= 150 && rect.bottom >= 150) {
+            currentSection = sectionId;
+            break;
+          }
+        }
+      }
+      
+      setActiveSection(currentSection);
+
+      // Обновление прогресса
+      const windowHeight = window.innerHeight;
+      const documentHeight = document.documentElement.scrollHeight;
+      const scrollTop = window.pageYOffset;
+      const scrollPercent = (scrollTop / (documentHeight - windowHeight)) * 100;
+      setProgress(Math.min(Math.round(scrollPercent), 100));
     };
+
     window.addEventListener("scroll", handleScroll, { passive: true });
-    handleScroll();
+    handleScroll(); // Вызов один раз при загрузке
+
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  useEffect(() => {
-    if (
-      typeof window === "undefined" ||
-      typeof document === "undefined" ||
-      !("IntersectionObserver" in window)
-    ) {
-      setActiveSection("hero");
-      return;
-    }
-    const observers = (content.navItems || []).map((item) => {
-      const element = document.getElementById(item.id);
-      if (!element) return null;
-      const observer = new IntersectionObserver(
-        ([entry]) => entry.isIntersecting && setActiveSection(item.id),
-        { threshold: 0.3 }
-      );
-      observer.observe(element);
-      return observer;
-    });
-    return () => observers.forEach((o) => o?.disconnect());
-  }, [content]);
-
+  // Плавный скролл к секции
   const scrollToSection = (sectionId) => {
-    const el = typeof document !== "undefined" && document.getElementById(sectionId);
-    if (el) el.scrollIntoView({ behavior: "smooth" });
+    const element = document.getElementById(sectionId);
+    if (element) {
+      element.scrollIntoView({ behavior: "smooth" });
+    }
   };
 
   const toggleAccordion = (idx) =>
@@ -209,39 +221,45 @@ export default function App() {
   };
 
   return (
-    // делаем премиальный стиль глобальным
     <div className="app premium">
-      <Navbar
-        activeSection={activeSection}
-        mobileMenuOpen={mobileMenuOpen}
-        setMobileMenuOpen={setMobileMenuOpen}
-        scrollToSection={scrollToSection}
-        content={content}
-        scrollProgress={scrollProgress}
-      />
+      {/* Navbar */}
+      <Navbar activeSection={activeSection} scrollToSection={scrollToSection} />
 
-      <Hero content={content} scrollToSection={scrollToSection} />
-      <Onboarding content={content} />
-      <AboutUltima content={content} />
-      <CalendarSection />
-      <CycleTimeline content={content} />
-      <Documents content={content} />
-      <Rules content={content} />
-      <Formula content={content} />
-      <PrepToSS
-        content={content}
-        activeTab={activeTab}
-        setActiveTab={setActiveTab}
-        promptExpanded={promptExpanded}
-        setPromptExpanded={setPromptExpanded}
-        copiedPrompt={copiedPrompt}
-        copyPrompt={copyPrompt}
-        downloadPrompt={downloadPrompt}
-      />
-      <SSOffline content={content} />
-      <MainCycle content={content} />
-      <Final content={content} scrollToSection={scrollToSection} />
-      <FooterCTA content={content} scrollToSection={scrollToSection} setActiveTab={setActiveTab} />
+      {/* Sidebar */}
+      <Sidebar activeSection={activeSection} scrollToSection={scrollToSection} progress={progress} />
+
+      {/* Scroll to Top Button */}
+      <ScrollToTop />
+
+      {/* Main Content */}
+      <div className="main-content">
+        <Hero id="hero" content={content} scrollToSection={scrollToSection} />
+        <Glossary id="glossary" />
+        <Intro id="intro" />
+        <Roadmap id="roadmap" />
+        <Checklist id="checklist" />
+        <Onboarding id="onboarding" content={content} />
+        <AboutUltima id="about" content={content} />
+        <CycleTimeline id="rhythm" content={content} />
+        <Documents id="documents-nda" content={content} />
+        <Rules id="rules" content={content} />
+        <Formula id="formula" content={content} />
+        <PrepToSS
+          id="prep-ss"
+          content={content}
+          activeTab={activeTab}
+          setActiveTab={setActiveTab}
+          promptExpanded={promptExpanded}
+          setPromptExpanded={setPromptExpanded}
+          copiedPrompt={copiedPrompt}
+          copyPrompt={copyPrompt}
+          downloadPrompt={downloadPrompt}
+        />
+        <SSOffline id="ss-offline" content={content} />
+        <MainCycle id="main-cycle" content={content} />
+        <Final id="final" content={content} scrollToSection={scrollToSection} />
+        <FooterCTA id="footer" content={content} scrollToSection={scrollToSection} setActiveTab={setActiveTab} />
+      </div>
     </div>
   );
 }

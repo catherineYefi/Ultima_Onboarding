@@ -1,9 +1,9 @@
 import React from "react";
 import { MapPin } from "lucide-react";
 
-export default function SSOffline({ content }) {
+export default function SSOffline({ id = "ss-offline", content }) {
   return (
-    <section id="ss-offline" className="section">
+    <section id={id} className="section">
       <div className="container">
         <div className="section-header fade-in">
           <MapPin size={32} className="section-icon" />

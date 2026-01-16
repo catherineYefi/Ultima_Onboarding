@@ -14,7 +14,7 @@ const NDA_LINK =
   "https://drive.google.com/file/d/1s2I-HdtHI4TP1KS2yEEKaWYt7CMaGRgx/view?usp=drive_link";
 const ORG_PRESENTATION_9 = "https://33wgq2.csb.app/";
 
-export default function Documents({ onOpenRules, onOpenAIMentor }) {
+export default function Documents({ id = "documents-nda", onOpenRules, onOpenAIMentor, content }) {
   const go = (href) => {
     if (!href) return;
     if (href.startsWith("#")) {
@@ -26,7 +26,7 @@ export default function Documents({ onOpenRules, onOpenAIMentor }) {
   };
 
   return (
-    <section id="org-start" className="section">
+    <section id={id} className="section">
       <div className="container">
         <div className="section-header fade-in">
           <h2>Организационный старт</h2>

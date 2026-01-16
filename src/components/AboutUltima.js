@@ -1,9 +1,9 @@
 import React from "react";
 import { BookOpen } from "lucide-react";
 
-export default function AboutUltima({ content }) {
+export default function AboutUltima({ id = "about", content }) {
   return (
-    <section id="about" className="section">
+    <section id={id} className="section">
       <div className="container">
         <div className="section-header fade-in">
           <BookOpen size={32} className="section-icon" />

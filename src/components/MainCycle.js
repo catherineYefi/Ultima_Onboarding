@@ -19,7 +19,7 @@ import {
  *  - Блок "Эфиры с топ-экспертами"
  *  - Rhythm в content может быть объектом { description, meetings: [], additional: [] } — защитились
  */
-export default function MainCycle({ content, scrollToSection }) {
+export default function MainCycle({ id = "main-cycle", content, scrollToSection }) {
   const mc = content?.sections?.mainCycle ?? {};
   const title = mc?.title ?? "Основной цикл: 6 месяцев работы";
   const lead =
@@ -45,7 +45,7 @@ export default function MainCycle({ content, scrollToSection }) {
   };
 
   return (
-    <section id="main-cycle" className="section container main-cycle">
+    <section id={id} className="section container main-cycle">
       <div className="section-header fade-in">
         <h2>{title}</h2>
         <p className="section-subtitle">{lead}</p>
