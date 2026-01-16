@@ -6,24 +6,12 @@ import {
   ListChecks,
   FileText,
   GraduationCap,
-  ChevronDown,
-  ChevronUp,
   ArrowRight,
 } from "lucide-react";
 
 /**
- * AboutProgram — единый аккордеон «О программе»
- * Секции:
- *  - Что такое ULTIMA (кратко из content.sections.about)
- *  - Цикл сезона (коротко из content.sections.mainCycle / ssOffline)
- *  - Дорожная карта (3 этапа: Start-СС → Главный цикл → Выпускной)
- *  - Правила (кнопка ведёт к секции #org-start, где открывается подпопап с правилами)
- *  - Формула сезона (если есть в content.sections.formula)
- *  - Выпускной (кратко из content.sections.final)
- *
- * Важное по ТЗ:
- * - Кнопки «Дорожная карта» и «Ритм встреч» сделаны как `cta-button secondary`
- *   (светлый текст на тёмном фоне).
+ * AboutProgram — премиум-версия с карточками вместо аккордеонов
+ * Визуально красиво и современно, легче читается
  */
 export default function AboutProgram({ content, scrollToSection }) {
   const about = content?.sections?.about ?? {};
@@ -32,7 +20,7 @@ export default function AboutProgram({ content, scrollToSection }) {
   const finalSec = content?.sections?.final ?? {};
   const formula = content?.sections?.formula ?? {};
 
-  const [openId, setOpenId] = useState("about");
+  const [selectedId, setSelectedId] = useState("about");
 
   const go = (href) => {
     if (!href) return;
@@ -47,154 +35,111 @@ export default function AboutProgram({ content, scrollToSection }) {
   const items = [
     {
       id: "about",
-      icon: <Info size={20} />,
+      icon: <Info size={24} />,
       title: "Что такое ULTIMA?",
+      color: "primary",
       body: (
         <div className="ap-body">
           <p className="ap-lead">
             {about?.lead ??
-              "ULTIMA — управляемый сезон стратегической работы над ростом бизнеса: цели, метрики, дисциплина исполнения. Фокус — ROI и предсказуемый результат."}
+              "ULTIMA — управляемый сезон стратегической работы над ростом бизнеса: цели, метрики, дисциплина исполнения."}
           </p>
           <ul className="ap-list">
             <li>Результат: WIG/OKR, дорожная карта, приборы контроля</li>
             <li>Управление: недельный ритм, дедлайны, отчётность</li>
-            <li>Команда: группа предпринимателей (8 чел.), трекеры и ассистент</li>
+            <li>Команда: группа предпринимателей, трекеры и ассистент</li>
           </ul>
-          <button className="cta-button secondary" onClick={() => go("#about")}>
-            Подробнее в разделе «О программе» <ArrowRight size={16} />
-          </button>
         </div>
       ),
     },
     {
       id: "cycle",
-      icon: <LineChart size={20} />,
+      icon: <LineChart size={24} />,
       title: "Цикл сезона",
+      color: "accent",
       body: (
         <div className="ap-body">
           <ul className="ap-list">
             <li>
-              <strong>Start-СС:</strong>{" "}
-              {ssOffline?.format || "2 дня офлайн: фокус, экономика, карта работ"}
+              <strong>Start-СС:</strong> {ssOffline?.format || "2 дня офлайн"}
             </li>
             <li>
-              <strong>Главный цикл (6 месяцев):</strong>{" "}
-              {mainCycle?.lead ||
-                "Ритм встреч: 1-й месяц — трекер каждую неделю; 2–6-й — чередование трекер/лидер. Бадди-созвоны раз в 2 недели."}
+              <strong>Главный цикл:</strong> {mainCycle?.lead || "6 месяцев с еженедельными спринтами"}
             </li>
             <li>
-              <strong>Выпускной:</strong>{" "}
-              {finalSec?.lead ||
-                "Презентация результата, подтверждённые метрики, план 90 дней"}
+              <strong>Выпускной:</strong> {finalSec?.lead || "Презентация результата"}
             </li>
           </ul>
-          <div className="ap-actions">
-            <button
-              className="cta-button secondary"
-              onClick={() => go("#cycle-timeline")}
-            >
-              Дорожная карта <ArrowRight size={16} />
-            </button>
-            <button
-              className="cta-button secondary"
-              onClick={() => go("#main-cycle")}
-            >
-              Ритм встреч <ArrowRight size={16} />
-            </button>
-          </div>
         </div>
       ),
     },
     {
       id: "roadmap",
-      icon: <Target size={20} />,
+      icon: <Target size={24} />,
       title: "Дорожная карта",
+      color: "primary",
       body: (
         <div className="ap-body">
           <ol className="ap-steps">
-            <li>
-              <strong>Start-СС:</strong> WIG/OKR → приборы контроля → план на 6 месяцев
-            </li>
-            <li>
-              <strong>Главный цикл:</strong> еженедельные спринты, контроль метрик,
-              работа с узкими местами
-            </li>
-            <li>
-              <strong>Выпускной:</strong> PDF-презентация, дашборд, P&L за сезон, план 90 дней
-            </li>
+            <li><strong>Start-СС:</strong> Определение целей и метрик</li>
+            <li><strong>Главный цикл:</strong> Еженедельные спринты и контроль</li>
+            <li><strong>Выпускной:</strong> Презентация и план на 90 дней</li>
           </ol>
-          <button className="cta-button secondary" onClick={() => go("#prep-ss")}>
-            Начать с подготовки <ArrowRight size={16} />
-          </button>
         </div>
       ),
     },
     {
       id: "rules",
-      icon: <FileText size={20} />,
+      icon: <FileText size={24} />,
       title: "Правила группы",
+      color: "accent",
       body: (
         <div className="ap-body">
           <p className="ap-lead">
-            Режим неизбежности, фокус на ROI и прозрачность. Полные правила открываются в подстранице.
+            Режим неизбежности, фокус на ROI и прозрачность.
           </p>
           <ul className="ap-list">
-            <li>
-              <strong>Дисциплина:</strong> посещаемость, дедлайны, артефакты
-            </li>
-            <li>
-              <strong>Коммуникации:</strong> ответ ≤ 12 часов, тишина = красный флаг
-            </li>
-            <li>
-              <strong>Цена слова:</strong> фиксированная ответственность в декларации
-            </li>
+            <li><strong>Дисциплина:</strong> Посещаемость и дедлайны</li>
+            <li><strong>Коммуникации:</strong> Ответ ≤ 12 часов</li>
+            <li><strong>Цена слова:</strong> Фиксированная ответственность</li>
           </ul>
-          <div className="ap-actions">
-            <button className="cta-button secondary" onClick={() => go("#org-start")}>
-              Открыть правила <ArrowRight size={16} />
-            </button>
-          </div>
         </div>
       ),
     },
     {
       id: "formula",
-      icon: <ListChecks size={20} />,
+      icon: <ListChecks size={24} />,
       title: "Формула сезона",
+      color: "primary",
       body: (
         <div className="ap-body">
           <p className="ap-lead">
             {formula?.lead ||
-              "Формула — это связь целей, метрик, гипотез и ритма исполнения. Делаем только то, что приближает к WIG/OKR."}
+              "Связь целей, метрик, гипотез и ритма исполнения."}
           </p>
           <ul className="ap-list">
-            <li>Цели (WIG/OKR) → ключевые драйверы роста</li>
-            <li>Метрики → приборы контроля и дашборды</li>
-            <li>Гипотезы → спринты, ретроспективы, коррекции</li>
+            <li>Цели (WIG/OKR) → ключевые драйверы</li>
+            <li>Метрики → приборы контроля</li>
+            <li>Гипотезы → спринты и коррекции</li>
           </ul>
-          <button className="cta-button secondary" onClick={() => go("#formula")}>
-            Подробнее о формуле <ArrowRight size={16} />
-          </button>
         </div>
       ),
     },
     {
       id: "final",
-      icon: <GraduationCap size={20} />,
+      icon: <GraduationCap size={24} />,
       title: "Выпускной",
+      color: "accent",
       body: (
         <div className="ap-body">
           <p className="ap-lead">
-            Краткий питч, подтверждённые цифры, ясные следующие шаги. Готовим финальный пакет артефактов.
+            Краткий питч, подтверждённые цифры, ясные следующие шаги.
           </p>
           <ul className="ap-list">
-            <li>PDF-презентация результата (15–20 слайдов)</li>
-            <li>Дашборд метрик, P&L за сезон</li>
+            <li>PDF-презентация результата</li>
+            <li>Дашборд метрик и P&L за сезон</li>
             <li>План на 90 дней</li>
           </ul>
-          <button className="cta-button secondary" onClick={() => go("#final")}>
-            К списку артефактов <ArrowRight size={16} />
-          </button>
         </div>
       ),
     },
@@ -202,42 +147,32 @@ export default function AboutProgram({ content, scrollToSection }) {
 
   return (
     <section id="about-program" className="section container about-program">
-      <div className="section-header fade-in">
+      <div className="section-header">
         <h2>О программе</h2>
         <p className="section-subtitle">
-          Коротко о содержании сезона ULTIMA: как идём к результату и что нужно от вас.
+          Структура ULTIMA: как мы идём к результату и что нужно от вас
         </p>
       </div>
 
-      <div className="ap-accordion fade-in">
+      <div className="ap-cards-grid">
         {items.map((it) => {
-          const isOpen = openId === it.id;
+          const isSelected = selectedId === it.id;
           return (
-            <div key={it.id} className={`ap-item ${isOpen ? "open" : ""}`}>
-              <button
-                className="ap-trigger"
-                onClick={() => setOpenId(isOpen ? "" : it.id)}
-                aria-expanded={isOpen}
-                aria-controls={`ap-panel-${it.id}`}
-              >
-                <span className="ap-trigger-left">
-                  <span className="ap-icon">{it.icon}</span>
-                  <span className="ap-title">{it.title}</span>
-                </span>
-                <span className="ap-trigger-right">
-                  {isOpen ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
-                </span>
-              </button>
-
-              <div
-                id={`ap-panel-${it.id}`}
-                className="ap-panel"
-                role="region"
-                aria-hidden={!isOpen}
-                style={{ display: isOpen ? "block" : "none" }}
-              >
-                {it.body}
+            <div 
+              key={it.id} 
+              className={`ap-card ap-card-${it.color} ${isSelected ? 'selected' : ''}`}
+              onClick={() => setSelectedId(isSelected ? '' : it.id)}
+            >
+              <div className="ap-card-header">
+                <div className="ap-card-icon">{it.icon}</div>
+                <h3 className="ap-card-title">{it.title}</h3>
               </div>
+              
+              {isSelected && (
+                <div className="ap-card-body">
+                  {it.body}
+                </div>
+              )}
             </div>
           );
         })}

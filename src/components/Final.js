@@ -126,11 +126,11 @@ export default function Final({ content, scrollToSection }) {
 
       {cta?.label && (
         <div className="final-cta fade-in">
-          <button className="cta-button primary outline" onClick={() => go(cta.href)}>
-            {cta.label} <ArrowRight size={18} />
+          <button className="cta-button primary outline" onClick={() => scrollToSection?.('prep-ss')}>
+            Подготовка к стратегической сессии <ArrowRight size={18} />
           </button>
-          <button className="cta-button secondary" onClick={() => go("#prep-ss")}>
-            Перейти к чек-листам <Share2 size={18} />
+          <button className="cta-button secondary" onClick={() => scrollToSection?.('onboarding')}>
+            Стартовый чек-лист <Share2 size={18} />
           </button>
         </div>
       )}

@@ -55,7 +55,7 @@ export default function Formula({ content }) {
           {
             icon: "Workflow",
             title: "Спринтовая работа",
-            text: "12 недель после Start-СС: постановка «золотых задач» и зачёт по чек-листу.",
+            text: "6 месяцев после Start-СС: постановка «золотых задач» и зачёт по чек-листу.",
           },
         ];
 
@@ -99,10 +99,6 @@ export default function Formula({ content }) {
   const ctaPrimary = f?.ctaPrimary ?? {
     label: "Смотреть ритм встреч",
     href: "#main-cycle",
-  };
-  const ctaSecondary = f?.ctaSecondary ?? {
-    label: "Дорожная карта 12 недель",
-    href: "#cycle-timeline",
   };
 
   const go = (href) => {
@@ -194,15 +190,6 @@ export default function Formula({ content }) {
               onClick={() => go(ctaPrimary.href)}
             >
               {ctaPrimary.label} <ArrowRight size={18} />
-            </button>
-          )}
-          {ctaSecondary?.label && (
-            <button
-              className="cta-button secondary"
-              onClick={() => go(ctaSecondary.href)}
-              style={{ marginLeft: 8 }}
-            >
-              {ctaSecondary.label} <Map size={18} />
             </button>
           )}
         </div>

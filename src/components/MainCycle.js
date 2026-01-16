@@ -130,38 +130,25 @@ export default function MainCycle({ content, scrollToSection }) {
           <h3 className="block-title">
             <Video size={20} /> {expert.title || "Эфиры с топ-экспертами"}
           </h3>
-          <div className="metrics-grid">
-            <div className="metric-card">
-              <div className="metric-icon">
-                <Target size={20} />
-              </div>
-              <div className="metric-texts">
-                <div className="metric-name">
-                  {expert.description ||
-                    "Дополнительные образовательные сессии только для участников ULTIMA"}
-                </div>
-                <div className="metric-desc">
-                  {(expert.format ||
-                    "Онлайн-эфиры по управлению, маркетингу, продажам, HR") +
-                    " • " +
-                    (expert.frequency || "В течение сезона")}
-                  {expert.access ? ` • ${expert.access}` : ""}
-                </div>
-              </div>
+          <div className="metrics-card-full" style={{ padding: '2rem', background: 'linear-gradient(135deg, rgba(102, 126, 234, 0.05) 0%, rgba(118, 75, 162, 0.05) 100%)', borderRadius: '12px' }}>
+            <div className="metric-icon" style={{ marginBottom: '1rem' }}>
+              <Target size={24} />
+            </div>
+            <div className="metric-name" style={{ fontSize: '1.2rem', marginBottom: '1rem', fontWeight: '600' }}>
+              {expert.description ||
+                "Дополнительные образовательные сессии только для участников ULTIMA"}
+            </div>
+            <div className="metric-desc" style={{ lineHeight: '1.8' }}>
+              <p style={{ marginBottom: '0.5rem' }}>
+                {expert.format ||
+                  "Онлайн-эфиры с ведущими экспертами по управлению, маркетингу, продажам, HR"}
+              </p>
+              <p>
+                {expert.frequency || "В течение сезона"}
+                {expert.access ? ` • ${expert.access}` : ""}
+              </p>
             </div>
           </div>
-        </div>
-      )}
-
-      {/* CTA */}
-      {cta?.label && (
-        <div className="cycle-cta fade-in">
-          <button
-            className="cta-button primary outline"
-            onClick={() => go(cta.href)}
-          >
-            {cta.label} <ArrowRight size={18} />
-          </button>
         </div>
       )}
     </section>

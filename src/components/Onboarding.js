@@ -1,15 +1,14 @@
 // src/components/Onboarding.js
-import React from "react";
+import React, { useState } from "react";
 import { BookOpen, ListChecks, ExternalLink } from "lucide-react";
 
 /**
  * Онбординг
- * Безопасно работает с разными формами контента:
- * - content.onboarding.{sections, checklist}
- * - content.sections.onboarding.{sections, checklist}
- * Если чего-то нет — подставляет дефолты из ТЗ.
+ * Новая версия с табами вместо 3-х колонок для лучшей читаемости
  */
 export default function Onboarding({ content }) {
+  const [activeTab, setActiveTab] = useState(0);
+
   // Нормализация источников
   const ob =
     (content && (content.onboarding || content.sections?.onboarding)) || {};
@@ -17,7 +16,7 @@ export default function Onboarding({ content }) {
   // Sections (массив карточек онбординга)
   const sections = Array.isArray(ob.sections) ? ob.sections : [];
 
-  // Чек-лист (верхний/дублирующий)
+  // Чек-лист
   const defaultChecklist = [
     "Подписал NDA",
     "Вступил в чаты группы",
@@ -30,7 +29,7 @@ export default function Onboarding({ content }) {
   ];
   const checklist = Array.isArray(ob.checklist) && ob.checklist.length > 0 ? ob.checklist : defaultChecklist;
 
-  // Универсальные рендеры частей секции
+  // Рендеры
   const renderDocuments = (docs) => {
     if (!Array.isArray(docs) || docs.length === 0) return null;
     return (
@@ -50,9 +49,12 @@ export default function Onboarding({ content }) {
   const renderBulletItems = (items) => {
     if (!Array.isArray(items) || items.length === 0) return null;
     return (
-      <ul className="final-list dots">
+      <ul className="checklist-items">
         {items.map((t, i) => (
-          <li key={i}>{String(t)}</li>
+          <li key={i} className="checklist-item">
+            <input type="checkbox" id={`item-${i}`} />
+            <label htmlFor={`item-${i}`}>{String(t)}</label>
+          </li>
         ))}
       </ul>
     );
@@ -61,9 +63,10 @@ export default function Onboarding({ content }) {
   const renderStages = (stages) => {
     if (!Array.isArray(stages) || stages.length === 0) return null;
     return (
-      <div className="rhythm-grid" style={{ marginTop: 8 }}>
+      <div className="stages-grid">
         {stages.map((st, i) => (
-          <div key={i} className="rhythm-card">
+          <div key={i} className="stage-card">
+            <div className="stage-number">{i + 1}</div>
             <h4>{st?.title || `Шаг ${i + 1}`}</h4>
             {st?.description && <p>{st.description}</p>}
           </div>
@@ -76,14 +79,11 @@ export default function Onboarding({ content }) {
     const terms = content?.terms;
     if (!Array.isArray(terms) || terms.length === 0) return null;
     return (
-      <div className="metrics-grid" style={{ marginTop: 8 }}>
+      <div className="glossary-grid">
         {terms.map((t, i) => (
-          <div key={i} className="metric-card">
-            <div className="metric-icon"><ListChecks size={18} /></div>
-            <div className="metric-texts">
-              <div className="metric-name">{t.term || "Термин"}</div>
-              {t.definition && <div className="metric-desc">{t.definition}</div>}
-            </div>
+          <div key={i} className="glossary-item">
+            <div className="glossary-term">{t.term || "Термин"}</div>
+            {t.definition && <div className="glossary-definition">{t.definition}</div>}
           </div>
         ))}
       </div>
@@ -92,36 +92,56 @@ export default function Onboarding({ content }) {
 
   return (
     <section id="onboarding" className="section container">
-      <div className="section-header fade-in">
+      <div className="section-header">
         <h2>Онбординг</h2>
         <p className="section-subtitle">
           Быстрый старт в ULTIMA: документы, шаги и ожидания по программе.
         </p>
       </div>
 
-      {/* Верхний чек-лист */}
-      <div className="card fade-in">
-        <h3 style={{ marginTop: 0 }}>Стартовый чек-лист</h3>
-        {renderBulletItems(checklist)}
-      </div>
+      {/* Табы для онбординг-секций */}
+      {sections.length > 0 && (
+        <div className="onboarding-tabs">
+          <div className="tabs">
+            {sections.map((sec, idx) => (
+              <button
+                key={sec?.id || idx}
+                className={`tab-button ${activeTab === idx ? 'active' : ''}`}
+                onClick={() => setActiveTab(idx)}
+              >
+                {sec?.title || `Раздел ${idx + 1}`}
+              </button>
+            ))}
+          </div>
 
-      {/* Разделы онбординга */}
-      <div className="cards-grid fade-in" style={{ marginTop: 16 }}>
-        {(sections.length > 0 ? sections : []).map((sec, idx) => {
-          const c = sec?.content || {};
-          return (
-            <div key={sec?.id || idx} className="doc-card">
-              <h3>{sec?.title || "Раздел"}</h3>
-              {sec?.subtitle && <p className="doc-subtitle">{sec.subtitle}</p>}
-              {c.text && <p>{c.text}</p>}
-              {renderBulletItems(c.items)}
-              {renderStages(c.stages)}
-              {/* Специальный случай: глоссарий */}
-              {sec?.id === "glossary" && renderGlossary(c)}
-              {renderDocuments(c.documents)}
-            </div>
-          );
-        })}
+          {sections.map((sec, idx) => {
+            const c = sec?.content || {};
+            return (
+              <div 
+                key={sec?.id || idx} 
+                className={`tab-content ${activeTab === idx ? '' : 'hidden'}`}
+              >
+                <div className="card">
+                  {sec?.subtitle && <p className="card-subtitle">{sec.subtitle}</p>}
+                  {c.text && <p className="card-description">{c.text}</p>}
+                  {renderBulletItems(c.items)}
+                  {renderStages(c.stages)}
+                  {sec?.id === "glossary" && renderGlossary(c)}
+                  {renderDocuments(c.documents)}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      )}
+
+      {/* Чек-лист как отдельный блок */}
+      <div className="card">
+        <div className="flex flex-between">
+          <h3 className="card-title">Стартовый чек-лист</h3>
+          <span className="badge badge-success">{checklist.filter(Boolean).length} пунктов</span>
+        </div>
+        {renderBulletItems(checklist)}
       </div>
     </section>
   );

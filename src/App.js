@@ -19,6 +19,7 @@ import CalendarSection from "./components/CalendarSection";
 
 // СТИЛИ: сначала базовые, потом премиальные + мост
 import "./styles.css";
+import "./styles-design-system.css";    // дизайн система + компоненты
 import "./styles-premium-v2.css";       // твой новый файл
 import "./styles-premium-bridge.css";   // наш бридж-слой
 
@@ -239,7 +240,7 @@ export default function App() {
       />
       <SSOffline content={content} />
       <MainCycle content={content} />
-      <Final content={content} />
+      <Final content={content} scrollToSection={scrollToSection} />
       <FooterCTA content={content} scrollToSection={scrollToSection} setActiveTab={setActiveTab} />
     </div>
   );
