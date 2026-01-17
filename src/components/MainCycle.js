@@ -4,153 +4,114 @@ import {
   Users,
   CheckSquare,
   Activity,
-  BarChart2,
-  Target,
-  ArrowRight,
-  Video,
+  Zap,
+  TrendingUp,
+  UserCheck,
 } from "lucide-react";
 
 /**
- * Основной цикл (6 месяцев)
- * По ТЗ:
- *  - Месяц 1: трекер каждую неделю
- *  - Месяцы 2–6: чередование — неделя с трекером / неделя с лидером
- *  - Бадди — раз в 2 недели
- *  - Блок "Эфиры с топ-экспертами"
- *  - Rhythm в content может быть объектом { description, meetings: [], additional: [] } — защитились
+ * MainCycle компонент - ритм встреч программы
+ * VERSION 2.0 - читает из content.meetingsRhythm
+ * 
+ * Props:
+ * - id: ID секции для якорей
+ * - content: объект content из content.js
  */
-export default function MainCycle({ id = "main-cycle", content, scrollToSection }) {
-  const mc = content?.sections?.mainCycle ?? {};
-  const title = mc?.title ?? "Основной цикл: 6 месяцев работы";
-  const lead =
-    mc?.lead ??
-    "Работаем в недельном ритме: плотный старт, затем устойчивое чередование. Фокус — устранение узких мест и достижение WIG/OKR.";
-
-  const rhythm = mc?.rhythm && typeof mc.rhythm === "object" ? mc.rhythm : {};
-  const meetings = Array.isArray(rhythm?.meetings) ? rhythm.meetings : [];
-  const additional = Array.isArray(rhythm?.additional) ? rhythm.additional : [];
-
-  const expert = mc?.expertSessions;
-
-  const cta = mc?.cta ?? { label: "К дорожной карте", href: "#cycle-timeline" };
-
-  const go = (href) => {
-    if (!href) return;
-    if (href.startsWith("#")) {
-      const el = document.getElementById(href.slice(1));
-      el?.scrollIntoView({ behavior: "smooth" });
-    } else {
-      window.open(href, "_blank", "noopener,noreferrer");
-    }
-  };
+export default function MainCycle({ id = "meetings-rhythm", content }) {
+  const rhythm = content?.meetingsRhythm || {};
 
   return (
-    <section id={id} className="section container main-cycle">
-      <div className="section-header fade-in">
-        <h2>{title}</h2>
-        <p className="section-subtitle">{lead}</p>
-      </div>
-
-      {/* Ритм по месяцам */}
-      <div className="cycle-rhythm fade-in">
-        <h3 className="block-title">
-          <RefreshCw size={20} /> Как устроен ритм встреч
-        </h3>
-        <div className="rhythm-grid">
-          <div className="rhythm-card">
-            <div className="rhythm-icon">
-              <CheckSquare size={22} />
-            </div>
-            <h4>Месяц 1: Плотный старт</h4>
-            <p>
-              Встречи с трекером <strong>каждую неделю</strong>. Задача — быстро
-              запустить внедрение после Start-СС, не дать стратегии остаться на
-              бумаге.
-            </p>
-          </div>
-          <div className="rhythm-card">
-            <div className="rhythm-icon">
-              <Users size={22} />
-            </div>
-            <h4>Месяцы 2–6: Устойчивый ритм</h4>
-            <p>
-              Встречи <strong>каждую неделю</strong>, чередование:
-            </p>
-            <ul className="final-list dots" style={{ marginTop: 6 }}>
-              <li>Неделя 1 → Встреча с трекером</li>
-              <li>Неделя 2 → Встреча с лидером группы</li>
-            </ul>
-            <p className="muted">Бадди-созвоны — раз в 2 недели.</p>
-          </div>
+    <section id={id} className="section">
+      <div className="container">
+        {/* Заголовок секции */}
+        <div className="section-header fade-in">
+          <RefreshCw size={32} className="section-icon" />
+          <h2>{rhythm?.title || "Ритм встреч"}</h2>
+          <p className="section-subtitle">
+            {rhythm?.subtitle || "Как устроена работа в течение 6 месяцев"}
+          </p>
         </div>
-      </div>
 
-      {/* Конкретные форматы встреч — из content.sections.mainCycle.rhythm.meetings */}
-      {meetings.length > 0 && (
-        <div className="cycle-rhythm fade-in" style={{ marginTop: 18 }}>
-          <h3 className="block-title">
-            <Activity size={20} /> Форматы встреч
-          </h3>
-          <div className="rhythm-grid">
-            {meetings.map((m, i) => (
-              <div key={i} className="rhythm-card">
-                <div className="rhythm-icon">
-                  {i % 3 === 0 && <Users size={22} />}
-                  {i % 3 === 1 && <CheckSquare size={22} />}
-                  {i % 3 === 2 && <Activity size={22} />}
-                </div>
-                <h4>{m?.format || m?.title || `Встреча ${i + 1}`}</h4>
-                <p>
-                  <strong>{m?.week || ""}</strong>{" "}
-                  {m?.focus ? `— ${m.focus}` : ""}
-                </p>
+        {/* БЛОК 1: Месяц 1 - Плотный старт */}
+        {rhythm?.month1 && (
+          <div className="rhythm-block fade-in">
+            <div className="rhythm-block-header">
+              <Zap size={24} className="rhythm-block-icon" />
+              <h3>{rhythm.month1.title}</h3>
+            </div>
+            <p className="rhythm-block-description">{rhythm.month1.description}</p>
+            
+            {rhythm.month1.meetings && rhythm.month1.meetings.length > 0 && (
+              <div className="rhythm-meetings-list">
+                {rhythm.month1.meetings.map((meeting, idx) => (
+                  <div key={idx} className="rhythm-meeting-item">
+                    <div className="rhythm-meeting-number">
+                      {idx + 1}
+                    </div>
+                    <div className="rhythm-meeting-content">
+                      <strong>{meeting}</strong>
+                    </div>
+                  </div>
+                ))}
               </div>
-            ))}
+            )}
           </div>
-        </div>
-      )}
+        )}
 
-      {/* Дополнительно */}
-      {additional.length > 0 && (
-        <div className="cycle-metrics fade-in" style={{ marginTop: 18 }}>
-          <h3 className="block-title">
-            <BarChart2 size={20} /> Дополнительно
-          </h3>
-          <ul className="final-list dots">
-            {additional.map((a, i) => (
-              <li key={i}>{a}</li>
-            ))}
-          </ul>
-        </div>
-      )}
+        {/* БЛОК 2: Месяцы 2-6 - Устойчивый ритм */}
+        {rhythm?.months26 && (
+          <div className="rhythm-block fade-in">
+            <div className="rhythm-block-header">
+              <TrendingUp size={24} className="rhythm-block-icon" />
+              <h3>{rhythm.months26.title}</h3>
+            </div>
+            <p className="rhythm-block-description">{rhythm.months26.description}</p>
+            
+            {/* Паттерн чередования */}
+            {rhythm.months26.pattern && (
+              <div className="rhythm-pattern">
+                <h4>Паттерн чередования:</h4>
+                <div className="rhythm-pattern-grid">
+                  {rhythm.months26.pattern.map((item, idx) => (
+                    <div key={idx} className="rhythm-pattern-item">
+                      <div className="rhythm-pattern-icon">
+                        {idx % 2 === 0 ? <Users size={20} /> : <CheckSquare size={20} />}
+                      </div>
+                      <span>{item}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
 
-      {/* Эфиры с экспертами */}
-      {expert && (
-        <div className="cycle-metrics fade-in" style={{ marginTop: 18 }}>
-          <h3 className="block-title">
-            <Video size={20} /> {expert.title || "Эфиры с топ-экспертами"}
-          </h3>
-          <div className="metrics-card-full" style={{ padding: '2rem', background: 'linear-gradient(135deg, rgba(102, 126, 234, 0.05) 0%, rgba(118, 75, 162, 0.05) 100%)', borderRadius: '12px' }}>
-            <div className="metric-icon" style={{ marginBottom: '1rem' }}>
-              <Target size={24} />
-            </div>
-            <div className="metric-name" style={{ fontSize: '1.2rem', marginBottom: '1rem', fontWeight: '600' }}>
-              {expert.description ||
-                "Дополнительные образовательные сессии только для участников ULTIMA"}
-            </div>
-            <div className="metric-desc" style={{ lineHeight: '1.8' }}>
-              <p style={{ marginBottom: '0.5rem' }}>
-                {expert.format ||
-                  "Онлайн-эфиры с ведущими экспертами по управлению, маркетингу, продажам, HR"}
-              </p>
-              <p>
-                {expert.frequency || "В течение сезона"}
-                {expert.access ? ` • ${expert.access}` : ""}
-              </p>
-            </div>
+            {/* Заметка про бадди */}
+            {rhythm.months26.buddyNote && (
+              <div className="rhythm-buddy-note">
+                <UserCheck size={20} />
+                <span>{rhythm.months26.buddyNote}</span>
+              </div>
+            )}
           </div>
-        </div>
-      )}
+        )}
+
+        {/* БЛОК 3: Дополнительные активности */}
+        {rhythm?.additional && rhythm.additional.length > 0 && (
+          <div className="rhythm-additional fade-in">
+            <div className="rhythm-additional-header">
+              <Activity size={24} className="rhythm-additional-icon" />
+              <h3>Дополнительные активности</h3>
+            </div>
+            <ul className="rhythm-additional-list">
+              {rhythm.additional.map((item, idx) => (
+                <li key={idx} className="rhythm-additional-item">
+                  <CheckSquare size={18} className="rhythm-additional-bullet" />
+                  <span>{item}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+      </div>
     </section>
   );
 }

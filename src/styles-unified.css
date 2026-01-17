@@ -8105,3 +8105,1150 @@ a:hover, .inline-link:hover {
     padding: 1.25rem;
   }
 }
+/* ═══════════════════════════════════════════════════════════
+   HERO - ДОПОЛНИТЕЛЬНЫЕ СТИЛИ (добавить в styles-unified.css)
+   Добавь эти стили в конец файла styles-unified.css
+   ═══════════════════════════════════════════════════════════ */
+
+/* Hero Description */
+.hero-description {
+  font-size: 1.125rem;
+  line-height: 1.7;
+  color: rgba(255, 255, 255, 0.85);
+  margin: 1.5rem 0;
+  max-width: 700px;
+}
+
+/* Hero Highlights - список с галочками */
+.hero-highlights {
+  list-style: none;
+  padding: 0;
+  margin: 2rem 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.hero-highlight-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  font-size: 1rem;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.hero-highlight-icon {
+  color: #10b981;
+  flex-shrink: 0;
+  margin-top: 0.1rem;
+}
+
+/* Hero Accent - акцентный блок */
+.hero-accent {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 12px;
+  padding: 1rem 1.5rem;
+  margin: 2rem 0;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.95);
+  font-weight: 500;
+  max-width: 700px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .hero-description {
+    font-size: 1rem;
+  }
+
+  .hero-highlight-item {
+    font-size: 0.95rem;
+  }
+
+  .hero-accent {
+    font-size: 0.9rem;
+    padding: 0.875rem 1.25rem;
+  }
+}
+/* ═══════════════════════════════════════════════════════════
+   GLOSSARY - ДОПОЛНИТЕЛЬНЫЕ СТИЛИ ДЛЯ ИКОНОК
+   Добавь эти стили в конец файла styles-unified.css
+   ═══════════════════════════════════════════════════════════ */
+
+/* Иконка в карточке глоссария */
+.glossary-card-icon {
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(99, 102, 241, 0.1);
+  border-radius: 12px;
+  color: #6366f1;
+  margin-bottom: 1rem;
+  transition: all 0.3s ease;
+}
+
+.glossary-card:hover .glossary-card-icon {
+  background: rgba(99, 102, 241, 0.2);
+  transform: scale(1.05);
+}
+
+/* Адаптация для мобильных */
+@media (max-width: 768px) {
+  .glossary-card-icon {
+    width: 40px;
+    height: 40px;
+  }
+  
+  .glossary-card-icon svg {
+    width: 20px;
+    height: 20px;
+  }
+}
+/* ═══════════════════════════════════════════════════════════
+   ABOUT ULTIMA - СТИЛИ ДЛЯ ОБНОВЛЕННОГО КОМПОНЕНТА
+   Добавь эти стили в конец файла styles-unified.css
+   ═══════════════════════════════════════════════════════════ */
+
+/* ─────────────────────────────────────────────────────────── */
+/* БЛОК 1: СУТЬ ПРОГРАММЫ */
+/* ─────────────────────────────────────────────────────────── */
+
+.about-essence {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  padding: 2rem;
+  margin-bottom: 3rem;
+}
+
+.about-essence-text {
+  font-size: 1.125rem;
+  line-height: 1.8;
+  color: rgba(255, 255, 255, 0.9);
+  margin: 0;
+}
+
+/* ─────────────────────────────────────────────────────────── */
+/* БЛОК 2: ФОРМУЛА НЕИЗБЕЖНОСТИ */
+/* ─────────────────────────────────────────────────────────── */
+
+.about-formula {
+  margin-bottom: 3rem;
+}
+
+.about-formula-title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  color: #fff;
+  text-align: center;
+}
+
+.about-formula-subtitle {
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.7);
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+/* Сетка компонентов формулы */
+.formula-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+/* Карточка компонента формулы */
+.formula-card {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  padding: 1.5rem;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+.formula-card:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(99, 102, 241, 0.4);
+  transform: translateY(-4px);
+}
+
+.formula-card-icon {
+  width: 64px;
+  height: 64px;
+  margin: 0 auto 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(99, 102, 241, 0.15);
+  border-radius: 16px;
+  color: #6366f1;
+  transition: all 0.3s ease;
+}
+
+.formula-card:hover .formula-card-icon {
+  background: rgba(99, 102, 241, 0.25);
+  transform: scale(1.1);
+}
+
+.formula-card-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+  color: #fff;
+}
+
+.formula-card-description {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.7);
+  margin: 0;
+}
+
+/* Результат формулы */
+.formula-result {
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(139, 92, 246, 0.2));
+  border: 1px solid rgba(99, 102, 241, 0.3);
+  border-radius: 12px;
+  padding: 1.25rem 1.5rem;
+  text-align: center;
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.95);
+}
+
+.formula-result strong {
+  color: #fff;
+  font-weight: 600;
+}
+
+/* ─────────────────────────────────────────────────────────── */
+/* БЛОК 3: ЦИКЛ ПРОГРАММЫ */
+/* ─────────────────────────────────────────────────────────── */
+
+.about-cycle {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+}
+
+.about-cycle-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.about-cycle-icon {
+  color: #10b981;
+}
+
+.about-cycle-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #fff;
+  margin: 0;
+}
+
+.about-cycle-description {
+  font-size: 1rem;
+  line-height: 1.7;
+  color: rgba(255, 255, 255, 0.8);
+  margin-bottom: 1.5rem;
+}
+
+.about-cycle-stages {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.about-cycle-stage {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 0.95rem;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.about-cycle-stage::before {
+  content: "→";
+  color: #10b981;
+  font-weight: 700;
+  font-size: 1.25rem;
+}
+
+/* ─────────────────────────────────────────────────────────── */
+/* БЛОК 4: РИТМ РАБОТЫ */
+/* ─────────────────────────────────────────────────────────── */
+
+.about-rhythm {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+}
+
+.about-rhythm-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.about-rhythm-icon {
+  color: #f59e0b;
+}
+
+.about-rhythm-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #fff;
+  margin: 0;
+}
+
+.about-rhythm-description {
+  font-size: 1rem;
+  line-height: 1.7;
+  color: rgba(255, 255, 255, 0.8);
+  margin-bottom: 1.5rem;
+}
+
+.about-rhythm-details {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.about-rhythm-detail {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 0.95rem;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.about-rhythm-detail::before {
+  content: "✓";
+  color: #f59e0b;
+  font-weight: 700;
+  font-size: 1.25rem;
+}
+
+/* ─────────────────────────────────────────────────────────── */
+/* RESPONSIVE */
+/* ─────────────────────────────────────────────────────────── */
+
+@media (max-width: 768px) {
+  .about-essence {
+    padding: 1.5rem;
+  }
+
+  .about-essence-text {
+    font-size: 1rem;
+  }
+
+  .about-formula-title {
+    font-size: 1.5rem;
+  }
+
+  .formula-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .formula-card {
+    padding: 1.25rem;
+  }
+
+  .formula-card-icon {
+    width: 56px;
+    height: 56px;
+  }
+
+  .about-cycle,
+  .about-rhythm {
+    padding: 1.5rem;
+  }
+
+  .about-cycle-title,
+  .about-rhythm-title {
+    font-size: 1.25rem;
+  }
+}
+/* ═══════════════════════════════════════════════════════════
+   CHECKLIST - ДОПОЛНИТЕЛЬНЫЕ СТИЛИ
+   Добавь эти стили в конец файла styles-unified.css
+   ═══════════════════════════════════════════════════════════ */
+
+/* Мотивационное сообщение при завершении чеклиста */
+.checklist-complete-message {
+  margin-top: 2rem;
+  padding: 1.5rem;
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(5, 150, 105, 0.2));
+  border: 1px solid rgba(16, 185, 129, 0.4);
+  border-radius: 12px;
+  text-align: center;
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #fff;
+  animation: slideInUp 0.5s ease-out;
+}
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .checklist-complete-message {
+    font-size: 1rem;
+    padding: 1.25rem;
+  }
+}
+/* ═══════════════════════════════════════════════════════════
+   ORGANIZATIONAL STEPS - СТИЛИ ДЛЯ НОВОГО КОМПОНЕНТА
+   Добавь эти стили в конец файла styles-unified.css
+   ═══════════════════════════════════════════════════════════ */
+
+/* Список шагов */
+.org-steps-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+/* Карточка шага */
+.org-step-card {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: 1.5rem;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  padding: 1.5rem;
+  transition: all 0.3s ease;
+  animation: fadeInUp 0.6s ease-out both;
+}
+
+.org-step-card:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(99, 102, 241, 0.4);
+  transform: translateY(-4px);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.3);
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Номер шага */
+.org-step-number {
+  flex-shrink: 0;
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  border-radius: 12px;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #fff;
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+}
+
+/* Контент шага */
+.org-step-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.org-step-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #fff;
+  margin: 0;
+}
+
+.org-step-description {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.7);
+  margin: 0;
+}
+
+/* Кнопка действия */
+.org-step-action {
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  margin-top: 0.5rem;
+  background: rgba(99, 102, 241, 0.2);
+  border: 1px solid rgba(99, 102, 241, 0.3);
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #a5b4fc;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.org-step-action:hover {
+  background: rgba(99, 102, 241, 0.3);
+  border-color: rgba(99, 102, 241, 0.5);
+  color: #c7d2fe;
+  transform: translateX(4px);
+}
+
+.org-step-action svg {
+  transition: transform 0.3s ease;
+}
+
+.org-step-action:hover svg {
+  transform: translateX(4px);
+}
+
+/* Иконка завершения (декоративная) */
+.org-step-check {
+  flex-shrink: 0;
+  color: rgba(16, 185, 129, 0.4);
+  transition: all 0.3s ease;
+}
+
+.org-step-card:hover .org-step-check {
+  color: rgba(16, 185, 129, 0.7);
+  transform: scale(1.1);
+}
+
+/* Мотивационная заметка */
+.org-steps-note {
+  background: rgba(245, 158, 11, 0.15);
+  border: 1px solid rgba(245, 158, 11, 0.3);
+  border-radius: 12px;
+  padding: 1.25rem 1.5rem;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.9);
+  text-align: center;
+}
+
+/* ─────────────────────────────────────────────────────────── */
+/* RESPONSIVE */
+/* ─────────────────────────────────────────────────────────── */
+
+@media (max-width: 768px) {
+  .org-step-card {
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1.25rem;
+  }
+
+  .org-step-number {
+    width: 40px;
+    height: 40px;
+    font-size: 1.25rem;
+  }
+
+  .org-step-title {
+    font-size: 1.125rem;
+  }
+
+  .org-step-description {
+    font-size: 0.9rem;
+  }
+
+  .org-step-check {
+    position: absolute;
+    top: 1.25rem;
+    right: 1.25rem;
+  }
+
+  .org-steps-note {
+    font-size: 0.875rem;
+    padding: 1rem 1.25rem;
+  }
+}
+/* ═══════════════════════════════════════════════════════════
+   PREP TO SS - ДОПОЛНИТЕЛЬНЫЕ СТИЛИ ДЛЯ ДОКУМЕНТОВ
+   Добавь эти стили в конец файла styles-unified.css
+   ═══════════════════════════════════════════════════════════ */
+
+/* Секция документов и шаблонов */
+.documents-templates {
+  margin-top: 3rem;
+  padding-top: 2rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.documents-templates h3 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+}
+
+/* Сетка шаблонов */
+.templates-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+
+/* Карточка шаблона */
+.template-card {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 1.5rem;
+  transition: all 0.3s ease;
+}
+
+.template-card:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(99, 102, 241, 0.4);
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+}
+
+.template-card h4 {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 0.5rem;
+}
+
+.template-card p {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.7);
+  margin-bottom: 1rem;
+}
+
+/* Ссылка на шаблон */
+.template-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background: rgba(99, 102, 241, 0.2);
+  border: 1px solid rgba(99, 102, 241, 0.3);
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #a5b4fc;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.template-link:hover {
+  background: rgba(99, 102, 241, 0.3);
+  border-color: rgba(99, 102, 241, 0.5);
+  color: #c7d2fe;
+  transform: translateX(4px);
+}
+
+.template-link svg {
+  transition: transform 0.3s ease;
+}
+
+.template-link:hover svg {
+  transform: translateX(4px);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .templates-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .template-card {
+    padding: 1.25rem;
+  }
+
+  .documents-templates h3 {
+    font-size: 1.25rem;
+  }
+}
+/* ═══════════════════════════════════════════════════════════
+   START-CC - СТИЛИ ДЛЯ КОМПОНЕНТА
+   Добавь эти стили в конец файла styles-unified.css
+   ═══════════════════════════════════════════════════════════ */
+
+/* Обзор Start-СС */
+.startcc-overview {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+}
+
+.startcc-overview p {
+  font-size: 1.125rem;
+  line-height: 1.8;
+  color: rgba(255, 255, 255, 0.9);
+  margin: 0;
+}
+
+/* ─────────────────────────────────────────────────────────── */
+/* БЛОКИ ДНЕЙ */
+/* ─────────────────────────────────────────────────────────── */
+
+.startcc-day {
+  margin-bottom: 2.5rem;
+}
+
+.startcc-day-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.startcc-day-icon {
+  color: #6366f1;
+}
+
+.startcc-day-header h3 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #fff;
+  margin: 0;
+}
+
+/* Блоки внутри дня */
+.startcc-blocks {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.startcc-block {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 1.25rem;
+  transition: all 0.3s ease;
+}
+
+.startcc-block:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(99, 102, 241, 0.4);
+  transform: translateX(4px);
+}
+
+.startcc-block-number {
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #fff;
+}
+
+.startcc-block-content {
+  flex: 1;
+}
+
+.startcc-block-content h4 {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #fff;
+  margin: 0 0 0.5rem 0;
+}
+
+.startcc-block-content p {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.7);
+  margin: 0;
+}
+
+/* ─────────────────────────────────────────────────────────── */
+/* РЕЗУЛЬТАТЫ START-СС */
+/* ─────────────────────────────────────────────────────────── */
+
+.startcc-results {
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(5, 150, 105, 0.1));
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  border-radius: 16px;
+  padding: 2rem;
+  margin-top: 2rem;
+}
+
+.startcc-results-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.startcc-results-icon {
+  color: #10b981;
+}
+
+.startcc-results-header h3 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #fff;
+  margin: 0;
+}
+
+.startcc-results-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.875rem;
+}
+
+.startcc-result-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  font-size: 1rem;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.startcc-result-icon {
+  color: #10b981;
+  flex-shrink: 0;
+  margin-top: 0.1rem;
+}
+
+/* ─────────────────────────────────────────────────────────── */
+/* RESPONSIVE */
+/* ─────────────────────────────────────────────────────────── */
+
+@media (max-width: 768px) {
+  .startcc-overview {
+    padding: 1.5rem;
+  }
+
+  .startcc-overview p {
+    font-size: 1rem;
+  }
+
+  .startcc-day-header h3 {
+    font-size: 1.25rem;
+  }
+
+  .startcc-block {
+    padding: 1rem;
+  }
+
+  .startcc-block-content h4 {
+    font-size: 1rem;
+  }
+
+  .startcc-block-content p {
+    font-size: 0.9rem;
+  }
+
+  .startcc-results {
+    padding: 1.5rem;
+  }
+
+  .startcc-results-header h3 {
+    font-size: 1.25rem;
+  }
+
+  .startcc-result-item {
+    font-size: 0.95rem;
+  }
+}
+/* ═══════════════════════════════════════════════════════════
+   MAIN CYCLE (MEETINGS RHYTHM) - СТИЛИ
+   Добавь эти стили в конец файла styles-unified.css
+   ═══════════════════════════════════════════════════════════ */
+
+/* ─────────────────────────────────────────────────────────── */
+/* БЛОКИ РИТМА */
+/* ─────────────────────────────────────────────────────────── */
+
+.rhythm-block {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+}
+
+.rhythm-block-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.rhythm-block-icon {
+  color: #6366f1;
+}
+
+.rhythm-block-header h3 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #fff;
+  margin: 0;
+}
+
+.rhythm-block-description {
+  font-size: 1rem;
+  line-height: 1.7;
+  color: rgba(255, 255, 255, 0.8);
+  margin-bottom: 1.5rem;
+}
+
+/* Список встреч */
+.rhythm-meetings-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.rhythm-meeting-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.75rem 1rem;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  transition: all 0.3s ease;
+}
+
+.rhythm-meeting-item:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(99, 102, 241, 0.3);
+  transform: translateX(4px);
+}
+
+.rhythm-meeting-number {
+  flex-shrink: 0;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: #fff;
+}
+
+.rhythm-meeting-content {
+  flex: 1;
+  font-size: 0.95rem;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+/* ─────────────────────────────────────────────────────────── */
+/* ПАТТЕРН ЧЕРЕДОВАНИЯ */
+/* ─────────────────────────────────────────────────────────── */
+
+.rhythm-pattern {
+  margin-top: 1.5rem;
+  padding: 1.5rem;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 12px;
+}
+
+.rhythm-pattern h4 {
+  font-size: 1rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.9);
+  margin: 0 0 1rem 0;
+}
+
+.rhythm-pattern-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.rhythm-pattern-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 0.95rem;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.rhythm-pattern-icon {
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(99, 102, 241, 0.15);
+  border-radius: 8px;
+  color: #6366f1;
+}
+
+/* Заметка про бадди */
+.rhythm-buddy-note {
+  margin-top: 1rem;
+  padding: 1rem 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  background: rgba(245, 158, 11, 0.1);
+  border: 1px solid rgba(245, 158, 11, 0.3);
+  border-radius: 10px;
+  font-size: 0.95rem;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.rhythm-buddy-note svg {
+  flex-shrink: 0;
+  color: #f59e0b;
+}
+
+/* ─────────────────────────────────────────────────────────── */
+/* ДОПОЛНИТЕЛЬНЫЕ АКТИВНОСТИ */
+/* ─────────────────────────────────────────────────────────── */
+
+.rhythm-additional {
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.08), rgba(5, 150, 105, 0.08));
+  border: 1px solid rgba(16, 185, 129, 0.25);
+  border-radius: 16px;
+  padding: 2rem;
+  margin-top: 2rem;
+}
+
+.rhythm-additional-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.rhythm-additional-icon {
+  color: #10b981;
+}
+
+.rhythm-additional-header h3 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #fff;
+  margin: 0;
+}
+
+.rhythm-additional-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.875rem;
+}
+
+.rhythm-additional-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  font-size: 1rem;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.rhythm-additional-bullet {
+  flex-shrink: 0;
+  color: #10b981;
+  margin-top: 0.1rem;
+}
+
+/* ─────────────────────────────────────────────────────────── */
+/* RESPONSIVE */
+/* ─────────────────────────────────────────────────────────── */
+
+@media (max-width: 768px) {
+  .rhythm-block {
+    padding: 1.5rem;
+  }
+
+  .rhythm-block-header h3 {
+    font-size: 1.25rem;
+  }
+
+  .rhythm-block-description {
+    font-size: 0.95rem;
+  }
+
+  .rhythm-meeting-item {
+    padding: 0.625rem 0.875rem;
+  }
+
+  .rhythm-pattern {
+    padding: 1.25rem;
+  }
+
+  .rhythm-additional {
+    padding: 1.5rem;
+  }
+
+  .rhythm-additional-header h3 {
+    font-size: 1.25rem;
+  }
+}

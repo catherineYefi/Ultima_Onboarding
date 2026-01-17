@@ -12,86 +12,70 @@ import {
 } from "lucide-react";
 
 /**
- * Roadmap компонент - ПОЛНАЯ дорожная карта программы от подготовки до финала
- * Все этапы соответствуют методологии
+ * Roadmap компонент - дорожная карта программы
+ * VERSION 2.0 - читает из content.roadmap
+ * 
+ * Props:
+ * - id: ID секции для якорей
+ * - content: объект content из content.js
  */
-export default function Roadmap({ id = "roadmap" }) {
-  const stages = [
-    {
-      icon: Brain,
-      title: "Подготовка к Start-СС",
-      duration: "2-3 недели",
-      description:
-        "3 встречи с БИ для сбора фактов и цифр + Pre-Ultima Booster (мини-курс) + AI-наставник для структурирования материалов.",
-      color: "primary",
-    },
-    {
-      icon: Calendar,
-      title: "Start-СС",
-      duration: "2 дня offline",
-      description:
-        "Определение WIG, настройка приборов контроля, построение дорожной карты на 6 месяцев. Выбор лидера группы и бадди-пар.",
-      color: "accent",
-    },
-    {
-      icon: Zap,
-      title: "Месяц 1: Плотный старт",
-      duration: "4 недели",
-      description:
-        "Встречи с трекером каждую неделю. Быстрый запуск внедрения, первые золотые задачи, установление ритма работы.",
-      color: "primary",
-    },
-    {
-      icon: TrendingUp,
-      title: "Месяцы 2-6: Устойчивый ритм",
-      duration: "20 недель",
-      description:
-        "Чередование: неделя с трекером → неделя с лидером группы. Бадди-созвоны раз в 2 недели. Еженедельное обновление приборов контроля.",
-      color: "secondary",
-    },
-    {
-      icon: Sparkles,
-      title: "Слёты Нечто (2-3 за сезон)",
-      duration: "В течение 6 месяцев",
-      description:
-        "Мастермайнды с топ-экспертами, нетворкинг с участниками экосистемы, работа над стратегическими вопросами. Только для ULTIMA.",
-      color: "accent",
-    },
-    {
-      icon: Award,
-      title: "Final-СС",
-      duration: "1 день на слёте",
-      description:
-        "Презентация результатов, проверка выполнения WIG, фиксация достижений, планирование следующего цикла (для продленцев).",
-      color: "success",
-    },
-  ];
+export default function Roadmap({ id = "roadmap", content }) {
+  const roadmap = content?.roadmap || {};
+  const stages = roadmap?.stages || [];
+
+  // Маппинг иконок
+  const iconMap = {
+    Brain: Brain,
+    Calendar: Calendar,
+    Zap: Zap,
+    TrendingUp: TrendingUp,
+    Sparkles: Sparkles,
+    Award: Award,
+    Target: Target,
+    Users: Users,
+  };
+
+  // Функция получения иконки
+  const getIcon = (iconName) => {
+    return iconMap[iconName] || Calendar;
+  };
 
   return (
     <section id={id} className="section">
       <div className="container">
+        {/* Заголовок секции */}
         <div className="section-header">
-          <h2 className="section-title">Дорожная карта программы</h2>
+          <h2 className="section-title">
+            {roadmap?.title || "Дорожная карта программы"}
+          </h2>
           <p className="section-subtitle">
-            Полный путь от подготовки до финала: все ключевые этапы 6-месячной программы
+            {roadmap?.subtitle || "Полный путь от подготовки до финала"}
           </p>
         </div>
 
+        {/* Timeline этапов */}
         <div className="roadmap-timeline">
           {stages.map((stage, idx) => {
-            const Icon = stage.icon;
+            const Icon = getIcon(stage.icon);
             return (
               <div key={idx} className="roadmap-stage">
-                <div className={`roadmap-stage-icon roadmap-icon-${stage.color}`}>
+                {/* Иконка этапа */}
+                <div className={`roadmap-stage-icon roadmap-icon-${stage.color || 'primary'}`}>
                   <Icon size={28} />
                 </div>
+
+                {/* Контент этапа */}
                 <div className="roadmap-stage-content">
                   <div className="roadmap-stage-header">
                     <h3 className="roadmap-stage-title">{stage.title}</h3>
-                    <span className="roadmap-stage-duration">{stage.duration}</span>
+                    {stage.duration && (
+                      <span className="roadmap-stage-duration">{stage.duration}</span>
+                    )}
                   </div>
                   <p className="roadmap-stage-description">{stage.description}</p>
                 </div>
+
+                {/* Соединительная линия */}
                 {idx < stages.length - 1 && <div className="roadmap-connector" />}
               </div>
             );
@@ -99,13 +83,12 @@ export default function Roadmap({ id = "roadmap" }) {
         </div>
 
         {/* Важная заметка */}
-        <div className="roadmap-note">
-          <CheckCircle size={20} />
-          <p>
-            <strong>Важно:</strong> Группы работают асинхронно. Даты Start-СС и основного
-            цикла определяются индивидуально для каждой группы.
-          </p>
-        </div>
+        {roadmap?.note && (
+          <div className="roadmap-note">
+            <CheckCircle size={20} />
+            <p>{roadmap.note}</p>
+          </div>
+        )}
       </div>
     </section>
   );

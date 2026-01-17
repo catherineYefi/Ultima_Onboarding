@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import rawContent from "./content";
+import content from "./content";
 
 // Components
 import Navbar from "./components/Navbar";
@@ -7,151 +7,77 @@ import Sidebar from "./components/Sidebar";
 import ScrollToTop from "./components/ScrollToTop";
 import Hero from "./components/Hero";
 import Glossary from "./components/Glossary";
-import Intro from "./components/Intro";
+import AboutUltima from "./components/AboutUltima";
 import Roadmap from "./components/Roadmap";
 import Checklist from "./components/Checklist";
 import Onboarding from "./components/Onboarding";
-import AboutUltima from "./components/AboutUltima";
-import CycleTimeline from "./components/CycleTimeline";
+import OrganizationalSteps from "./components/OrganizationalSteps";
+import PrepToSS from "./components/PrepToSS";
+import StartCC from "./components/StartCC";
+import MainCycle from "./components/MainCycle";
 import Documents from "./components/Documents";
 import Rules from "./components/Rules";
-import Formula from "./components/Formula";
-import PrepToSS from "./components/PrepToSS";
-import SSOffline from "./components/SSOffline";
-import MainCycle from "./components/MainCycle";
 import Final from "./components/Final";
 import FooterCTA from "./components/FooterCTA";
 import CalendarSection from "./components/CalendarSection";
 
-// СТИЛИ: Единый объединённый CSS файл (Phase 2 - Unified)
+// СТИЛИ: Единый объединённый CSS файл
 import "./styles-unified.css";
 
-// --- безопасная нормализация контента (как у нас было ранее) ---
-function normalizeContent(raw) {
-  const safe = (v, fb) => (v === undefined || v === null ? fb : v);
-
-  const documents =
-    raw?.sections?.about?.documents && Array.isArray(raw.sections.about.documents)
-      ? raw.sections.about.documents
-      : [];
-
-  const findDoc = (re) =>
-    documents.find((d) => re.test((d?.title || "") + (d?.name || "")));
-
-  const links = {
-    nda: {
-      available: !!findDoc(/nda/i),
-      url: safe(findDoc(/nda/i)?.link, "#"),
-      label: "Скоро",
-    },
-    rules: {
-      available: !!findDoc(/правил|регламент/i),
-      url: safe(findDoc(/правил|регламент/i)?.link, "#"),
-      label: "Скоро",
-    },
-    calendar: {
-      available: true,
-      url: "#calendar",
-      label: "Откроется позже",
-    },
-    booster: {
-      url: "#prep-ss",
-    },
-    ...(raw.links || {}),
-  };
-
-  const prepFrom = raw?.sections?.prepSS || raw?.sections?.prepToSS || {};
-  const readiness =
-    prepFrom?.readinessChecklists ||
-    (Array.isArray(prepFrom?.phases)
-      ? prepFrom.phases.map((p, i) => ({
-          id: `phase-${i}`,
-          title: p?.name || `Шаг ${i + 1}`,
-          items: Array.isArray(p?.deliverables) ? p.deliverables : [],
-        }))
-      : []);
-
-  const prepSS = {
-    nextStep: {
-      title: prepFrom?.title || "Подготовка к стратегической сессии",
-      description:
-        prepFrom?.note ||
-        "Пройди шаги подготовки перед Start-СС: встречи с БИ, материалы, чек-листы.",
-      cta: { text: "Перейти к шагам" },
-    },
-    why:
-      prepFrom?.why ||
-      "Качество СС определяется не днём работы, а подготовкой к ней.",
-    readinessChecklists: readiness,
-    ...(raw?.sections?.prepSS || {}),
-  };
-
-  const ssOffline = {
-    ...(raw?.sections?.ssOffline || {}),
-    format:
-      raw?.sections?.ssOffline?.format || "2 дня офлайн (Start-СС: день 1 и день 2)",
-    results:
-      Array.isArray(raw?.sections?.ssOffline?.results) &&
-      raw.sections.ssOffline.results.length > 0
-        ? raw.sections.ssOffline.results
-        : [
-            "Определены WIG/OKR",
-            "Настроены приборы контроля",
-            "Собрана дорожная карта на 6 месяцев",
-          ],
-  };
-
-  const rhythmRaw = raw?.sections?.mainCycle?.rhythm;
-  const rhythmArray = Array.isArray(rhythmRaw)
-    ? rhythmRaw
-    : Array.isArray(rhythmRaw?.meetings)
-    ? rhythmRaw.meetings.map((m) => ({
-        title: `${m?.week || ""} — ${m?.format || ""}`.trim(),
-        description: m?.focus || "",
-      }))
-    : [];
-
-  const mainCycle = {
-    ...(raw?.sections?.mainCycle || {}),
-    rhythm: rhythmArray,
-  };
-
-  return {
-    ...raw,
-    links,
-    aiMentorPrompt:
-      raw?.aiMentorPrompt ||
-      `Я — AI-наставник ULTIMA. Помоги мне подготовиться к Start-СС: 
-— собери P&L за 3 месяца, 
-— выпиши ключевые метрики, 
-— зафиксируй WIG/OKR и приборы контроля.`,
-    sections: {
-      ...(raw?.sections || {}),
-      prepSS,
-      ssOffline,
-      mainCycle,
-    },
-  };
-}
-
+/**
+ * ULTIMA 9.0 ONBOARDING - ГЛАВНОЕ ПРИЛОЖЕНИЕ
+ * VERSION 2.0 - Новая структура из 5 секций
+ */
 export default function App() {
-  const content = normalizeContent(rawContent);
-
   const [activeSection, setActiveSection] = useState("hero");
   const [progress, setProgress] = useState(0);
-  const [openAccordions, setOpenAccordions] = useState({});
-  const [copiedPrompt, setCopiedPrompt] = useState(false);
   const [activeTab, setActiveTab] = useState("bi-meetings");
+  const [copiedPrompt, setCopiedPrompt] = useState(false);
   const [promptExpanded, setPromptExpanded] = useState(false);
 
-  // Все секции для отслеживания
+  // ═══════════════════════════════════════════════════════════
+  // НОВЫЙ СПИСОК СЕКЦИЙ (ДЛЯ НАВИГАЦИИ И СКРОЛЛА)
+  // ═══════════════════════════════════════════════════════════
+  
   const sectionIds = [
-    "hero", "glossary", "intro", "roadmap", "checklist", "prep-ss",
-    "about", "rhythm", "roles",
-    "documents-nda", "documents-presentation", "documents-calendar",
+    // СЕКЦИЯ 1: HERO
+    "hero",
+    
+    // СЕКЦИЯ 2: ОНБОРДИНГ
+    "glossary",
+    "about-program",
+    "roadmap",
+    "checklist",
+    "org-steps",
+    "prep-start-cc",
+    
+    // СЕКЦИЯ 3: ПРОГРАММА
+    "start-cc",
+    "meetings-rhythm",
+    "meeting-cycle",
+    "roles",
+    "wig-declaration",
+    "control-panel",
+    
+    // СЕКЦИЯ 4: ИНСТРУМЕНТЫ
+    "tools-hub",
+    "templates",
+    "calendar",
+    
+    // СЕКЦИЯ 5: ДОКУМЕНТЫ
+    "documents",
+    "documents-presentation",
+    "rules",
+    "ai-mentor",
+    
+    // СЕКЦИЯ 6: ЗАВЕРШЕНИЕ
+    "final-cc",
   ];
 
-  // Отслеживание активной секции при скролле
+  // ═══════════════════════════════════════════════════════════
+  // ОТСЛЕЖИВАНИЕ АКТИВНОЙ СЕКЦИИ ПРИ СКРОЛЛЕ
+  // ═══════════════════════════════════════════════════════════
+  
   useEffect(() => {
     const handleScroll = () => {
       let currentSection = "hero";
@@ -184,7 +110,10 @@ export default function App() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Плавный скролл к секции
+  // ═══════════════════════════════════════════════════════════
+  // ПЛАВНЫЙ СКРОЛЛ К СЕКЦИИ
+  // ═══════════════════════════════════════════════════════════
+  
   const scrollToSection = (sectionId) => {
     const element = document.getElementById(sectionId);
     if (element) {
@@ -192,9 +121,10 @@ export default function App() {
     }
   };
 
-  const toggleAccordion = (idx) =>
-    setOpenAccordions((prev) => ({ ...prev, [idx]: !prev[idx] }));
-
+  // ═══════════════════════════════════════════════════════════
+  // КОПИРОВАНИЕ ПРОМПТА AI-НАСТАВНИКА
+  // ═══════════════════════════════════════════════════════════
+  
   const copyPrompt = async () => {
     try {
       if (navigator?.clipboard?.writeText) {
@@ -228,21 +158,34 @@ export default function App() {
       {/* Scroll to Top Button */}
       <ScrollToTop />
 
-      {/* Main Content */}
+      {/* ═══════════════════════════════════════════════════════════ */}
+      {/* MAIN CONTENT - НОВЫЙ ПОРЯДОК СЕКЦИЙ */}
+      {/* ═══════════════════════════════════════════════════════════ */}
+      
       <div className="main-content">
+        
+        {/* ═══════════════════════════════════════════════════════════ */}
+        {/* СЕКЦИЯ 1: HERO */}
+        {/* ═══════════════════════════════════════════════════════════ */}
+        
         <Hero id="hero" content={content} scrollToSection={scrollToSection} />
-        <Glossary id="glossary" />
-        <Intro id="intro" />
-        <Roadmap id="roadmap" />
-        <Checklist id="checklist" />
-        <Onboarding id="onboarding" content={content} />
-        <AboutUltima id="about" content={content} />
-        <CycleTimeline id="rhythm" content={content} />
-        <Documents id="documents-nda" content={content} />
-        <Rules id="rules" content={content} />
-        <Formula id="formula" content={content} />
+
+        {/* ═══════════════════════════════════════════════════════════ */}
+        {/* СЕКЦИЯ 2: ОНБОРДИНГ */}
+        {/* ═══════════════════════════════════════════════════════════ */}
+        
+        {/* 2.1. ОСНОВЫ (понять систему) */}
+        <Glossary id="glossary" content={content} />
+        <AboutUltima id="about-program" content={content} />
+        <Roadmap id="roadmap" content={content} />
+        
+        {/* 2.2. ПЕРВЫЕ ШАГИ (что делать прямо сейчас) */}
+        <Checklist id="checklist" content={content} />
+        <OrganizationalSteps id="org-steps" content={content} scrollToSection={scrollToSection} />
+        
+        {/* 2.3. ПОДГОТОВКА К START-CC */}
         <PrepToSS
-          id="prep-ss"
+          id="prep-start-cc"
           content={content}
           activeTab={activeTab}
           setActiveTab={setActiveTab}
@@ -252,9 +195,97 @@ export default function App() {
           copyPrompt={copyPrompt}
           downloadPrompt={downloadPrompt}
         />
-        <SSOffline id="ss-offline" content={content} />
-        <MainCycle id="main-cycle" content={content} />
-        <Final id="final" content={content} scrollToSection={scrollToSection} />
+
+        {/* ═══════════════════════════════════════════════════════════ */}
+        {/* СЕКЦИЯ 3: ПРОГРАММА (как это работает) */}
+        {/* ═══════════════════════════════════════════════════════════ */}
+        
+        {/* 3.1. START-CC */}
+        <StartCC id="start-cc" content={content} />
+        
+        {/* 3.2. ОСНОВНОЙ ЦИКЛ */}
+        {/* Используем существующий MainCycle для meetings-rhythm */}
+        <MainCycle id="meetings-rhythm" content={content} />
+        
+        {/* ВРЕМЕННЫЕ ЗАГЛУШКИ для новых секций */}
+        {/* Эти компоненты мы создадим на следующих шагах */}
+        <section id="meeting-cycle" className="section">
+          <div className="container">
+            <h2>Цикл разбора на встречах</h2>
+            <p>Раздел в разработке - будет добавлен на следующем шаге</p>
+          </div>
+        </section>
+
+        <section id="roles" className="section">
+          <div className="container">
+            <h2>Роли в программе</h2>
+            <p>Раздел в разработке - будет добавлен на следующем шаге</p>
+          </div>
+        </section>
+
+        <section id="wig-declaration" className="section">
+          <div className="container">
+            <h2>Работа с декларацией WIG</h2>
+            <p>Раздел в разработке - будет добавлен на следующем шаге</p>
+          </div>
+        </section>
+
+        <section id="control-panel" className="section">
+          <div className="container">
+            <h2>Приборы контроля</h2>
+            <p>Раздел в разработке - будет добавлен на следующем шаге</p>
+          </div>
+        </section>
+
+        {/* ═══════════════════════════════════════════════════════════ */}
+        {/* СЕКЦИЯ 4: ИНСТРУМЕНТЫ И РЕСУРСЫ */}
+        {/* ═══════════════════════════════════════════════════════════ */}
+        
+        <section id="tools-hub" className="section">
+          <div className="container">
+            <h2>Полезные инструменты</h2>
+            <p>Раздел в разработке - будет добавлен на следующем шаге</p>
+          </div>
+        </section>
+
+        <section id="templates" className="section">
+          <div className="container">
+            <h2>Шаблоны</h2>
+            <p>Раздел в разработке - будет добавлен на следующем шаге</p>
+          </div>
+        </section>
+
+        <CalendarSection id="calendar" content={content} />
+
+        {/* ═══════════════════════════════════════════════════════════ */}
+        {/* СЕКЦИЯ 5: ДОКУМЕНТЫ */}
+        {/* ═══════════════════════════════════════════════════════════ */}
+        
+        <Documents id="documents" content={content} />
+        
+        <section id="documents-presentation" className="section">
+          <div className="container">
+            <h2>Презентации</h2>
+            <p>Раздел в разработке - будет добавлен на следующем шаге</p>
+          </div>
+        </section>
+
+        <Rules id="rules" content={content} />
+        
+        <section id="ai-mentor" className="section">
+          <div className="container">
+            <h2>AI-наставник</h2>
+            <p>Раздел в разработке - будет добавлен на следующем шаге</p>
+          </div>
+        </section>
+
+        {/* ═══════════════════════════════════════════════════════════ */}
+        {/* СЕКЦИЯ 6: ЗАВЕРШЕНИЕ */}
+        {/* ═══════════════════════════════════════════════════════════ */}
+        
+        <Final id="final-cc" content={content} scrollToSection={scrollToSection} />
+        
+        {/* Footer CTA */}
         <FooterCTA id="footer" content={content} scrollToSection={scrollToSection} setActiveTab={setActiveTab} />
       </div>
     </div>

@@ -3,62 +3,75 @@ import { Check } from "lucide-react";
 
 /**
  * Checklist компонент - стартовый чек-лист с сохранением в localStorage
+ * VERSION 2.0 - читает из content.startingChecklist
+ * 
+ * Props:
+ * - id: ID секции для якорей
+ * - content: объект content из content.js
  */
-export default function Checklist({ id = "checklist" }) {
-  const defaultItems = [
-    "Подписал NDA",
-    "Вступил в чаты группы",
-    "Узнал про роль buddy (назначение на первой встрече)",
-    "Записал видео-визитку о бизнесе (2–3 минуты)",
-    "Заполнил \"Точку А и Б\"",
-    "Подготовил презентацию для Start-СС",
-    "Составил черновик декларации WIG",
-    "Определил первую золотую задачу",
-  ];
+export default function Checklist({ id = "checklist", content }) {
+  const checklistData = content?.startingChecklist || {};
+  const items = checklistData?.items || [];
 
-  const [checklist, setChecklist] = useState(defaultItems.map((text, idx) => ({
-    id: idx,
-    text,
-    completed: false,
-  })));
+  // Инициализация чеклиста
+  const initializeChecklist = () => {
+    return items.map((text, idx) => ({
+      id: idx,
+      text,
+      completed: false,
+    }));
+  };
 
-  // Загрузка из localStorage
+  const [checklist, setChecklist] = useState(initializeChecklist());
+
+  // Загрузка из localStorage при монтировании
   useEffect(() => {
-    const saved = localStorage.getItem("ultima-checklist");
+    const saved = localStorage.getItem("ultima-checklist-v2");
     if (saved) {
       try {
         const parsed = JSON.parse(saved);
-        setChecklist(parsed);
+        // Проверяем, что количество пунктов совпадает
+        if (parsed.length === items.length) {
+          setChecklist(parsed);
+        } else {
+          // Если структура изменилась, сбрасываем
+          setChecklist(initializeChecklist());
+        }
       } catch (e) {
         console.error("Failed to parse checklist:", e);
+        setChecklist(initializeChecklist());
       }
     }
   }, []);
 
-  // Сохранение в localStorage
+  // Переключение пункта чеклиста
   const toggleItem = (itemId) => {
     const updated = checklist.map((item) =>
       item.id === itemId ? { ...item, completed: !item.completed } : item
     );
     setChecklist(updated);
-    localStorage.setItem("ultima-checklist", JSON.stringify(updated));
+    localStorage.setItem("ultima-checklist-v2", JSON.stringify(updated));
   };
 
+  // Расчёт прогресса
   const completedCount = checklist.filter((item) => item.completed).length;
   const totalCount = checklist.length;
-  const progress = Math.round((completedCount / totalCount) * 100);
+  const progress = totalCount > 0 ? Math.round((completedCount / totalCount) * 100) : 0;
 
   return (
     <section id={id} className="section">
       <div className="container">
+        {/* Заголовок секции */}
         <div className="section-header">
-          <h2 className="section-title">Стартовый чек-лист</h2>
+          <h2 className="section-title">
+            {checklistData?.title || "Стартовый чек-лист"}
+          </h2>
           <p className="section-subtitle">
-            Пройди все пункты перед первой встречей группы
+            {checklistData?.subtitle || "Пройди все пункты перед первой встречей группы"}
           </p>
         </div>
 
-        {/* Прогресс */}
+        {/* Прогресс-бар */}
         <div className="checklist-progress">
           <div className="checklist-progress-bar">
             <div
@@ -85,7 +98,7 @@ export default function Checklist({ id = "checklist" }) {
                 type="checkbox"
                 checked={item.completed}
                 onChange={() => toggleItem(item.id)}
-                className="checklist-item-checkbox"
+                className="checklist-item-input"
                 style={{ display: "none" }}
               />
               <div className="checklist-item-checkbox">
@@ -95,6 +108,13 @@ export default function Checklist({ id = "checklist" }) {
             </label>
           ))}
         </div>
+
+        {/* Мотивационное сообщение при завершении */}
+        {progress === 100 && (
+          <div className="checklist-complete-message">
+            🎉 Отлично! Вы готовы к старту программы!
+          </div>
+        )}
       </div>
     </section>
   );

@@ -3,6 +3,7 @@ import { Check } from "lucide-react";
 
 /**
  * Sidebar компонент - боковая навигация с якорями
+ * VERSION 2.0 - Новая структура по 5 секциям
  * 
  * Props:
  * - activeSection: текущая активная секция
@@ -10,33 +11,55 @@ import { Check } from "lucide-react";
  * - progress: прогресс (0-100%)
  */
 export default function Sidebar({ activeSection, scrollToSection, progress = 0 }) {
-  // Группировка секций по категориям
+  // ═══════════════════════════════════════════════════════════
+  // НОВАЯ СТРУКТУРА НАВИГАЦИИ (5 СЕКЦИЙ)
+  // ═══════════════════════════════════════════════════════════
+  
   const sectionGroups = [
     {
-      title: "Онбординг",
+      title: "📍 ОНБОРДИНГ",
       sections: [
         { id: "hero", label: "Главная" },
         { id: "glossary", label: "Глоссарий" },
-        { id: "intro", label: "Введение" },
+        { id: "about-program", label: "О программе" },
         { id: "roadmap", label: "Дорожная карта" },
         { id: "checklist", label: "Чек-лист" },
-        { id: "prep-ss", label: "Start-СС" },
+        { id: "org-steps", label: "Организационные шаги" },
+        { id: "prep-start-cc", label: "Подготовка к Start-СС" },
       ],
     },
     {
-      title: "Программа",
+      title: "📍 ПРОГРАММА",
       sections: [
-        { id: "about", label: "О ULTIMA" },
-        { id: "rhythm", label: "Ритм работы" },
+        { id: "start-cc", label: "Start-СС" },
+        { id: "meetings-rhythm", label: "Ритм встреч" },
+        { id: "meeting-cycle", label: "Цикл разбора" },
         { id: "roles", label: "Роли" },
+        { id: "wig-declaration", label: "Декларация WIG" },
+        { id: "control-panel", label: "Приборы контроля" },
       ],
     },
     {
-      title: "Документы",
+      title: "📍 ИНСТРУМЕНТЫ",
       sections: [
-        { id: "documents-nda", label: "NDA" },
-        { id: "documents-presentation", label: "Презентация" },
-        { id: "documents-calendar", label: "Календарь" },
+        { id: "tools-hub", label: "Калькуляторы" },
+        { id: "templates", label: "Шаблоны" },
+        { id: "calendar", label: "Календарь" },
+      ],
+    },
+    {
+      title: "📍 ДОКУМЕНТЫ",
+      sections: [
+        { id: "documents", label: "NDA" },
+        { id: "documents-presentation", label: "Презентации" },
+        { id: "rules", label: "Правила" },
+        { id: "ai-mentor", label: "AI-наставник" },
+      ],
+    },
+    {
+      title: "📍 ЗАВЕРШЕНИЕ",
+      sections: [
+        { id: "final-cc", label: "Final-СС" },
       ],
     },
   ];
