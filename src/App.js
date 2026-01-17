@@ -23,11 +23,8 @@ import Final from "./components/Final";
 import FooterCTA from "./components/FooterCTA";
 import CalendarSection from "./components/CalendarSection";
 
-// СТИЛИ: сначала базовые, потом премиальные + мост
-import "./styles.css";
-import "./styles-design-system.css";    // дизайн система + компоненты
-import "./styles-premium-v2.css";       // твой новый файл
-import "./styles-premium-bridge.css";   // наш бридж-слой
+// СТИЛИ: Единый объединённый CSS файл (Phase 2 - Unified)
+import "./styles-unified.css";
 
 // --- безопасная нормализация контента (как у нас было ранее) ---
 function normalizeContent(raw) {
