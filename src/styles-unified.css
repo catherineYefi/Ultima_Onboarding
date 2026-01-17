@@ -9841,3 +9841,189 @@ a:hover, .inline-link:hover {
     font-size: 1rem;
   }
 }
+/* ═══════════════════════════════════════════════════════════
+   TOOLS HUB - СТИЛИ ДЛЯ КОМПОНЕНТА
+   Добавь эти стили в конец файла styles-unified.css
+   ═══════════════════════════════════════════════════════════ */
+
+/* Контейнер категорий */
+.toolshub-categories {
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
+}
+
+/* Категория инструментов */
+.toolshub-category {
+  animation: fadeInUp 0.6s ease-out both;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.toolshub-category-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Сетка инструментов */
+.toolshub-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+
+/* Карточка инструмента */
+.toolshub-card {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  transition: all 0.3s ease;
+}
+
+.toolshub-card:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(99, 102, 241, 0.4);
+  transform: translateY(-4px);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.3);
+}
+
+/* Иконка инструмента */
+.toolshub-icon {
+  width: 56px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(99, 102, 241, 0.15);
+  border-radius: 12px;
+  color: #6366f1;
+  transition: all 0.3s ease;
+}
+
+.toolshub-card:hover .toolshub-icon {
+  background: rgba(99, 102, 241, 0.25);
+  transform: scale(1.1);
+}
+
+/* Название инструмента */
+.toolshub-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #fff;
+  margin: 0;
+}
+
+/* Описание инструмента */
+.toolshub-description {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.7);
+  margin: 0;
+  flex: 1;
+}
+
+/* Ссылка на инструмент */
+.toolshub-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.625rem 1.25rem;
+  background: rgba(99, 102, 241, 0.2);
+  border: 1px solid rgba(99, 102, 241, 0.3);
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #a5b4fc;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  align-self: flex-start;
+}
+
+.toolshub-link:hover {
+  background: rgba(99, 102, 241, 0.3);
+  border-color: rgba(99, 102, 241, 0.5);
+  color: #c7d2fe;
+  transform: translateX(4px);
+}
+
+.toolshub-link svg {
+  transition: transform 0.3s ease;
+}
+
+.toolshub-link:hover svg {
+  transform: translateX(4px);
+}
+
+/* Заметка */
+.toolshub-note {
+  background: rgba(245, 158, 11, 0.1);
+  border: 1px solid rgba(245, 158, 11, 0.3);
+  border-radius: 12px;
+  padding: 1.5rem 2rem;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.9);
+  text-align: center;
+  margin-top: 2rem;
+}
+
+/* ─────────────────────────────────────────────────────────── */
+/* RESPONSIVE */
+/* ─────────────────────────────────────────────────────────── */
+
+@media (max-width: 768px) {
+  .toolshub-categories {
+    gap: 2rem;
+  }
+
+  .toolshub-category-title {
+    font-size: 1.25rem;
+  }
+
+  .toolshub-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .toolshub-card {
+    padding: 1.5rem;
+  }
+
+  .toolshub-icon {
+    width: 48px;
+    height: 48px;
+  }
+
+  .toolshub-title {
+    font-size: 1.125rem;
+  }
+
+  .toolshub-description {
+    font-size: 0.9rem;
+  }
+
+  .toolshub-note {
+    padding: 1.25rem 1.5rem;
+    font-size: 0.875rem;
+  }
+}

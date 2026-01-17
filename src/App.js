@@ -18,6 +18,8 @@ import MainCycle from "./components/MainCycle";
 import Documents from "./components/Documents";
 import Rules from "./components/Rules";
 import Final from "./components/Final";
+import Roles from "./components/Roles";
+import ToolsHub from "./components/ToolsHub";
 import FooterCTA from "./components/FooterCTA";
 import CalendarSection from "./components/CalendarSection";
 
@@ -216,12 +218,7 @@ export default function App() {
           </div>
         </section>
 
-        <section id="roles" className="section">
-          <div className="container">
-            <h2>Роли в программе</h2>
-            <p>Раздел в разработке - будет добавлен на следующем шаге</p>
-          </div>
-        </section>
+        <Roles id="roles" content={content} />
 
         <section id="wig-declaration" className="section">
           <div className="container">
@@ -244,7 +241,7 @@ export default function App() {
         <section id="tools-hub" className="section">
           <div className="container">
             <h2>Полезные инструменты</h2>
-            <p>Раздел в разработке - будет добавлен на следующем шаге</p>
+            <ToolsHub id="tools-hub" content={content} />
           </div>
         </section>
 
