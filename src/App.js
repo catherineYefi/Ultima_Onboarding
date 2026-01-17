@@ -219,7 +219,12 @@ export default function App() {
           </div>
         </section>
 
-        <Roles id="roles" content={content} />
+        <section id="roles" className="section">
+          <div className="container">
+            <h2>Роли в программе</h2>
+            <p><Roles id="roles" content={content} /></p>
+          </div>
+        </section>
 
         <section id="wig-declaration" className="section">
           <div className="container">
