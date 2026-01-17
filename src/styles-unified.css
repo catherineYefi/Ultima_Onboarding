@@ -9252,3 +9252,592 @@ a:hover, .inline-link:hover {
     font-size: 1.25rem;
   }
 }
+/* ═══════════════════════════════════════════════════════════
+   DOCUMENTS - ДОПОЛНИТЕЛЬНЫЕ СТИЛИ
+   Добавь эти стили в конец файла styles-unified.css
+   ═══════════════════════════════════════════════════════════ */
+
+/* Категория документов */
+.documents-category {
+  margin-bottom: 3rem;
+}
+
+.documents-category:last-child {
+  margin-bottom: 0;
+}
+
+.documents-category-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Улучшения для doc-card (если их ещё нет) */
+.doc-card-icon {
+  width: 64px;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(99, 102, 241, 0.15);
+  border-radius: 16px;
+  color: #6366f1;
+  margin-bottom: 1rem;
+  transition: all 0.3s ease;
+}
+
+.doc-card:hover .doc-card-icon {
+  background: rgba(99, 102, 241, 0.25);
+  transform: scale(1.05);
+}
+
+.doc-card-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 0.5rem;
+}
+
+.doc-card-description {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.7);
+  margin-bottom: 1rem;
+  flex: 1;
+}
+
+/* Кнопка/ссылка документа */
+.doc-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.625rem 1.25rem;
+  background: rgba(99, 102, 241, 0.2);
+  border: 1px solid rgba(99, 102, 241, 0.3);
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #a5b4fc;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.doc-link:hover {
+  background: rgba(99, 102, 241, 0.3);
+  border-color: rgba(99, 102, 241, 0.5);
+  color: #c7d2fe;
+  transform: translateY(-2px);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .documents-category-title {
+    font-size: 1.25rem;
+  }
+
+  .doc-card-icon {
+    width: 56px;
+    height: 56px;
+  }
+
+  .doc-card-title {
+    font-size: 1.125rem;
+  }
+
+  .doc-card-description {
+    font-size: 0.9rem;
+  }
+}
+/* ═══════════════════════════════════════════════════════════
+   RULES - СТИЛИ ДЛЯ КОМПОНЕНТА
+   Добавь эти стили в конец файла styles-unified.css
+   ═══════════════════════════════════════════════════════════ */
+
+/* Общий заголовок блока */
+.rules-block-title {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 1.5rem;
+}
+
+.rules-block-icon {
+  color: #6366f1;
+}
+
+/* ─────────────────────────────────────────────────────────── */
+/* БЛОК 1: ПРИНЦИПЫ */
+/* ─────────────────────────────────────────────────────────── */
+
+.rules-principles {
+  margin-bottom: 3rem;
+}
+
+.rules-principles-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+
+.rules-principle-card {
+  position: relative;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 1.5rem;
+  padding-left: 4rem;
+  transition: all 0.3s ease;
+}
+
+.rules-principle-card:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(99, 102, 241, 0.4);
+  transform: translateY(-4px);
+}
+
+.rules-principle-number {
+  position: absolute;
+  left: 1.5rem;
+  top: 1.5rem;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #fff;
+}
+
+.rules-principle-text {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.85);
+  margin: 0;
+}
+
+/* ─────────────────────────────────────────────────────────── */
+/* БЛОК 2: ДИСЦИПЛИНА */
+/* ─────────────────────────────────────────────────────────── */
+
+.rules-discipline {
+  background: rgba(245, 158, 11, 0.1);
+  border: 1px solid rgba(245, 158, 11, 0.3);
+  border-radius: 16px;
+  padding: 2rem;
+  margin-bottom: 3rem;
+}
+
+.rules-discipline .rules-block-icon {
+  color: #f59e0b;
+}
+
+.rules-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.rules-list-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 1rem 1.25rem;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 10px;
+  transition: all 0.3s ease;
+}
+
+.rules-list-item:hover {
+  background: rgba(255, 255, 255, 0.08);
+  transform: translateX(4px);
+}
+
+.rules-list-number {
+  flex-shrink: 0;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(245, 158, 11, 0.3);
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: #fbbf24;
+}
+
+.rules-list-text {
+  flex: 1;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+/* ─────────────────────────────────────────────────────────── */
+/* БЛОК 3: ПОСЛЕДСТВИЯ */
+/* ─────────────────────────────────────────────────────────── */
+
+.rules-consequences {
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  border-radius: 16px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+}
+
+.rules-consequences .rules-block-icon {
+  color: #ef4444;
+}
+
+.rules-consequences-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.875rem;
+}
+
+.rules-consequence-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.rules-consequence-icon {
+  flex-shrink: 0;
+  color: #ef4444;
+  margin-top: 0.1rem;
+}
+
+/* ─────────────────────────────────────────────────────────── */
+/* КНОПКА ПОЛНЫХ ПРАВИЛ */
+/* ─────────────────────────────────────────────────────────── */
+
+.rules-cta {
+  text-align: center;
+  padding: 2rem 0;
+}
+
+/* ─────────────────────────────────────────────────────────── */
+/* RESPONSIVE */
+/* ─────────────────────────────────────────────────────────── */
+
+@media (max-width: 768px) {
+  .rules-block-title {
+    font-size: 1.25rem;
+  }
+
+  .rules-principles-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .rules-principle-card {
+    padding: 1.25rem;
+    padding-left: 3.5rem;
+  }
+
+  .rules-principle-number {
+    left: 1.25rem;
+    top: 1.25rem;
+    width: 28px;
+    height: 28px;
+    font-size: 0.875rem;
+  }
+
+  .rules-discipline,
+  .rules-consequences {
+    padding: 1.5rem;
+  }
+
+  .rules-list-item {
+    padding: 0.875rem 1rem;
+  }
+}
+/* ═══════════════════════════════════════════════════════════
+   FINAL-CC - СТИЛИ ДЛЯ КОМПОНЕНТА
+   Добавь эти стили в конец файла styles-unified.css
+   ═══════════════════════════════════════════════════════════ */
+
+/* Обзор Final-СС */
+.finalcc-overview {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+}
+
+.finalcc-overview p {
+  font-size: 1.125rem;
+  line-height: 1.8;
+  color: rgba(255, 255, 255, 0.9);
+  margin: 0;
+}
+
+/* ─────────────────────────────────────────────────────────── */
+/* СЕТКА КАРТОЧЕК */
+/* ─────────────────────────────────────────────────────────── */
+
+.finalcc-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+/* Карточка */
+.finalcc-card {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  padding: 2rem;
+  transition: all 0.3s ease;
+}
+
+.finalcc-card:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(99, 102, 241, 0.3);
+  transform: translateY(-4px);
+}
+
+.finalcc-card.highlight {
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(5, 150, 105, 0.1));
+  border-color: rgba(16, 185, 129, 0.3);
+}
+
+.finalcc-card.highlight:hover {
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.15), rgba(5, 150, 105, 0.15));
+  border-color: rgba(16, 185, 129, 0.4);
+}
+
+/* Заголовок карточки */
+.finalcc-card-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.finalcc-icon {
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(99, 102, 241, 0.2);
+  border-radius: 12px;
+  color: #6366f1;
+}
+
+.finalcc-card.highlight .finalcc-icon {
+  background: rgba(16, 185, 129, 0.2);
+  color: #10b981;
+}
+
+.finalcc-card-header h3 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #fff;
+  margin: 0;
+}
+
+/* ─────────────────────────────────────────────────────────── */
+/* СПИСОК "ЧТО СДАЁМ" */
+/* ─────────────────────────────────────────────────────────── */
+
+.finalcc-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.finalcc-list-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+}
+
+.finalcc-list-icon {
+  flex-shrink: 0;
+  color: #10b981;
+  margin-top: 0.1rem;
+}
+
+.finalcc-list-content {
+  flex: 1;
+}
+
+.finalcc-item-name {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.9);
+  margin-bottom: 0.25rem;
+}
+
+.finalcc-item-desc {
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+/* ─────────────────────────────────────────────────────────── */
+/* ЧЕК-ЛИСТ */
+/* ─────────────────────────────────────────────────────────── */
+
+.finalcc-checklist {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.finalcc-checklist-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.finalcc-checklist-icon {
+  flex-shrink: 0;
+  color: #6366f1;
+  margin-top: 0.2rem;
+}
+
+/* ─────────────────────────────────────────────────────────── */
+/* КРИТЕРИИ */
+/* ─────────────────────────────────────────────────────────── */
+
+.finalcc-criteria {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.finalcc-criteria-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.finalcc-criteria-icon {
+  flex-shrink: 0;
+  color: #10b981;
+  margin-top: 0.2rem;
+}
+
+/* ─────────────────────────────────────────────────────────── */
+/* РЕЗУЛЬТАТ FINAL-СС */
+/* ─────────────────────────────────────────────────────────── */
+
+.finalcc-outcome {
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.15), rgba(217, 119, 6, 0.15));
+  border: 1px solid rgba(245, 158, 11, 0.3);
+  border-radius: 16px;
+  padding: 2rem;
+  text-align: center;
+}
+
+.finalcc-outcome-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.finalcc-outcome-icon {
+  color: #f59e0b;
+}
+
+.finalcc-outcome-header h3 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #fff;
+  margin: 0;
+}
+
+.finalcc-outcome-text {
+  font-size: 1.125rem;
+  line-height: 1.8;
+  color: rgba(255, 255, 255, 0.9);
+  margin: 0;
+}
+
+/* ─────────────────────────────────────────────────────────── */
+/* RESPONSIVE */
+/* ─────────────────────────────────────────────────────────── */
+
+@media (max-width: 768px) {
+  .finalcc-overview {
+    padding: 1.5rem;
+  }
+
+  .finalcc-overview p {
+    font-size: 1rem;
+  }
+
+  .finalcc-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .finalcc-card {
+    padding: 1.5rem;
+  }
+
+  .finalcc-icon {
+    width: 40px;
+    height: 40px;
+  }
+
+  .finalcc-card-header h3 {
+    font-size: 1.125rem;
+  }
+
+  .finalcc-outcome {
+    padding: 1.5rem;
+  }
+
+  .finalcc-outcome-header h3 {
+    font-size: 1.25rem;
+  }
+
+  .finalcc-outcome-text {
+    font-size: 1rem;
+  }
+}

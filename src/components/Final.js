@@ -3,137 +3,127 @@ import {
   Trophy,
   FileText,
   CheckCircle2,
-  ArrowRight,
-  Share2,
   Upload,
-  ExternalLink,
+  Target,
+  Award,
 } from "lucide-react";
 
 /**
- * FINAL — выпускной и сдача артефактов
- * По ТЗ: заполняем "Что сдаём", чек-лист, критерии. Светлые CTA допустимы, но тут outline primary ок.
+ * Final компонент - Final-СС (финальная стратегическая сессия)
+ * VERSION 2.0 - читает из content.finalCC
+ * 
+ * Props:
+ * - id: ID секции для якорей
+ * - content: объект content из content.js
  */
-export default function Final({ id = "final", content, scrollToSection }) {
-  const fin = content?.sections?.final ?? {};
-
-  const title = fin?.title ?? "Final-СС: подведение итогов";
-  const lead =
-    fin?.lead ??
-    "Готовим и сдаём итоговый пакет: презентация результата, цифры и подтверждающие артефакты. Финальная защита — краткая и по делу.";
-
-  const deliverables =
-    Array.isArray(fin?.deliverables) && fin.deliverables.length > 0
-      ? fin.deliverables.map((d) =>
-          typeof d === "string" ? { name: d } : d
-        )
-      : [
-          { name: "Финальная презентация (PDF, 15–20 слайдов)", desc: "Результаты, динамика метрик, ключевые инсайты." },
-          { name: "Дашборд метрик", desc: "Скрин/ссылка на актуальные приборы контроля." },
-          { name: "P&L за сезон", desc: "Сводка: выручка, маржа, ROMI по ключевым каналам." },
-          { name: "План на 90 дней", desc: "3–5 эпиков, метрики, чек-поинты." },
-        ];
-
-  const checklist =
-    Array.isArray(fin?.checklist) && fin.checklist.length > 0
-      ? fin.checklist
-      : [
-          "Сверстан PDF и проверен отображением на экране",
-          "Все цифры подтверждены источниками/скринами",
-          "Ссылки и QR-коды работают",
-          "Тайминг питча ≤ 7 минут, ответы на вопросы ≤ 5 минут",
-        ];
-
-  const criteria =
-    Array.isArray(fin?.criteria) && fin.criteria.length > 0
-      ? fin.criteria
-      : [
-          "Чёткий ROI/рост ключевых метрик",
-          "Прозрачные источники данных",
-          "Правильные выводы и следующие шаги",
-        ];
-
-  const cta = fin?.cta ?? { label: "К подготовке", href: "#prep-ss" };
-
-  const go = (href) => {
-    if (!href) return;
-    if (href.startsWith("#")) {
-      scrollToSection?.(href.slice(1));
-    } else {
-      window.open(href, "_blank", "noopener,noreferrer");
-    }
-  };
+export default function Final({ id = "final-cc", content }) {
+  const finalCC = content?.finalCC || {};
 
   return (
-    <section id={id} className="section container final-section">
-      <div className="section-header fade-in">
-        <h2>{title}</h2>
-        <p className="section-subtitle">{lead}</p>
-      </div>
+    <section id={id} className="section">
+      <div className="container">
+        {/* Заголовок секции */}
+        <div className="section-header fade-in">
+          <Award size={32} className="section-icon" />
+          <h2>{finalCC?.title || "Final-СС: Подведение итогов"}</h2>
+          <p className="section-subtitle">
+            {finalCC?.subtitle || "Защита результатов и планирование следующего цикла"}
+          </p>
+        </div>
 
-      <div className="final-grid fade-in">
-        <div className="final-card">
-          <div className="final-card-header">
-            <div className="final-icon"><FileText size={22} /></div>
-            <h3>Что сдаём</h3>
+        {/* Обзор */}
+        {finalCC?.overview && (
+          <div className="finalcc-overview fade-in">
+            <p>{finalCC.overview}</p>
           </div>
-          <ul className="final-list">
-            {deliverables.map((d, i) => (
-              <li key={i} className="final-item">
-                <CheckCircle2 size={18} />
-                <div>
-                  <div className="final-item-name">{d.name}</div>
-                  {d.desc && <div className="final-item-desc">{d.desc}</div>}
-                  {d.href && (
-                    <a
-                      href={d.href}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-link"
-                    >
-                      Открыть <ExternalLink size={14} />
-                    </a>
-                  )}
+        )}
+
+        {/* 3 блока */}
+        <div className="finalcc-grid fade-in">
+          
+          {/* БЛОК 1: Что сдаём */}
+          {finalCC?.deliverables && (
+            <div className="finalcc-card">
+              <div className="finalcc-card-header">
+                <div className="finalcc-icon">
+                  <FileText size={24} />
                 </div>
-              </li>
-            ))}
-          </ul>
+                <h3>{finalCC.deliverables.title || "Что сдаём"}</h3>
+              </div>
+              {finalCC.deliverables.items && finalCC.deliverables.items.length > 0 && (
+                <ul className="finalcc-list">
+                  {finalCC.deliverables.items.map((item, idx) => (
+                    <li key={idx} className="finalcc-list-item">
+                      <CheckCircle2 size={18} className="finalcc-list-icon" />
+                      <div className="finalcc-list-content">
+                        <div className="finalcc-item-name">{item.name}</div>
+                        {item.description && (
+                          <div className="finalcc-item-desc">{item.description}</div>
+                        )}
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
+          )}
+
+          {/* БЛОК 2: Чек-лист перед сдачей */}
+          {finalCC?.checklist && (
+            <div className="finalcc-card">
+              <div className="finalcc-card-header">
+                <div className="finalcc-icon">
+                  <Upload size={24} />
+                </div>
+                <h3>{finalCC.checklist.title || "Чек-лист перед сдачей"}</h3>
+              </div>
+              {finalCC.checklist.items && finalCC.checklist.items.length > 0 && (
+                <ul className="finalcc-checklist">
+                  {finalCC.checklist.items.map((item, idx) => (
+                    <li key={idx} className="finalcc-checklist-item">
+                      <CheckCircle2 size={16} className="finalcc-checklist-icon" />
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
+          )}
+
+          {/* БЛОК 3: Критерии зачёта */}
+          {finalCC?.criteria && (
+            <div className="finalcc-card highlight">
+              <div className="finalcc-card-header">
+                <div className="finalcc-icon">
+                  <Trophy size={24} />
+                </div>
+                <h3>{finalCC.criteria.title || "Критерии зачёта"}</h3>
+              </div>
+              {finalCC.criteria.items && finalCC.criteria.items.length > 0 && (
+                <ul className="finalcc-criteria">
+                  {finalCC.criteria.items.map((item, idx) => (
+                    <li key={idx} className="finalcc-criteria-item">
+                      <Target size={16} className="finalcc-criteria-icon" />
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
+          )}
         </div>
 
-        <div className="final-card">
-          <div className="final-card-header">
-            <div className="final-icon"><Upload size={22} /></div>
-            <h3>Чек-лист перед сдачей</h3>
+        {/* Результат */}
+        {finalCC?.outcome && (
+          <div className="finalcc-outcome fade-in">
+            <div className="finalcc-outcome-header">
+              <Award size={24} className="finalcc-outcome-icon" />
+              <h3>{finalCC.outcome.title || "Результат Final-СС"}</h3>
+            </div>
+            <p className="finalcc-outcome-text">{finalCC.outcome.description}</p>
           </div>
-          <ul className="final-list dots">
-            {checklist.map((c, i) => (
-              <li key={i}>{String(c)}</li>
-            ))}
-          </ul>
-        </div>
-
-        <div className="final-card">
-          <div className="final-card-header">
-            <div className="final-icon"><Trophy size={22} /></div>
-            <h3>Критерии зачёта</h3>
-          </div>
-          <ul className="final-list dots">
-            {criteria.map((c, i) => (
-              <li key={i}>{String(c)}</li>
-            ))}
-          </ul>
-        </div>
+        )}
       </div>
-
-      {cta?.label && (
-        <div className="final-cta fade-in">
-          <button className="cta-button primary outline" onClick={() => scrollToSection?.('prep-ss')}>
-            Подготовка к стратегической сессии <ArrowRight size={18} />
-          </button>
-          <button className="cta-button secondary" onClick={() => scrollToSection?.('onboarding')}>
-            Стартовый чек-лист <Share2 size={18} />
-          </button>
-        </div>
-      )}
     </section>
   );
 }
