@@ -20,6 +20,7 @@ import Rules from "./components/Rules";
 import Final from "./components/Final";
 import Roles from "./components/Roles";
 import ToolsHub from "./components/ToolsHub";
+import MeetingCycle from "./components/MeetingCycle";
 import FooterCTA from "./components/FooterCTA";
 import CalendarSection from "./components/CalendarSection";
 
@@ -214,7 +215,7 @@ export default function App() {
         <section id="meeting-cycle" className="section">
           <div className="container">
             <h2>Цикл разбора на встречах</h2>
-            <p>Раздел в разработке - будет добавлен на следующем шаге</p>
+            <MeetingCycle id="meeting-cycle" content={content} />
           </div>
         </section>
 

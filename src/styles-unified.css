@@ -10027,3 +10027,262 @@ a:hover, .inline-link:hover {
     font-size: 0.875rem;
   }
 }
+/* ═══════════════════════════════════════════════════════════
+   MEETING CYCLE - СТИЛИ ДЛЯ КОМПОНЕНТА
+   Добавь эти стили в конец файла styles-unified.css
+   ═══════════════════════════════════════════════════════════ */
+
+/* Обзор встречи */
+.meetingcycle-overview {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+}
+
+.meetingcycle-overview p {
+  font-size: 1.125rem;
+  line-height: 1.8;
+  color: rgba(255, 255, 255, 0.9);
+  margin: 0;
+}
+
+/* ─────────────────────────────────────────────────────────── */
+/* ЭТАПЫ ВСТРЕЧИ */
+/* ─────────────────────────────────────────────────────────── */
+
+.meetingcycle-stages {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+/* Этап встречи */
+.meetingcycle-stage {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: 1.5rem;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  padding: 2rem;
+  transition: all 0.3s ease;
+  animation: fadeInUp 0.6s ease-out both;
+}
+
+.meetingcycle-stage:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(99, 102, 241, 0.4);
+  transform: translateX(8px);
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Номер этапа */
+.meetingcycle-stage-number {
+  flex-shrink: 0;
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  border-radius: 12px;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #fff;
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+}
+
+/* Иконка этапа */
+.meetingcycle-stage-icon {
+  flex-shrink: 0;
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(99, 102, 241, 0.15);
+  border-radius: 12px;
+  color: #6366f1;
+  transition: all 0.3s ease;
+}
+
+.meetingcycle-stage:hover .meetingcycle-stage-icon {
+  background: rgba(99, 102, 241, 0.25);
+  transform: scale(1.1);
+}
+
+/* Контент этапа */
+.meetingcycle-stage-content {
+  flex: 1;
+}
+
+.meetingcycle-stage-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #fff;
+  margin: 0 0 0.5rem 0;
+}
+
+.meetingcycle-stage-duration {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  background: rgba(245, 158, 11, 0.2);
+  border: 1px solid rgba(245, 158, 11, 0.3);
+  border-radius: 6px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #fbbf24;
+  margin-bottom: 0.75rem;
+}
+
+.meetingcycle-stage-description {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.75);
+  margin: 0 0 1rem 0;
+}
+
+/* Ключевые вопросы */
+.meetingcycle-questions {
+  margin-top: 1rem;
+  padding: 1rem 1.25rem;
+  background: rgba(255, 255, 255, 0.03);
+  border-left: 3px solid #6366f1;
+  border-radius: 8px;
+}
+
+.meetingcycle-questions h4 {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.9);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin: 0 0 0.75rem 0;
+}
+
+.meetingcycle-questions ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.meetingcycle-questions li {
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.75);
+  padding-left: 1.25rem;
+  position: relative;
+}
+
+.meetingcycle-questions li::before {
+  content: "•";
+  position: absolute;
+  left: 0;
+  color: #6366f1;
+  font-weight: 700;
+}
+
+/* ─────────────────────────────────────────────────────────── */
+/* РЕЗУЛЬТАТ ВСТРЕЧИ */
+/* ─────────────────────────────────────────────────────────── */
+
+.meetingcycle-outcome {
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(5, 150, 105, 0.1));
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  border-radius: 16px;
+  padding: 2rem;
+}
+
+.meetingcycle-outcome-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.meetingcycle-outcome-icon {
+  color: #10b981;
+}
+
+.meetingcycle-outcome-header h3 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #fff;
+  margin: 0;
+}
+
+.meetingcycle-outcome-text {
+  font-size: 1rem;
+  line-height: 1.7;
+  color: rgba(255, 255, 255, 0.85);
+  margin: 0;
+}
+
+/* ─────────────────────────────────────────────────────────── */
+/* RESPONSIVE */
+/* ─────────────────────────────────────────────────────────── */
+
+@media (max-width: 768px) {
+  .meetingcycle-overview {
+    padding: 1.5rem;
+  }
+
+  .meetingcycle-overview p {
+    font-size: 1rem;
+  }
+
+  .meetingcycle-stage {
+    flex-direction: column;
+    padding: 1.5rem;
+    gap: 1rem;
+  }
+
+  .meetingcycle-stage-number,
+  .meetingcycle-stage-icon {
+    width: 40px;
+    height: 40px;
+  }
+
+  .meetingcycle-stage-number {
+    font-size: 1.25rem;
+  }
+
+  .meetingcycle-stage-title {
+    font-size: 1.25rem;
+  }
+
+  .meetingcycle-stage-description {
+    font-size: 0.9rem;
+  }
+
+  .meetingcycle-outcome {
+    padding: 1.5rem;
+  }
+
+  .meetingcycle-outcome-header h3 {
+    font-size: 1.25rem;
+  }
+
+  .meetingcycle-outcome-text {
+    font-size: 0.95rem;
+  }
+}
