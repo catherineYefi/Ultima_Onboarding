@@ -68,9 +68,9 @@ export default function OrganizationalSteps({ id = "org-steps", content, scrollT
                 {step.action && (
                   <button
                     className="org-step-action"
-                    onClick={() => handleAction(step.actionLink)}
+                    onClick={() => handleAction(step.action.link)}
                   >
-                    <span>{step.action}</span>
+                    <span>{step.action.text}</span>
                     <ArrowRight size={16} />
                   </button>
                 )}
