@@ -252,7 +252,7 @@ export default function App() {
           copyPrompt={copyPrompt}
           downloadPrompt={downloadPrompt}
         />
-        <StartCC id="StartCC" content={content} />
+        <StartCC id="start-cc" content={content} />
         <MainCycle id="main-cycle" content={content} />
         <Final id="final" content={content} scrollToSection={scrollToSection} />
         <FooterCTA id="footer" content={content} scrollToSection={scrollToSection} setActiveTab={setActiveTab} />
