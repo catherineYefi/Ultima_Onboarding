@@ -10985,3 +10985,177 @@ a:hover, .inline-link:hover {
     padding: 1.25rem 1.5rem;
   }
 }
+/* ===========================
+   ULTIMA 9.0 — Доп. стили секций (append-only)
+   Вставить в КОНЕЦ styles-unified.css
+   =========================== */
+
+/* ----- Универсальные утилиты ----- */
+.section { padding: 56px 0; }
+.section__header { margin-bottom: 24px; }
+.section__title { font-size: 28px; line-height: 1.2; margin: 0 0 8px; }
+.section__subtitle { color: rgba(0,0,0,0.65); margin: 0; }
+.container { max-width: 1120px; margin: 0 auto; padding: 0 16px; }
+
+.btn { display: inline-flex; align-items: center; gap: 8px; padding: 10px 14px; border-radius: 8px; border: 1px solid transparent; cursor: pointer; text-decoration: none; }
+.btn--primary { background: #111; color: #fff; }
+.btn--primary:hover { opacity: .92; }
+.btn--secondary { background: #f5f5f5; color: #111; border-color: #e7e7e7; }
+.btn--secondary:hover { background: #eee; }
+
+/* ----- Navbar (совместимость) ----- */
+.navbar { position: sticky; top: 0; z-index: 50; background: #fff; border-bottom: 1px solid #eee; }
+.navbar--elevated { box-shadow: 0 2px 12px rgba(0,0,0,.06); }
+.navbar__inner { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 10px 16px; }
+.navbar__brand { font-weight: 700; letter-spacing: .4px; cursor: pointer; user-select: none; }
+.navbar__links { display: none; gap: 8px; }
+.navbar__burger { border: none; background: transparent; cursor: pointer; padding: 6px; }
+.navbar__drawer { display: grid; gap: 8px; padding: 10px 16px 16px; border-top: 1px solid #eee; }
+.nav-link { border: none; background: transparent; padding: 8px 10px; border-radius: 8px; cursor: pointer; }
+.nav-link.active { background: #111; color: #fff; }
+@media (min-width: 960px) {
+  .navbar__links { display: flex; }
+  .navbar__burger, .navbar__drawer { display: none; }
+}
+
+/* ----- Sidebar (совместимость) ----- */
+.sidebar { position: fixed; top: 64px; left: 0; bottom: 0; width: 280px; padding: 12px 12px 24px; overflow: auto; background: #fff; border-right: 1px solid #eee; z-index: 40; }
+.sidebar--floating { opacity: .98; backdrop-filter: blur(6px); }
+.sidebar__top { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; }
+.sidebar__pin { background: #f5f5f5; border: 1px solid #e7e7e7; border-radius: 8px; padding: 6px 10px; cursor: pointer; }
+.sidebar__progress { display: flex; align-items: center; gap: 8px; margin-left: auto; }
+.sidebar__progress-track { width: 120px; height: 6px; background: #eee; border-radius: 999px; overflow: hidden; }
+.sidebar__progress-bar { height: 100%; background: #111; }
+.sidebar__progress-label { font-size: 12px; color: rgba(0,0,0,0.6); }
+.sidebar__group { margin-top: 12px; }
+.sidebar__group-title { font-size: 12px; text-transform: uppercase; color: rgba(0,0,0,0.45); letter-spacing: .6px; margin: 8px 6px; }
+.sidebar__list { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; }
+.sidebar__link { width: 100%; text-align: left; background: transparent; border: none; padding: 8px 10px; border-radius: 8px; cursor: pointer; }
+.sidebar__link.active { background: #111; color: #fff; }
+@media (max-width: 1199px) { .sidebar { display: none; } }
+.main-content { margin-left: 0; }
+@media (min-width: 1200px) { .main-content { margin-left: 280px; } }
+
+/* ----- OrganizationalSteps ----- */
+.orgsteps__list { display: grid; gap: 16px; }
+.orgsteps__card { border: 1px solid #eee; border-radius: 12px; padding: 16px; background: #fff; }
+.orgsteps__title { margin: 0 0 6px; font-size: 18px; }
+.orgsteps__desc { margin: 0 0 10px; color: rgba(0,0,0,0.7); }
+.orgsteps__bullets { margin: 0 0 10px 16px; }
+.orgsteps__bullet { margin: 6px 0; }
+.orgsteps__actions { display: flex; gap: 8px; }
+
+/* ----- Roles ----- */
+.roles__grid { display: grid; grid-template-columns: 1fr; gap: 12px; }
+@media (min-width: 720px) { .roles__grid { grid-template-columns: 1fr 1fr; } }
+@media (min-width: 1080px) { .roles__grid { grid-template-columns: 1fr 1fr 1fr; } }
+.roles__card { border: 1px solid #eee; border-radius: 12px; background: #fff; overflow: hidden; }
+.roles__card-head { display: flex; align-items: center; gap: 12px; padding: 14px 16px; cursor: pointer; }
+.roles__title { margin: 0; font-size: 16px; }
+.roles__meta { display: flex; gap: 8px; margin-left: auto; }
+.roles__pill { background: #f3f3f3; border: 1px solid #e7e7e7; border-radius: 999px; padding: 4px 8px; font-size: 12px; color: rgba(0,0,0,0.8); }
+.roles__toggle { margin-left: 8px; border: 1px solid #e7e7e7; background: #fff; border-radius: 8px; width: 28px; height: 28px; cursor: pointer; }
+.roles__card-body { padding: 12px 16px 16px; display: grid; gap: 14px; }
+.roles__block-title { font-size: 12px; text-transform: uppercase; letter-spacing: .5px; color: rgba(0,0,0,0.55); margin-bottom: 6px; }
+.roles__list { margin: 0; padding-left: 18px; }
+.roles__li { margin: 6px 0; }
+.roles__text { margin: 0; }
+.roles__hint { margin-top: 12px; color: rgba(0,0,0,0.55); font-size: 13px; }
+
+/* ----- WIG Declaration ----- */
+.wig__text { margin: 0 0 12px; color: rgba(0,0,0,0.78); }
+.wig__block { margin: 16px 0; }
+.wig__block-title { font-size: 13px; text-transform: uppercase; letter-spacing: .5px; color: rgba(0,0,0,0.55); margin-bottom: 6px; }
+.wig__template { background: #0f0f0f; color: #fff; border-radius: 12px; padding: 12px; overflow: auto; }
+.wig__grid { display: grid; gap: 16px; }
+@media (min-width: 920px) { .wig__grid { grid-template-columns: 1fr 1fr; } }
+.wig__list { margin: 0; padding-left: 18px; }
+.wig__li { margin: 6px 0; }
+
+/* ----- Control Panel ----- */
+.cp__tabs { display: grid; gap: 12px; }
+.cp__tablist { display: flex; flex-wrap: wrap; gap: 8px; }
+.cp__tab { border: 1px solid #e7e7e7; background: #fff; padding: 8px 10px; border-radius: 8px; cursor: pointer; }
+.cp__tab.is-active { background: #111; color: #fff; border-color: #111; }
+.cp__grid { display: grid; gap: 16px; }
+@media (min-width: 960px) { .cp__grid { grid-template-columns: 1fr 1fr; } }
+.cp__category { border: 1px solid #eee; border-radius: 12px; padding: 16px; background: #fff; }
+.cp__category-title { margin: 0 0 10px; font-size: 16px; }
+.cp__metrics { display: grid; gap: 12px; }
+.cp__metric { border: 1px dashed #e7e7e7; border-radius: 10px; padding: 12px; background: #fcfcfc; }
+.cp__metric-head { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.cp__metric-name { margin: 0; font-size: 15px; }
+.cp__metric-target { margin-left: auto; font-size: 12px; color: rgba(0,0,0,0.65); }
+.cp__metric-desc { margin: 6px 0 8px; color: rgba(0,0,0,0.75); }
+.cp__meta { display: flex; flex-wrap: wrap; gap: 12px; margin: 0; padding: 0; list-style: none; }
+.cp__meta-item { font-size: 13px; color: rgba(0,0,0,0.75); }
+.cp__meta-label { color: rgba(0,0,0,0.55); }
+.cp__notes { margin: 8px 0 0 16px; }
+.cp__note { margin: 4px 0; color: rgba(0,0,0,0.75); }
+.cp__block-title { font-size: 13px; text-transform: uppercase; letter-spacing: .5px; color: rgba(0,0,0,0.55); margin-bottom: 6px; }
+.cp__leadlag { display: grid; gap: 16px; }
+@media (min-width: 720px) { .cp__leadlag { grid-template-columns: 1fr 1fr; } }
+.cp__dash { display: grid; gap: 10px; }
+.cp__dash-item { list-style: none; } /* <-- фикс: правило не пустое */
+.cp__dash-link { display: inline-flex; gap: 8px; align-items: center; }
+.cp__dash-system { color: rgba(0,0,0,0.55); }
+.cp__formulas { display: grid; gap: 8px; margin: 0; padding-left: 18px; }
+.cp__formula { margin: 0; }
+.cp__hint { margin-top: 14px; color: rgba(0,0,0,0.55); font-size: 13px; }
+
+/* ----- Tools Hub ----- */
+.tools__search { margin: 8px 0 16px; }
+.tools__input { width: 100%; padding: 10px 12px; border: 1px solid #e7e7e7; border-radius: 10px; outline: none; }
+.tools__category { margin: 16px 0; }
+.tools__category-title { margin: 0 0 10px; font-size: 16px; }
+.tools__grid { display: grid; gap: 12px; grid-template-columns: 1fr; }
+@media (min-width: 720px) { .tools__grid { grid-template-columns: 1fr 1fr; } }
+@media (min-width: 1080px) { .tools__grid { grid-template-columns: 1fr 1fr 1fr; } }
+.tools__card { border: 1px solid #eee; border-radius: 12px; padding: 14px; background: #fff; display: grid; gap: 8px; }
+.tools__head { display: flex; align-items: baseline; gap: 8px; }
+.tools__title { margin: 0; font-size: 15px; }
+.tools__system { margin-left: auto; font-size: 12px; color: rgba(0,0,0,0.55); }
+.tools__desc { margin: 0; color: rgba(0,0,0,0.75); }
+.tools__tags { display: flex; flex-wrap: wrap; gap: 6px; }
+.tools__tag { font-size: 12px; background: #f3f3f3; border: 1px solid #e7e7e7; border-radius: 999px; padding: 2px 8px; }
+.tools__actions { margin-top: 4px; }
+.tools__empty { color: rgba(0,0,0,0.55); font-style: italic; }
+.tools__hint { margin-top: 12px; color: rgba(0,0,0,0.55); font-size: 13px; }
+
+/* ----- Calendar ----- */
+.calendar__table { border: 1px solid #eee; border-radius: 12px; overflow: hidden; background: #fff; }
+.calendar__row { display: grid; grid-template-columns: 120px 100px 1fr 160px; }
+.calendar__row--head { background: #fafafa; font-weight: 600; }
+.calendar__cell { padding: 10px 12px; border-bottom: 1px solid #eee; }
+.calendar__cell--title { border-left: 1px solid #f2f2f2; border-right: 1px solid #f2f2f2; }
+.calendar__desc { color: rgba(0,0,0,0.6); margin-top: 2px; }
+.calendar__body { list-style: none; margin: 0; padding: 0; }
+.calendar__hint { margin-top: 12px; color: rgba(0,0,0,0.55); font-size: 13px; }
+@media (max-width: 720px) {
+  .calendar__row { grid-template-columns: 1fr; }
+  .calendar__cell--date, .calendar__cell--time, .calendar__cell--location { color: rgba(0,0,0,0.65); }
+}
+
+/* ----- Documents ----- */
+.documents__group { margin: 18px 0; }
+.documents__group-title { font-size: 16px; margin: 0 0 10px; }
+.documents__list { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; grid-template-columns: 1fr; }
+@media (min-width: 960px) { .documents__list { grid-template-columns: 1fr 1fr; } }
+.doc-card { border: 1px solid #eee; border-radius: 12px; padding: 14px; background: #fff; display: grid; gap: 8px; }
+.doc-card__head { display: flex; gap: 8px; align-items: baseline; }
+.doc-card__title { margin: 0; font-size: 15px; }
+.doc-card__badge { margin-left: 8px; font-size: 11px; background: #111; color: #fff; border-radius: 999px; padding: 2px 8px; }
+.doc-card__type { margin-left: auto; font-size: 12px; color: rgba(0,0,0,0.55); }
+.doc-card__desc { margin: 0; color: rgba(0,0,0,0.72); }
+.doc-card__actions { margin-top: 4px; }
+
+/* ----- Rules ----- */
+.rules__list { counter-reset: rules; list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; }
+.rules__item { display: grid; grid-template-columns: 56px 1fr; align-items: start; gap: 8px; border: 1px solid #eee; border-radius: 12px; background: #fff; padding: 12px; }
+.rules__index { font-weight: 700; font-size: 18px; line-height: 1; background: #111; color: #fff; min-width: 40px; text-align: center; border-radius: 8px; padding: 10px 0; }
+.rules__title { margin: 0 0 6px; }
+.rules__text { margin: 0; color: rgba(0,0,0,0.75); }
+.rules__notes { margin-top: 12px; }
+.rules__notes-title { font-size: 13px; text-transform: uppercase; color: rgba(0,0,0,0.55); margin: 0 0 6px; }
+.rules__notes-list { margin: 0; padding-left: 18px; }
+.rules__note { margin: 4px 0; }

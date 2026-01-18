@@ -1,143 +1,143 @@
-import React from "react";
-import { Target, TrendingUp, Calendar, CheckCircle, AlertCircle } from "lucide-react";
+import React, { useMemo } from "react";
 
 /**
- * WIGDeclaration компонент - работа с декларацией главной цели
- * VERSION 1.0 - НОВЫЙ КОМПОНЕНТ
- * 
- * Props:
- * - id: ID секции для якорей
- * - content: объект content из content.js
+ * WIG (Wildly Important Goal) Declaration — строгий якорь id="wig-declaration"
+ *
+ * Поддерживаемые источники данных:
+ *  A) content.sections.wigDeclaration = {
+ *       title?, subtitle?, intro?, template?, examples?: string[],
+ *       rules?: string[], cadence?: string[], checkpoints?: string[]
+ *     }
+ *  Б) content.wigDeclaration = аналогичная структура
+ *
+ * Безопасные дефолты показаны, если данные частично отсутствуют.
  */
-export default function WIGDeclaration({ id = "wig-declaration", content }) {
-  const wigDeclaration = content?.wigDeclaration || {};
+
+const normalizeWIG = (content = {}) => {
+  const fromSections = content?.sections?.wigDeclaration || {};
+  const fromRoot = content?.wigDeclaration || {};
+  const src = Object.keys(fromSections).length ? fromSections : fromRoot;
+
+  const title = src?.title || "WIG — Декларация сверхважной цели";
+  const subtitle =
+    src?.subtitle ||
+    "Формулируем одну-две цели, определяющие успех на горизонте ближайших месяцев.";
+
+  const intro =
+    src?.intro ||
+    "WIG помогает сфокусировать организацию на действительно важном. Цель должна быть чёткой, измеримой, достижимой в заданный срок и подкреплённой ритмом контроля.";
+
+  const template =
+    src?.template ||
+    "Снидить/Увеличить <Метрика> с <Текущее значение> до <Целевое значение> к <Дата/Период> за счёт <Ключевой рычаг/инициатива>.";
+
+  const examples =
+    Array.isArray(src?.examples) && src.examples.length
+      ? src.examples
+      : [
+          "Увеличить ежемесячный актив DAU с 1 500 до 4 000 за 3 месяца за счёт реферальной программы и e-mail активации.",
+          "Сократить среднее время развертывания релиза с 5 дней до 1 дня к 31 мая за счёт CI/CD и шаблонов инфраструктуры.",
+        ];
+
+  const rules =
+    Array.isArray(src?.rules) && src.rules.length
+      ? src.rules
+      : [
+          "WIG — одна (максимум две) на команду/направление.",
+          "Формулировка содержит метрику, текущий и целевой уровень, крайний срок.",
+          "Есть чёткий владелец и измеримый ритм контроля.",
+        ];
+
+  const cadence =
+    Array.isArray(src?.cadence) && src.cadence.length
+      ? src.cadence
+      : [
+          "Еженедельный короткий синк по метрике и ключевому рычагу.",
+          "Ежемесячная ревизия плана и рисков.",
+        ];
+
+  const checkpoints =
+    Array.isArray(src?.checkpoints) && src.checkpoints.length
+      ? src.checkpoints
+      : [
+          "Промежуточные целевые уровни: 30%, 60%, 90% от WIG.",
+          "Фиксируем факты/препятствия и корректируем инициативы.",
+        ];
+
+  return { title, subtitle, intro, template, examples, rules, cadence, checkpoints };
+};
+
+const List = ({ items = [], className = "" }) => {
+  if (!items.length) return null;
+  return (
+    <ul className={`wig__list ${className}`.trim()}>
+      {items.map((t, i) => (
+        <li key={i} className="wig__li">
+          {t}
+        </li>
+      ))}
+    </ul>
+  );
+};
+
+const WIGDeclaration = ({ id = "wig-declaration", content = {} }) => {
+  const data = useMemo(() => normalizeWIG(content), [content]);
 
   return (
-    <section id={id} className="section">
+    <section id={id} className="section wig">
       <div className="container">
-        {/* Заголовок секции */}
-        <div className="section-header fade-in">
-          <Target size={32} className="section-icon" />
-          <h2>{wigDeclaration?.title || "Работа с декларацией WIG"}</h2>
-          <p className="section-subtitle">
-            {wigDeclaration?.subtitle || "Как формулировать и отслеживать главную цель"}
-          </p>
+        <header className="section__header">
+          <h2 className="section__title">{data.title}</h2>
+          {data.subtitle && <p className="section__subtitle">{data.subtitle}</p>}
+        </header>
+
+        <div className="wig__intro">
+          <p className="wig__text">{data.intro}</p>
         </div>
 
-        {/* Что такое WIG */}
-        {wigDeclaration?.definition && (
-          <div className="wig-definition fade-in">
-            <h3>Что такое WIG?</h3>
-            <p>{wigDeclaration.definition}</p>
-          </div>
-        )}
+        <div className="wig__block">
+          <div className="wig__block-title">Шаблон формулировки</div>
+          <pre className="wig__template">
+{data.template}
+          </pre>
+        </div>
 
-        {/* Формула WIG */}
-        {wigDeclaration?.formula && (
-          <div className="wig-formula fade-in">
-            <div className="wig-formula-header">
-              <Target size={24} className="wig-formula-icon" />
-              <h3>{wigDeclaration.formula.title || "Формула WIG"}</h3>
+        <div className="wig__grid">
+          <div className="wig__col">
+            <div className="wig__block">
+              <div className="wig__block-title">Примеры</div>
+              <List items={data.examples} />
             </div>
-            <div className="wig-formula-content">
-              {wigDeclaration.formula.template && (
-                <div className="wig-formula-template">
-                  {wigDeclaration.formula.template}
-                </div>
-              )}
-              {wigDeclaration.formula.example && (
-                <div className="wig-formula-example">
-                  <strong>Пример:</strong> {wigDeclaration.formula.example}
-                </div>
-              )}
+
+            <div className="wig__block">
+              <div className="wig__block-title">Правила постановки WIG</div>
+              <List items={data.rules} />
             </div>
           </div>
-        )}
 
-        {/* Критерии хорошего WIG */}
-        {wigDeclaration?.criteria && wigDeclaration.criteria.length > 0 && (
-          <div className="wig-criteria fade-in">
-            <h3>Критерии хорошего WIG</h3>
-            <div className="wig-criteria-grid">
-              {wigDeclaration.criteria.map((criterion, idx) => (
-                <div key={idx} className="wig-criterion-card">
-                  <CheckCircle size={20} className="wig-criterion-icon" />
-                  <div className="wig-criterion-content">
-                    <h4>{criterion.title}</h4>
-                    <p>{criterion.description}</p>
-                  </div>
-                </div>
-              ))}
+          <div className="wig__col">
+            <div className="wig__block">
+              <div className="wig__block-title">Ритм и контроль</div>
+              <List items={data.cadence} />
+            </div>
+
+            <div className="wig__block">
+              <div className="wig__block-title">Чекпоинты</div>
+              <List items={data.checkpoints} />
             </div>
           </div>
-        )}
+        </div>
 
-        {/* Lead/Lag показатели */}
-        {wigDeclaration?.leadLag && (
-          <div className="wig-leadlag fade-in">
-            <h3>Lead и Lag показатели</h3>
-            <div className="wig-leadlag-grid">
-              {/* Lead показатели */}
-              {wigDeclaration.leadLag.lead && (
-                <div className="wig-leadlag-card lead">
-                  <div className="wig-leadlag-header">
-                    <TrendingUp size={24} />
-                    <h4>{wigDeclaration.leadLag.lead.title || "Lead (опережающие)"}</h4>
-                  </div>
-                  <p className="wig-leadlag-description">
-                    {wigDeclaration.leadLag.lead.description}
-                  </p>
-                  {wigDeclaration.leadLag.lead.examples && (
-                    <ul className="wig-leadlag-examples">
-                      {wigDeclaration.leadLag.lead.examples.map((example, idx) => (
-                        <li key={idx}>{example}</li>
-                      ))}
-                    </ul>
-                  )}
-                </div>
-              )}
-
-              {/* Lag показатели */}
-              {wigDeclaration.leadLag.lag && (
-                <div className="wig-leadlag-card lag">
-                  <div className="wig-leadlag-header">
-                    <Calendar size={24} />
-                    <h4>{wigDeclaration.leadLag.lag.title || "Lag (результирующие)"}</h4>
-                  </div>
-                  <p className="wig-leadlag-description">
-                    {wigDeclaration.leadLag.lag.description}
-                  </p>
-                  {wigDeclaration.leadLag.lag.examples && (
-                    <ul className="wig-leadlag-examples">
-                      {wigDeclaration.leadLag.lag.examples.map((example, idx) => (
-                        <li key={idx}>{example}</li>
-                      ))}
-                    </ul>
-                  )}
-                </div>
-              )}
-            </div>
-          </div>
-        )}
-
-        {/* Частые ошибки */}
-        {wigDeclaration?.mistakes && wigDeclaration.mistakes.length > 0 && (
-          <div className="wig-mistakes fade-in">
-            <div className="wig-mistakes-header">
-              <AlertCircle size={24} className="wig-mistakes-icon" />
-              <h3>Частые ошибки при формулировке WIG</h3>
-            </div>
-            <ul className="wig-mistakes-list">
-              {wigDeclaration.mistakes.map((mistake, idx) => (
-                <li key={idx} className="wig-mistake-item">
-                  <AlertCircle size={18} className="wig-mistake-icon" />
-                  <span>{mistake}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
+        <div className="wig__hint">
+          Данные можно хранить в <code>content.sections.wigDeclaration</code> или{" "}
+          <code>content.wigDeclaration</code>. Поля:{" "}
+          <code>title</code>, <code>subtitle</code>, <code>intro</code>,{" "}
+          <code>template</code>, <code>examples[]</code>, <code>rules[]</code>,{" "}
+          <code>cadence[]</code>, <code>checkpoints[]</code>.
+        </div>
       </div>
     </section>
   );
-}
+};
+
+export default WIGDeclaration;

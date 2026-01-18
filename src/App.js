@@ -7,21 +7,23 @@ import Sidebar from "./components/Sidebar";
 import ScrollToTop from "./components/ScrollToTop";
 import Hero from "./components/Hero";
 import Glossary from "./components/Glossary";
-import Intro from "./components/Intro";
 import Roadmap from "./components/Roadmap";
 import Checklist from "./components/Checklist";
-import Onboarding from "./components/Onboarding";
 import AboutUltima from "./components/AboutUltima";
-import CycleTimeline from "./components/CycleTimeline";
 import Documents from "./components/Documents";
 import Rules from "./components/Rules";
-import Formula from "./components/Formula";
 import PrepToSS from "./components/PrepToSS";
 import StartCC from "./components/StartCC";
 import MainCycle from "./components/MainCycle";
 import Final from "./components/Final";
 import FooterCTA from "./components/FooterCTA";
 import CalendarSection from "./components/CalendarSection";
+import OrganizationalSteps from "./components/OrganizationalSteps";
+import MeetingCycle from "./components/MeetingCycle";
+import Roles from "./components/Roles";
+import WIGDeclaration from "./components/WIGDeclaration";
+import ControlPanel from "./components/ControlPanel";
+import ToolsHub from "./components/ToolsHub";
 
 // СТИЛИ: Единый объединённый CSS файл (Phase 2 - Unified)
 import "./styles-unified.css";
@@ -83,22 +85,27 @@ function normalizeContent(raw) {
       prepFrom?.why ||
       "Качество СС определяется не днём работы, а подготовкой к ней.",
     readinessChecklists: readiness,
-    ...(raw?.sections?.prepSS || {}),
+    biMeetings: Array.isArray(prepFrom?.biMeetings) ? prepFrom.biMeetings : [],
+    booster: raw?.links?.booster || links.booster?.url || "#",
   };
 
-  const startCC = {
-    ...(raw?.sections?.startCC || {}),
-    format:
-      raw?.sections?.startCC?.format || "2 дня офлайн (Start-СС: день 1 и день 2)",
-    results:
-      Array.isArray(raw?.sections?.startCC?.results) &&
-      raw.sections.startCC.results.length > 0
-        ? raw.sections.startCC.results
-        : [
-            "Определены WIG/OKR",
-            "Настроены приборы контроля",
-            "Собрана дорожная карта на 6 месяцев",
-          ],
+  const ssFrom = raw?.sections?.ssOffline || {};
+  const ssOffline = {
+    title: ssFrom?.title || "Офлайн стратегическая сессия",
+    location: ssFrom?.location || "TBD",
+    agenda: Array.isArray(ssFrom?.agenda)
+      ? ssFrom.agenda
+      : [
+          { time: "10:00", title: "Открытие" },
+          { time: "11:00", title: "Разбор стратегии" },
+        ],
+    results: Array.isArray(ssFrom?.results)
+      ? ssFrom.results
+      : [
+          "Определены WIG/OKR",
+          "Настроены приборы контроля",
+          "Собрана дорожная карта на 6 месяцев",
+        ],
   };
 
   const rhythmRaw = raw?.sections?.mainCycle?.rhythm;
@@ -107,29 +114,21 @@ function normalizeContent(raw) {
     : Array.isArray(rhythmRaw?.meetings)
     ? rhythmRaw.meetings.map((m) => ({
         title: `${m?.week || ""} — ${m?.format || ""}`.trim(),
-        description: m?.focus || "",
+        description: m?.description || "",
       }))
     : [];
-
-  const mainCycle = {
-    ...(raw?.sections?.mainCycle || {}),
-    rhythm: rhythmArray,
-  };
 
   return {
     ...raw,
     links,
-    aiMentorPrompt:
-      raw?.aiMentorPrompt ||
-      `Я — AI-наставник ULTIMA. Помоги мне подготовиться к Start-СС: 
-— собери P&L за 3 месяца, 
-— выпиши ключевые метрики, 
-— зафиксируй WIG/OKR и приборы контроля.`,
     sections: {
-      ...(raw?.sections || {}),
-      prepSS,
-      startCC,
-      mainCycle,
+      ...raw.sections,
+      prepSS: prepSS,
+      ssOffline: ssOffline,
+      mainCycle: {
+        ...(raw?.sections?.mainCycle || {}),
+        rhythm: rhythmArray,
+      },
     },
   };
 }
@@ -137,6 +136,7 @@ function normalizeContent(raw) {
 export default function App() {
   const content = normalizeContent(rawContent);
 
+  // Состояния
   const [activeSection, setActiveSection] = useState("hero");
   const [progress, setProgress] = useState(0);
   const [openAccordions, setOpenAccordions] = useState({});
@@ -144,18 +144,13 @@ export default function App() {
   const [activeTab, setActiveTab] = useState("bi-meetings");
   const [promptExpanded, setPromptExpanded] = useState(false);
 
-  // Все секции для отслеживания
-  const sectionIds = [
-    "hero", "glossary", "intro", "roadmap", "checklist", "prep-ss",
-    "about", "rhythm", "roles",
-    "documents-nda", "documents-calendar",
-  ];
+  // Все секции для отслеживания (унифицировано по спецификации)
+  const sectionIds = ["hero","glossary","about-program","roadmap","checklist","org-steps","prep-start-cc","start-cc","meetings-rhythm","meeting-cycle","roles","wig-declaration","control-panel","tools-hub","calendar","documents","rules","final-cc","footer"];
 
   // Отслеживание активной секции при скролле
   useEffect(() => {
     const handleScroll = () => {
       let currentSection = "hero";
-      
       for (const sectionId of sectionIds) {
         const element = document.getElementById(sectionId);
         if (element) {
@@ -174,13 +169,15 @@ export default function App() {
       const windowHeight = window.innerHeight;
       const documentHeight = document.documentElement.scrollHeight;
       const scrollTop = window.pageYOffset;
-      const scrollPercent = (scrollTop / (documentHeight - windowHeight)) * 100;
-      setProgress(Math.min(Math.round(scrollPercent), 100));
+      const progressValue = Math.min(
+        100,
+        Math.max(0, Math.round(((scrollTop + windowHeight) / documentHeight) * 100))
+      );
+      setProgress(progressValue);
     };
 
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    handleScroll(); // Вызов один раз при загрузке
-
+    window.addEventListener("scroll", handleScroll);
+    handleScroll();
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
@@ -198,12 +195,12 @@ export default function App() {
   const copyPrompt = async () => {
     try {
       if (navigator?.clipboard?.writeText) {
-        await navigator.clipboard.writeText(content.aiMentorPrompt);
+        await navigator.clipboard.writeText(content.aiMentorPrompt || "");
         setCopiedPrompt(true);
-        setTimeout(() => setCopiedPrompt(false), 2000);
+        setTimeout(() => setCopiedPrompt(false), 1500);
       }
-    } catch (err) {
-      console.error("Failed to copy:", err);
+    } catch (e) {
+      console.error(e);
     }
   };
 
@@ -228,21 +225,18 @@ export default function App() {
       {/* Scroll to Top Button */}
       <ScrollToTop />
 
-      {/* Main Content */}
+      {/* Контент */}
       <div className="main-content">
         <Hero id="hero" content={content} scrollToSection={scrollToSection} />
-        <Glossary id="glossary" />
-        <Intro id="intro" />
-        <Roadmap id="roadmap" />
-        <Checklist id="checklist" />
-        <Onboarding id="onboarding" content={content} />
-        <AboutUltima id="about" content={content} />
-        <CycleTimeline id="rhythm" content={content} />
-        <Documents id="documents-nda" content={content} />
-        <Rules id="rules" content={content} />
-        <Formula id="formula" content={content} />
+
+        {/* ОНБОРДИНГ */}
+        <Glossary id="glossary" content={content} />
+        <AboutUltima id="about-program" content={content} />
+        <Roadmap id="roadmap" content={content} />
+        <Checklist id="checklist" content={content} />
+        <OrganizationalSteps id="org-steps" content={content} scrollToSection={scrollToSection} />
         <PrepToSS
-          id="prep-ss"
+          id="prep-start-cc"
           content={content}
           activeTab={activeTab}
           setActiveTab={setActiveTab}
@@ -252,9 +246,23 @@ export default function App() {
           copyPrompt={copyPrompt}
           downloadPrompt={downloadPrompt}
         />
+
+        {/* ПРОГРАММА */}
         <StartCC id="start-cc" content={content} />
-        <MainCycle id="main-cycle" content={content} />
-        <Final id="final" content={content} scrollToSection={scrollToSection} />
+        <MainCycle id="meetings-rhythm" content={content} />
+        <MeetingCycle id="meeting-cycle" content={content} />
+        <Roles id="roles" content={content} />
+        <WIGDeclaration id="wig-declaration" content={content} />
+        <ControlPanel id="control-panel" content={content} />
+
+        {/* ИНСТРУМЕНТЫ */}
+        <ToolsHub id="tools-hub" content={content} />
+        <CalendarSection />
+
+        {/* ДОКУМЕНТЫ / ПРАВИЛА / ФИНАЛ */}
+        <Documents id="documents" content={content} />
+        <Rules id="rules" content={content} />
+        <Final id="final-cc" content={content} scrollToSection={scrollToSection} />
         <FooterCTA id="footer" content={content} scrollToSection={scrollToSection} setActiveTab={setActiveTab} />
       </div>
     </div>
