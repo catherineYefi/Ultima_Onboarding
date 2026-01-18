@@ -86,14 +86,14 @@ function normalizeContent(raw) {
     ...(raw?.sections?.prepSS || {}),
   };
 
-  const ssOffline = {
-    ...(raw?.sections?.ssOffline || {}),
+  const startCC = {
+    ...(raw?.sections?.startCC || {}),
     format:
-      raw?.sections?.ssOffline?.format || "2 дня офлайн (Start-СС: день 1 и день 2)",
+      raw?.sections?.startCC?.format || "2 дня офлайн (Start-СС: день 1 и день 2)",
     results:
-      Array.isArray(raw?.sections?.ssOffline?.results) &&
-      raw.sections.ssOffline.results.length > 0
-        ? raw.sections.ssOffline.results
+      Array.isArray(raw?.sections?.startCC?.results) &&
+      raw.sections.startCC.results.length > 0
+        ? raw.sections.startCC.results
         : [
             "Определены WIG/OKR",
             "Настроены приборы контроля",
@@ -128,7 +128,7 @@ function normalizeContent(raw) {
     sections: {
       ...(raw?.sections || {}),
       prepSS,
-      ssOffline,
+      startCC,
       mainCycle,
     },
   };
@@ -252,7 +252,7 @@ export default function App() {
           copyPrompt={copyPrompt}
           downloadPrompt={downloadPrompt}
         />
-        <SSOffline id="ss-offline" content={content} />
+        <StartCC id="StartCC" content={content} />
         <MainCycle id="main-cycle" content={content} />
         <Final id="final" content={content} scrollToSection={scrollToSection} />
         <FooterCTA id="footer" content={content} scrollToSection={scrollToSection} setActiveTab={setActiveTab} />
