@@ -1,185 +1,105 @@
-import React, { useState, useEffect } from "react";
-import rawContent from "./content";
+import React, { useEffect, useState } from "react";
+import content from "./content";
 
-// Components
-import Navbar from "./components/Navbar";
-import Sidebar from "./components/Sidebar";
-import ScrollToTop from "./components/ScrollToTop";
+// Твои компоненты (ровно из вложений, без изменений)
+import Navbar from "./components/Navbar";           // :contentReference[oaicite:9]{index=9}
+import Sidebar from "./components/Sidebar";         // :contentReference[oaicite:10]{index=10}
 import Hero from "./components/Hero";
 import Glossary from "./components/Glossary";
+import AboutUltima from "./components/AboutUltima"; // :contentReference[oaicite:11]{index=11}
 import Roadmap from "./components/Roadmap";
 import Checklist from "./components/Checklist";
-import AboutUltima from "./components/AboutUltima";
-import Documents from "./components/Documents";
-import Rules from "./components/Rules";
+import OrganizationalSteps from "./components/OrganizationalSteps"; // :contentReference[oaicite:12]{index=12}
 import PrepToSS from "./components/PrepToSS";
 import StartCC from "./components/StartCC";
 import MainCycle from "./components/MainCycle";
+import MeetingCycle from "./components/MeetingCycle";
+import Roles from "./components/Roles";             // :contentReference[oaicite:13]{index=13}
+import WIGDeclaration from "./components/WIGDeclaration"; // :contentReference[oaicite:14]{index=14}
+import ControlPanel from "./components/ControlPanel";
+import ToolsHub from "./components/ToolsHub";       // :contentReference[oaicite:15]{index=15}
+import Documents from "./components/Documents";     // :contentReference[oaicite:16]{index=16}
+import Rules from "./components/Rules";             // :contentReference[oaicite:17]{index=17}
 import Final from "./components/Final";
 import FooterCTA from "./components/FooterCTA";
-import OrganizationalSteps from "./components/OrganizationalSteps";
-import MeetingCycle from "./components/MeetingCycle";
-import Roles from "./components/Roles";
-import WIGDeclaration from "./components/WIGDeclaration";
-import ControlPanel from "./components/ControlPanel";
-import ToolsHub from "./components/ToolsHub";
+import ScrollToTop from "./components/ScrollToTop";
 
-// Calendar overlay (твоя версия)
-import CalendarOverlay from "./components/CalendarOverlay";
+import CalendarOverlay from "./components/CalendarOverlay"; // твой оверлей календаря
+import AIMentorOverlay from "./components/AIMentorOverlay"; // :contentReference[oaicite:18]{index=18}
 
 import "./styles-unified.css";
 
-// --- безопасная нормализация контента (без изменений) ---
-function normalizeContent(raw) {
-  const safe = (v, fb) => (v === undefined || v === null ? fb : v);
+// Секции страницы, которые реально существуют как якоря в DOM
+const SECTION_IDS = [
+  "hero",
+  "glossary",
+  "about-program",
+  "roadmap",
+  "checklist",
+  "org-steps",
+  "prep-start-cc",
+  "start-cc",
+  "meetings-rhythm",
+  "meeting-cycle",
+  "roles",
+  "wig-declaration",
+  "control-panel",
+  "tools-hub",
+  "documents",
+  "rules",
+  "final-cc",
+  "footer",
+];
 
-  const documents =
-    raw?.sections?.about?.documents && Array.isArray(raw.sections.about.documents)
-      ? raw.sections.about.documents
-      : [];
+// Соответствие «нестандартных» id из твоих Navbar/Sidebar → реальным якорям/действиям
+const ALIASES = {
+  // Navbar mainSections
+  onboarding: "glossary",
+  about: "about-program",
+  "documents-nda": "documents",
 
-  const findDoc = (re) =>
-    documents.find((d) => re.test((d?.title || "") + (d?.name || "")));
+  // Sidebar группы
+  templates: "tools-hub",
+  "documents-presentation": "documents",
 
-  const links = {
-    nda: {
-      available: !!findDoc(/nda/i),
-      url: safe(findDoc(/nda/i)?.link, "#"),
-      label: "Скоро",
-    },
-    rules: {
-      available: !!findDoc(/правил|регламент/i),
-      url: safe(findDoc(/правил|регламент/i)?.link, "#"),
-      label: "Скоро",
-    },
-    calendar: {
-      available: true,
-      url: "#calendar",
-      label: "Откроется позже",
-    },
-    booster: {
-      url: "#prep-ss",
-    },
-    ...(raw.links || {}),
-  };
-
-  const prepFrom = raw?.sections?.prepSS || raw?.sections?.prepToSS || {};
-  const readiness =
-    prepFrom?.readinessChecklists ||
-    (Array.isArray(prepFrom?.phases)
-      ? prepFrom.phases.map((p, i) => ({
-          id: `phase-${i}`,
-          title: p?.name || `Шаг ${i + 1}`,
-          items: Array.isArray(p?.deliverables) ? p.deliverables : [],
-        }))
-      : []);
-
-  const prepSS = {
-    nextStep: {
-      title: prepFrom?.title || "Подготовка к стратегической сессии",
-      description:
-        prepFrom?.note ||
-        "Пройди шаги подготовки перед Start-СС: встречи с БИ, материалы, чек-листы.",
-      cta: { text: "Перейти к шагам" },
-    },
-    why:
-      prepFrom?.why ||
-      "Качество СС определяется не днём работы, а подготовкой к ней.",
-    readinessChecklists: readiness,
-    biMeetings: Array.isArray(prepFrom?.biMeetings) ? prepFrom.biMeetings : [],
-    booster: raw?.links?.booster || links.booster?.url || "#",
-  };
-
-  const ssFrom = raw?.sections?.ssOffline || {};
-  const ssOffline = {
-    title: ssFrom?.title || "Офлайн стратегическая сессия",
-    location: ssFrom?.location || "TBD",
-    agenda: Array.isArray(ssFrom?.agenda)
-      ? ssFrom.agenda
-      : [
-          { time: "10:00", title: "Открытие" },
-          { time: "11:00", title: "Разбор стратегии" },
-        ],
-    results: Array.isArray(ssFrom?.results)
-      ? ssFrom.results
-      : [
-          "Определены WIG/OKR",
-          "Настроены приборы контроля",
-          "Собрана дорожная карта на 6 месяцев",
-        ],
-  };
-
-  const rhythmRaw = raw?.sections?.mainCycle?.rhythm;
-  const rhythmArray = Array.isArray(rhythmRaw)
-    ? rhythmRaw
-    : Array.isArray(rhythmRaw?.meetings)
-    ? rhythmRaw.meetings.map((m) => ({
-        title: `${m?.week || ""} — ${m?.format || ""}`.trim(),
-        description: m?.description || "",
-      }))
-    : [];
-
-  return {
-    ...raw,
-    links,
-    sections: {
-      ...raw.sections,
-      prepSS: prepSS,
-      ssOffline: ssOffline,
-      mainCycle: {
-        ...(raw?.sections?.mainCycle || {}),
-        rhythm: rhythmArray,
-      },
-    },
-  };
-}
+  // Спец-действия (оверлеи)
+  calendar: "__open_calendar__", // открыть модальный календарь
+  "ai-mentor": "__open_ai_mentor__", // открыть модальный AI-наставник
+};
 
 export default function App() {
-  const content = normalizeContent(rawContent);
-
-  // состояния
   const [activeSection, setActiveSection] = useState("hero");
   const [progress, setProgress] = useState(0);
-  const [openAccordions, setOpenAccordions] = useState({});
-  const [copiedPrompt, setCopiedPrompt] = useState(false);
+
+  // оверлеи
+  const [calendarOpen, setCalendarOpen] = useState(false);
+  const [aiMentorOpen, setAIMentorOpen] = useState(false);
+
+  // служебные состояния (если нужны в твоих секциях)
   const [activeTab, setActiveTab] = useState("bi-meetings");
   const [promptExpanded, setPromptExpanded] = useState(false);
+  const [copiedPrompt, setCopiedPrompt] = useState(false);
 
-  // модальный календарь (оверлей)
-  const [calendarOpen, setCalendarOpen] = useState(false);
-
-  // список секций (без секционной версии календаря)
-  const sectionIds = [
-    "hero","glossary","about-program","roadmap","checklist","org-steps","prep-start-cc",
-    "start-cc","meetings-rhythm","meeting-cycle","roles","wig-declaration","control-panel",
-    "tools-hub","documents","rules","final-cc","footer"
-  ];
-
-  // отслеживание активной секции и прогресса
+  // выделение активной секции и прогресс скролла
   useEffect(() => {
     const handleScroll = () => {
-      let currentSection = "hero";
-      for (const sectionId of sectionIds) {
-        const element = document.getElementById(sectionId);
-        if (element) {
-          const rect = element.getBoundingClientRect();
-          if (rect.top <= 150 && rect.bottom >= 150) {
-            currentSection = sectionId;
-            break;
-          }
+      let current = "hero";
+      for (const id of SECTION_IDS) {
+        const el = document.getElementById(id);
+        if (!el) continue;
+        const rect = el.getBoundingClientRect();
+        if (rect.top <= 150 && rect.bottom >= 150) {
+          current = id;
+          break;
         }
       }
+      setActiveSection(current);
 
-      setActiveSection(currentSection);
-
-      const windowHeight = window.innerHeight;
-      const documentHeight = document.documentElement.scrollHeight;
-      const scrollTop = window.pageYOffset;
-      const progressValue = Math.min(
-        100,
-        Math.max(0, Math.round(((scrollTop + windowHeight) / documentHeight) * 100))
-      );
-      setProgress(progressValue);
+      const h = window.innerHeight;
+      const dh = document.documentElement.scrollHeight;
+      const y = window.pageYOffset;
+      const p = Math.min(100, Math.max(0, Math.round(((y + h) / dh) * 100)));
+      setProgress(p);
     };
 
     window.addEventListener("scroll", handleScroll);
@@ -187,19 +107,24 @@ export default function App() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // плавный скролл; спец-обработка календаря — открываем модалку
-  const scrollToSection = (sectionId) => {
-    if (sectionId === "calendar") {
+  // нормальная навигация с учётом алиасов и оверлеев
+  const scrollToSection = (rawId) => {
+    const id = ALIASES[rawId] || rawId;
+
+    if (id === "__open_calendar__") {
       setCalendarOpen(true);
       return;
     }
-    const element = document.getElementById(sectionId);
-    if (element) element.scrollIntoView({ behavior: "smooth" });
+    if (id === "__open_ai_mentor__") {
+      setAIMentorOpen(true);
+      return;
+    }
+
+    const el = document.getElementById(id);
+    if (el) el.scrollIntoView({ behavior: "smooth" });
   };
 
-  const toggleAccordion = (idx) =>
-    setOpenAccordions((prev) => ({ ...prev, [idx]: !prev[idx] }));
-
+  // util для копирования промпта (используется в PrepToSS, если нужно)
   const copyPrompt = async () => {
     try {
       if (navigator?.clipboard?.writeText) {
@@ -224,7 +149,6 @@ export default function App() {
 
   return (
     <div className="app premium">
-      {/* Навигация */}
       <Navbar activeSection={activeSection} scrollToSection={scrollToSection} />
       <Sidebar
         activeSection={activeSection}
@@ -233,16 +157,18 @@ export default function App() {
       />
       <ScrollToTop />
 
-      {/* Контент */}
       <div className="main-content">
-        <Hero id="hero" content={content} scrollToSection={scrollToSection} />
-
         {/* Онбординг */}
+        <Hero id="hero" content={content} scrollToSection={scrollToSection} />
         <Glossary id="glossary" content={content} />
         <AboutUltima id="about-program" content={content} />
         <Roadmap id="roadmap" content={content} />
         <Checklist id="checklist" content={content} />
-        <OrganizationalSteps id="org-steps" content={content} scrollToSection={scrollToSection} />
+        <OrganizationalSteps
+          id="org-steps"
+          content={content}
+          scrollToSection={scrollToSection}
+        />
         <PrepToSS
           id="prep-start-cc"
           content={content}
@@ -278,8 +204,11 @@ export default function App() {
         />
       </div>
 
-      {/* Модальный календарь (твоя реализация, рендерим только когда открыт) */}
+      {/* Оверлеи */}
       {calendarOpen && <CalendarOverlay onClose={() => setCalendarOpen(false)} />}
+      {aiMentorOpen && (
+        <AIMentorOverlay content={content} onClose={() => setAIMentorOpen(false)} />
+      )}
     </div>
   );
 }
