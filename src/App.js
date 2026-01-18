@@ -209,50 +209,20 @@ export default function App() {
         <StartCC id="start-cc" content={content} />
         
         {/* 3.2. ОСНОВНОЙ ЦИКЛ */}
-        {/* Используем существующий MainCycle для meetings-rhythm */}
         <MainCycle id="meetings-rhythm" content={content} />
         
-        {/* ВРЕМЕННЫЕ ЗАГЛУШКИ для новых секций */}
-        {/* Эти компоненты мы создадим на следующих шагах */}
-        <section id="meeting-cycle" className="section">
-          <div className="container">
-            <h2>Цикл разбора на встречах</h2>
-            <MeetingCycle id="meeting-cycle" content={content} />
-          </div>
-        </section>
-
-        <section id="roles" className="section">
-          <div className="container">
-            <h2>Роли в программе</h2>
-            <p><Roles id="roles" content={content} /></p>
-          </div>
-        </section>
-
-        <section id="wig-declaration" className="section">
-          <div className="container">
-            <h2>Работа с декларацией WIG</h2>
-            <p><WIGDeclaration id="wig-declaration" content={content} /></p>
-          </div>
-        </section>
-
-        <section id="control-panel" className="section">
-          <div className="container">
-            <h2>Приборы контроля</h2>
-            <p><ControlPanel id="control-panel" content={content} /></p>
-          </div>
-        </section>
+        {/* 3.3. ДЕТАЛИ ПРОГРАММЫ */}
+        <MeetingCycle id="meeting-cycle" content={content} />
+        <Roles id="roles" content={content} />
+        <WIGDeclaration id="wig-declaration" content={content} />
+        <ControlPanel id="control-panel" content={content} />
 
         {/* ═══════════════════════════════════════════════════════════ */}
         {/* СЕКЦИЯ 4: ИНСТРУМЕНТЫ И РЕСУРСЫ */}
         {/* ═══════════════════════════════════════════════════════════ */}
         
-        <section id="tools-hub" className="section">
-          <div className="container">
-            <h2>Полезные инструменты</h2>
-            <ToolsHub id="tools-hub" content={content} />
-          </div>
-        </section>
-
+        <ToolsHub id="tools-hub" content={content} />
+        
         <section id="templates" className="section">
           <div className="container">
             <h2>Шаблоны</h2>
