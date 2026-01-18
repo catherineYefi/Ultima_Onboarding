@@ -1,100 +1,68 @@
 import React, { useMemo, useState } from "react";
 
 /**
- * Каталог инструментов (Tools Hub) — строгий якорь id="tools-hub"
- *
- * Поддерживаемые источники данных:
- *  A) content.sections.toolsHub = {
- *       title?, subtitle?, categories?: Category[], tools?: Tool[]
- *     }
- *  Б) content.toolsHub = аналогичная структура
- *
- * Мы поддерживаем два способа описания:
- *  1) categories[] со своими tools[] внутри
- *  2) плоский массив tools[] (без категорий) — сгруппируем по типу или "Прочее"
- *
- * Tool:
- *  {
- *    key?: string,
- *    title?: string,           // Название инструмента
- *    description?: string,
- *    link?: string,            // URL или "#anchor"
- *    tags?: string[],          // ["design", "tracking"]
- *    type?: string,            // "Docs", "Analytics", "Comms", "Dev", ...
- *    system?: string           // "Notion", "Jira", "GA4", "Figma" — отображаем серая подпись
- *  }
+ * Каталог инструментов (минимальная версия без новых CSS-классов).
+ * Источники:
+ *  - content.sections.toolsHub
+ *  - content.toolsHub
+ * Поддерживает:
+ *  1) categories[].tools[]
+ *  2) плоский tools[] (автогруппировка по type, иначе "Инструменты")
  */
 
-const normalizeHub = (content = {}) => {
-  const fromSections = content?.sections?.toolsHub || {};
-  const fromRoot = content?.toolsHub || {};
-  const src = Object.keys(fromSections).length ? fromSections : fromRoot;
+const normalize = (content = {}) => {
+  const a = content?.sections?.toolsHub || {};
+  const b = content?.toolsHub || {};
+  const src = Object.keys(a).length ? a : b;
 
   const title = src?.title || "Инструменты программы";
   const subtitle =
     src?.subtitle ||
-    "Единая точка входа в сервисы и артефакты: документы, аналитика, коммуникации, разработка.";
+    "Сервисы и артефакты: документы, аналитика, коммуникации, разработка.";
 
   const categories = Array.isArray(src?.categories) ? src.categories : [];
-  const flatTools = Array.isArray(src?.tools) ? src.tools : [];
+  const flat = Array.isArray(src?.tools) ? src.tools : [];
 
-  // Если есть categories с tools — используем их.
   if (categories.length && categories.some((c) => Array.isArray(c?.tools) && c.tools.length)) {
-    const normalized = categories
-      .filter((c) => Array.isArray(c?.tools))
-      .map((c, ci) => ({
-        key: c?.key || `cat-${ci}`,
-        title: c?.title || "Категория",
-        tools: c.tools.map((t, ti) => ({
-          key: t?.key || `t-${ci}-${ti}`,
-          title: t?.title || "Инструмент",
-          description: t?.description || "",
-          link: t?.link || "#",
-          tags: Array.isArray(t?.tags) ? t.tags : [],
-          type: t?.type || "",
-          system: t?.system || "",
+    return {
+      title,
+      subtitle,
+      groups: categories
+        .filter((c) => Array.isArray(c?.tools))
+        .map((c, i) => ({
+          key: c?.key || `cat-${i}`,
+          title: c?.title || "Категория",
+          tools: c.tools.map((t, j) => ({
+            key: t?.key || `t-${i}-${j}`,
+            title: t?.title || "Инструмент",
+            description: t?.description || "",
+            link: t?.link || "#",
+            tags: Array.isArray(t?.tags) ? t.tags : [],
+            type: t?.type || "",
+            system: t?.system || "",
+          })),
         })),
-      }));
-    return { title, subtitle, categories: normalized };
+    };
   }
 
-  // Иначе работаем с плоским массивом tools и группируем по type.
-  const baseTools =
-    flatTools.length > 0
-      ? flatTools
+  const base =
+    flat.length > 0
+      ? flat
       : [
           {
             key: "notion",
             title: "Notion — база знаний",
-            description: "Архив решений, протоколов, контента программы.",
+            description: "Архив решений, протоколов, контента.",
             link: "#",
             tags: ["docs"],
             type: "Docs",
             system: "Notion",
           },
-          {
-            key: "jira",
-            title: "Jira — проект/борды",
-            description: "Трекинг задач, спринты, доски Kanban/Scrum.",
-            link: "#",
-            tags: ["pm"],
-            type: "Project",
-            system: "Jira",
-          },
-          {
-            key: "ga4",
-            title: "GA4 — продуктовая аналитика",
-            description: "Ивент-аналитика веб/мобайл, аудитории, конверсии.",
-            link: "#",
-            tags: ["analytics"],
-            type: "Analytics",
-            system: "Google Analytics 4",
-          },
         ];
 
   const byType = {};
-  baseTools.forEach((t) => {
-    const type = t?.type || "Прочее";
+  base.forEach((t) => {
+    const type = t?.type || "Инструменты";
     if (!byType[type]) byType[type] = [];
     byType[type].push({
       key: t?.key || `${type}-${byType[type].length}`,
@@ -107,128 +75,150 @@ const normalizeHub = (content = {}) => {
     });
   });
 
-  const normalized = Object.entries(byType).map(([type, tools], i) => ({
+  const groups = Object.entries(byType).map(([type, tools], i) => ({
     key: `cat-${i}`,
     title: type,
     tools,
   }));
 
-  return { title, subtitle, categories: normalized };
-};
-
-const Tag = ({ t }) => <span className="tools__tag">{t}</span>;
-
-const ToolCard = ({ tool }) => {
-  const isInternal = tool?.link?.startsWith("#");
-  const hasTags = Array.isArray(tool?.tags) && tool.tags.length > 0;
-
-  const LinkEl = isInternal ? "a" : "a";
-  const linkProps = isInternal
-    ? { href: tool.link }
-    : {
-        href: tool.link || "#",
-        target: "_blank",
-        rel: "noopener noreferrer",
-        onClick: (e) => {
-          if (!tool.link) e.preventDefault();
-        },
-      };
-
-  return (
-    <li className="tools__card">
-      <div className="tools__head">
-        <h4 className="tools__title">{tool.title}</h4>
-        {tool.system && <span className="tools__system">{tool.system}</span>}
-      </div>
-      {tool.description && <p className="tools__desc">{tool.description}</p>}
-
-      {hasTags && (
-        <div className="tools__tags">
-          {tool.tags.map((t, i) => (
-            <Tag key={i} t={t} />
-          ))}
-        </div>
-      )}
-
-      <div className="tools__actions">
-        <LinkEl className="btn btn--primary" {...linkProps}>
-          Открыть
-        </LinkEl>
-      </div>
-    </li>
-  );
-};
-
-const CategoryBlock = ({ c }) => {
-  return (
-    <div className="tools__category">
-      <h3 className="tools__category-title">{c.title}</h3>
-      <ul className="tools__grid">
-        {c.tools.map((tool) => (
-          <ToolCard key={tool.key} tool={tool} />
-        ))}
-      </ul>
-    </div>
-  );
+  return { title, subtitle, groups };
 };
 
 const ToolsHub = ({ id = "tools-hub", content = {} }) => {
-  const data = useMemo(() => normalizeHub(content), [content]);
-  const [query, setQuery] = useState("");
+  const data = useMemo(() => normalize(content), [content]);
+  const [q, setQ] = useState("");
 
-  // Простая фильтрация по названию/описанию/тегам/системе
-  const filteredCategories = useMemo(() => {
-    const q = query.trim().toLowerCase();
-    if (!q) return data.categories;
+  const filter = (tool) => {
+    if (!q.trim()) return true;
+    const s = q.trim().toLowerCase();
+    return (
+      (tool.title || "").toLowerCase().includes(s) ||
+      (tool.description || "").toLowerCase().includes(s) ||
+      (tool.system || "").toLowerCase().includes(s) ||
+      (Array.isArray(tool.tags) ? tool.tags.join(" ").toLowerCase().includes(s) : false)
+    );
+  };
 
-    const match = (t) =>
-      (t.title || "").toLowerCase().includes(q) ||
-      (t.description || "").toLowerCase().includes(q) ||
-      (t.system || "").toLowerCase().includes(q) ||
-      (Array.isArray(t.tags) ? t.tags.join(" ").toLowerCase().includes(q) : false);
+  const filteredGroups = useMemo(
+    () =>
+      data.groups
+        .map((g) => ({ ...g, tools: g.tools.filter(filter) }))
+        .filter((g) => g.tools.length > 0),
+    [data.groups, q]
+  );
 
-    return data.categories
-      .map((c) => ({
-        ...c,
-        tools: c.tools.filter(match),
-      }))
-      .filter((c) => c.tools.length > 0);
-  }, [data.categories, query]);
+  const ToolLink = ({ tool }) => {
+    const isInternal = tool?.link?.startsWith("#");
+    const props = isInternal
+      ? { href: tool.link }
+      : {
+          href: tool.link || "#",
+          target: "_blank",
+          rel: "noopener noreferrer",
+          onClick: (e) => {
+            if (!tool.link) e.preventDefault();
+          },
+        };
+    return (
+      <a {...props} className="btn btn--primary" style={{ textDecoration: "none" }}>
+        Открыть
+      </a>
+    );
+  };
 
   return (
-    <section id={id} className="section tools">
+    <section id={id} className="section">
       <div className="container">
         <header className="section__header">
           <h2 className="section__title">{data.title}</h2>
-          {data.subtitle && (
-            <p className="section__subtitle">{data.subtitle}</p>
-          )}
+          {data.subtitle && <p className="section__subtitle">{data.subtitle}</p>}
         </header>
 
-        <div className="tools__search">
+        {/* Поиск */}
+        <div style={{ margin: "8px 0 16px" }}>
           <input
             type="search"
-            placeholder="Найти инструмент… (название, система, тег)"
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            className="tools__input"
+            placeholder="Найти инструмент…"
+            value={q}
+            onChange={(e) => setQ(e.target.value)}
+            style={{
+              width: "100%",
+              padding: "10px 12px",
+              border: "1px solid #e7e7e7",
+              borderRadius: 10,
+              outline: "none",
+            }}
             aria-label="Поиск по инструментам"
           />
         </div>
 
-        {filteredCategories.length > 0 ? (
-          filteredCategories.map((c) => <CategoryBlock key={c.key} c={c} />)
-        ) : (
-          <div className="tools__empty">Ничего не найдено по запросу «{query}».</div>
-        )}
+        {/* Категории */}
+        {filteredGroups.length ? (
+          filteredGroups.map((g) => (
+            <div key={g.key} style={{ margin: "16px 0" }}>
+              <h3 style={{ marginTop: 0 }}>{g.title}</h3>
+              <ul className="list" style={{ display: "grid", gap: 12, gridTemplateColumns: "1fr" }}>
+                {g.tools.map((t) => (
+                  <li key={t.key} className="item">
+                    <div
+                      className="card"
+                      style={{
+                        border: "1px solid #eee",
+                        borderRadius: 12,
+                        padding: 14,
+                      }}
+                    >
+                      <div
+                        style={{
+                          display: "flex",
+                          alignItems: "baseline",
+                          gap: 8,
+                          flexWrap: "wrap",
+                        }}
+                      >
+                        <h4 style={{ margin: 0 }}>{t.title}</h4>
+                        {t.system ? (
+                          <span style={{ marginLeft: "auto", fontSize: 12, color: "rgba(0,0,0,0.55)" }}>
+                            {t.system}
+                          </span>
+                        ) : null}
+                      </div>
 
-        <div className="tools__hint">
-          Данные берутся из <code>content.sections.toolsHub</code> (или{" "}
-          <code>content.toolsHub</code>). Поддерживаются поля:{" "}
-          <code>categories[].tools[]</code> или плоский <code>tools[]</code>. Поля инструмента:{" "}
-          <code>title</code>, <code>description</code>, <code>link</code>,{" "}
-          <code>tags[]</code>, <code>type</code>, <code>system</code>.
-        </div>
+                      {t.description && (
+                        <p style={{ margin: "6px 0 8px", color: "rgba(0,0,0,0.75)" }}>{t.description}</p>
+                      )}
+
+                      {Array.isArray(t.tags) && t.tags.length > 0 && (
+                        <div style={{ display: "flex", flexWrap: "wrap", gap: 6, marginBottom: 6 }}>
+                          {t.tags.map((tag, i) => (
+                            <span
+                              key={i}
+                              style={{
+                                fontSize: 12,
+                                background: "#f3f3f3",
+                                border: "1px solid #e7e7e7",
+                                borderRadius: 999,
+                                padding: "2px 8px",
+                              }}
+                            >
+                              {tag}
+                            </span>
+                          ))}
+                        </div>
+                      )}
+
+                      <ToolLink tool={t} />
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))
+        ) : (
+          <div style={{ color: "rgba(0,0,0,0.55)" }}>
+            Ничего не найдено по запросу «{q}».
+          </div>
+        )}
       </div>
     </section>
   );

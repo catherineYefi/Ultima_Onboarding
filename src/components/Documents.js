@@ -1,5 +1,6 @@
 import React, { useMemo } from "react";
 
+// Обязательные материалы — из твоего сообщения
 const REQUIRED_DOCS = [
   {
     title: "Инструкция по подготовке к СС",
@@ -49,7 +50,6 @@ const REQUIRED_DOCS = [
     required: true,
     tags: ["wig", "template"],
   },
-  // Калькуляторы — добавим как «полезные материалы»
   {
     title: "ROI симулятор",
     description: "Оценка возврата инвестиций",
@@ -68,37 +68,6 @@ const REQUIRED_DOCS = [
   },
 ];
 
-const fallbackGroups = (docsArr) => {
-  const nda = [];
-  const pres = [];
-  const required = [];
-  const optional = [];
-
-  docsArr.forEach((d) => {
-    const tags = (d?.tags || []).map((t) => String(t).toLowerCase());
-    const title = (d?.title || "").toLowerCase();
-    const name = (d?.name || "").toLowerCase();
-
-    const taggedNDA =
-      tags.includes("nda") || /nda|non[- ]?disclosure|соглашени[ея]\s+о\s+конфиден/i.test(title + " " + name);
-    const taggedPres =
-      tags.includes("presentation") || /презентаци/i.test(title + " " + name);
-
-    if (taggedNDA) nda.push(d);
-    else if (taggedPres) pres.push(d);
-    else if (d?.required) required.push(d);
-    else optional.push(d);
-  });
-
-  const groups = [];
-  if (nda.length) groups.push({ key: "nda", label: "NDA / Конфиденциальность", items: nda });
-  if (pres.length) groups.push({ key: "presentation", label: "Презентации", items: pres });
-  if (required.length) groups.push({ key: "required", label: "Обязательные материалы", items: required });
-  if (optional.length) groups.push({ key: "optional", label: "Полезные материалы", items: optional });
-  if (!groups.length) groups.push({ key: "all", label: "Документы", items: docsArr });
-  return groups;
-};
-
 const dedupeByLink = (arr) => {
   const seen = new Set();
   const out = [];
@@ -111,32 +80,38 @@ const dedupeByLink = (arr) => {
   return out;
 };
 
-const normalizeDocuments = (content) => {
+const fallbackGroups = (docsArr) => {
+  const required = [];
+  const optional = [];
+  docsArr.forEach((d) => (d?.required ? required.push(d) : optional.push(d)));
+
+  const groups = [];
+  if (required.length) groups.push({ key: "required", label: "Обязательные материалы", items: required });
+  if (optional.length) groups.push({ key: "optional", label: "Полезные материалы", items: optional });
+  if (!groups.length) groups.push({ key: "all", label: "Документы", items: docsArr });
+  return groups;
+};
+
+const normalize = (content) => {
   const legacy = content?.sections?.about?.documents;
   const modernGroups = content?.documents?.groups;
   const modernItems = content?.documents?.items;
 
   if (Array.isArray(modernGroups) && modernGroups.length) {
-    // Мержим REQUIRED_DOCS в группы: докинем в группу "Полезные материалы"
+    // Докидываем обязательные материалы в отдельную группу (без дублей)
     const merged = [...modernGroups];
-    const hasOptional = merged.find((g) =>
-      /полезн/i.test(g?.label || g?.title || "")
-    );
-    if (hasOptional) {
-      hasOptional.items = dedupeByLink([...(hasOptional.items || []), ...REQUIRED_DOCS]);
-    } else {
-      merged.push({
-        key: "optional",
-        label: "Полезные материалы",
-        items: REQUIRED_DOCS,
-      });
-    }
+    merged.push({
+      key: "required-ultima",
+      label: "Материалы ULTIMA",
+      items: REQUIRED_DOCS,
+    });
+    // плоская нормализация
     return merged
       .filter((g) => Array.isArray(g?.items))
       .map((g, idx) => ({
         key: g.key || `group-${idx}`,
         label: g.label || g.title || `Группа ${idx + 1}`,
-        items: g.items,
+        items: dedupeByLink(g.items),
       }));
   }
 
@@ -145,7 +120,6 @@ const normalizeDocuments = (content) => {
     (Array.isArray(legacy) && legacy.length && legacy) ||
     [];
 
-  // Мержим с обязательными материалами
   const mergedItems = dedupeByLink([...items, ...REQUIRED_DOCS]);
   return fallbackGroups(mergedItems);
 };
@@ -158,16 +132,22 @@ const DocCard = ({ doc }) => {
   const isRequired = !!doc?.required;
 
   return (
-    <li className="doc-card">
-      <div className="doc-card__head">
-        <h4 className="doc-card__title">
-          {title}
-          {isRequired && <span className="doc-card__badge">must</span>}
-        </h4>
-        {fileType && <span className="doc-card__type">{fileType}</span>}
-      </div>
-      {description && <p className="doc-card__desc">{description}</p>}
-      <div className="doc-card__actions">
+    <li className="item">
+      <div className="card" style={{ border: "1px solid #eee", borderRadius: 12, padding: 14 }}>
+        <div style={{ display: "flex", gap: 8, alignItems: "baseline", flexWrap: "wrap" }}>
+          <h4 style={{ margin: 0 }}>{title}</h4>
+          {fileType ? (
+            <span style={{ marginLeft: "auto", fontSize: 12, color: "rgba(0,0,0,0.55)" }}>{fileType}</span>
+          ) : null}
+          {isRequired ? (
+            <span style={{ fontSize: 11, background: "#111", color: "#fff", padding: "2px 8px", borderRadius: 999 }}>
+              must
+            </span>
+          ) : null}
+        </div>
+
+        {description && <p style={{ margin: "6px 0 8px", color: "rgba(0,0,0,0.72)" }}>{description}</p>}
+
         <a
           href={href}
           className="btn btn--primary"
@@ -176,6 +156,7 @@ const DocCard = ({ doc }) => {
           onClick={(e) => {
             if (href === "#") e.preventDefault();
           }}
+          style={{ textDecoration: "none" }}
         >
           Открыть
         </a>
@@ -185,22 +166,20 @@ const DocCard = ({ doc }) => {
 };
 
 const Documents = ({ id = "documents", content = {} }) => {
-  const groups = useMemo(() => normalizeDocuments(content), [content]);
+  const groups = useMemo(() => normalize(content), [content]);
 
   return (
-    <section id={id} className="section documents">
+    <section id={id} className="section">
       <div className="container">
         <header className="section__header">
           <h2 className="section__title">Документы</h2>
-          <p className="section__subtitle">
-            Все материалы для подготовки и прохождения ULTIMA.
-          </p>
+          <p className="section__subtitle">Все материалы для подготовки и прохождения ULTIMA.</p>
         </header>
 
         {groups.map((g) => (
-          <div key={g.key} className="documents__group">
-            <h3 className="documents__group-title">{g.label}</h3>
-            <ul className="documents__list">
+          <div key={g.key} style={{ margin: "18px 0" }}>
+            <h3 style={{ marginTop: 0 }}>{g.label}</h3>
+            <ul className="list" style={{ display: "grid", gap: 12 }}>
               {g.items.map((doc, i) => (
                 <DocCard key={`${g.key}-${i}`} doc={doc} />
               ))}

@@ -1,30 +1,11 @@
 import React, { useMemo } from "react";
 
-/**
- * Секция «Правила» — якорь строго id="rules"
- *
- * Поддерживает оба формата данных:
- *  A) content.sections.rules = {
- *       title?: string,
- *       subtitle?: string,
- *       items?: Array<{ title?: string, text?: string }>
- *       notes?: string[]
- *     }
- *  Б) content.rules = аналогичная структура
- *
- * Если данных нет — выводим безопасные дефолты.
- */
+const normalize = (content = {}) => {
+  const a = content?.sections?.rules || {};
+  const b = content?.rules || {};
+  const src = Object.keys(a).length ? a : b;
 
-const normalizeRules = (content = {}) => {
-  const fromSections = content?.sections?.rules || {};
-  const fromRoot = content?.rules || {};
-
-  const src = Object.keys(fromSections).length ? fromSections : fromRoot;
-
-  const title =
-    src?.title ||
-    "Правила и ожидания участия в программе ULTIMA 9.0";
-
+  const title = src?.title || "Правила и ожидания участия в программе ULTIMA 9.0";
   const subtitle =
     src?.subtitle ||
     "Пожалуйста, ознакомьтесь с базовыми требованиями и нормами взаимодействия.";
@@ -60,61 +41,39 @@ const normalizeRules = (content = {}) => {
       ];
 
   const notes = Array.isArray(src?.notes) ? src.notes : [];
-
   return { title, subtitle, items, notes };
 };
 
-const RuleItem = ({ index, title, text }) => (
-  <li className="rules__item">
-    <div className="rules__index">{index < 10 ? `0${index}` : index}</div>
-    <div className="rules__body">
-      <h4 className="rules__title">{title || "Правило"}</h4>
-      {text && <p className="rules__text">{text}</p>}
-    </div>
-  </li>
-);
-
-const Notes = ({ notes = [] }) => {
-  if (!notes.length) return null;
-  return (
-    <div className="rules__notes">
-      <h5 className="rules__notes-title">Примечания</h5>
-      <ul className="rules__notes-list">
-        {notes.map((n, i) => (
-          <li key={i} className="rules__note">
-            {n}
-          </li>
-        ))}
-      </ul>
-    </div>
-  );
-};
-
 const Rules = ({ id = "rules", content = {} }) => {
-  const data = useMemo(() => normalizeRules(content), [content]);
+  const data = useMemo(() => normalize(content), [content]);
 
   return (
-    <section id={id} className="section rules">
+    <section id={id} className="section">
       <div className="container">
         <header className="section__header">
           <h2 className="section__title">{data.title}</h2>
-          {data.subtitle && (
-            <p className="section__subtitle">{data.subtitle}</p>
-          )}
+          {data.subtitle && <p className="section__subtitle">{data.subtitle}</p>}
         </header>
 
-        <ol className="rules__list">
+        <ol className="list" style={{ paddingLeft: 18 }}>
           {data.items.map((it, i) => (
-            <RuleItem
-              key={i}
-              index={i + 1}
-              title={it?.title}
-              text={it?.text}
-            />
+            <li key={i} style={{ marginBottom: 10 }}>
+              <div style={{ fontWeight: 600 }}>{it?.title || "Правило"}</div>
+              {it?.text && <div style={{ marginTop: 4 }}>{it.text}</div>}
+            </li>
           ))}
         </ol>
 
-        <Notes notes={data.notes} />
+        {data.notes.length > 0 && (
+          <div style={{ marginTop: 12 }}>
+            <div style={{ fontWeight: 600, marginBottom: 6 }}>Примечания</div>
+            <ul className="list" style={{ paddingLeft: 18 }}>
+              {data.notes.map((n, i) => (
+                <li key={i}>{n}</li>
+              ))}
+            </ul>
+          </div>
+        )}
       </div>
     </section>
   );
