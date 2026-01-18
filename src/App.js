@@ -21,6 +21,8 @@ import Final from "./components/Final";
 import Roles from "./components/Roles";
 import ToolsHub from "./components/ToolsHub";
 import MeetingCycle from "./components/MeetingCycle";
+import WIGDeclaration from "./components/WIGDeclaration";
+import ControlPanel from "./components/ControlPanel";
 import FooterCTA from "./components/FooterCTA";
 import CalendarSection from "./components/CalendarSection";
 
@@ -229,14 +231,14 @@ export default function App() {
         <section id="wig-declaration" className="section">
           <div className="container">
             <h2>Работа с декларацией WIG</h2>
-            <p>Раздел в разработке - будет добавлен на следующем шаге</p>
+            <p><WIGDeclaration id="wig-declaration" content={content} /></p>
           </div>
         </section>
 
         <section id="control-panel" className="section">
           <div className="container">
             <h2>Приборы контроля</h2>
-            <p>Раздел в разработке - будет добавлен на следующем шаге</p>
+            <p><ControlPanel id="control-panel" content={content} /></p>
           </div>
         </section>
 
