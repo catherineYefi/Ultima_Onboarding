@@ -1,9 +1,14 @@
 import React, { useMemo, useState } from "react";
 
-const normalizeRoles = (content = {}) => {
-  const fromSections = content?.sections?.roles || {};
-  const fromRoot = content?.roles || {};
-  const src = Object.keys(fromSections).length ? fromSections : fromRoot;
+/**
+ * Роли — строго под твои классы roles__*
+ * Источники: content.sections.roles | content.roles
+ */
+
+const normalize = (content = {}) => {
+  const a = content?.sections?.roles || {};
+  const b = content?.roles || {};
+  const src = Object.keys(a).length ? a : b;
 
   const title = src?.title || "Роли и зоны ответственности";
   const subtitle =
@@ -11,8 +16,7 @@ const normalizeRoles = (content = {}) => {
     "Фиксация ролей, их миссий, обязанностей, полномочий и метрик успеха.";
 
   const rolesArr = Array.isArray(src?.roles) ? src.roles : [];
-
-  const defaults =
+  const def =
     rolesArr.length > 0
       ? rolesArr
       : [
@@ -20,23 +24,19 @@ const normalizeRoles = (content = {}) => {
             key: "owner",
             title: "Владелец продукта (Product Owner)",
             mission:
-              "Определяет ценность, приоритизирует бэклог, принимает ключевые продуктовые решения.",
+              "Определяет ценность, приоритизирует бэклог, принимает продуктовые решения.",
             responsibilities: [
-              "Формирует и поддерживает приоритизированный бэклог",
-              "Определяет критерии успешности (DoD, бизнес-метрики)",
-              "Коммуницирует визию и контекст команде",
+              "Поддерживает приоритизированный бэклог",
+              "Определяет критерии готовности",
             ],
-            rights: [
-              "Принимать решения по приоритетам",
-              "Утверждать релизы и MVP-критерии",
-            ],
-            kpis: ["Скорость поставки ценности", "Достижение продуктовых метрик"],
-            antiPatterns: ["Микроменеджмент исполнения задач команды разработки"],
+            rights: ["Принимать решения по приоритетам"],
+            kpis: ["Достижение целевых продуктовых метрик"],
+            antiPatterns: ["Микроменеджмент исполнения задач"],
             owner: "",
           },
         ];
 
-  const roles = defaults.map((r, i) => ({
+  const roles = def.map((r, i) => ({
     key: r?.key || `role-${i}`,
     title: r?.title || "Роль",
     mission: r?.mission || "",
@@ -55,107 +55,144 @@ const normalizeRoles = (content = {}) => {
   return { title, subtitle, roles };
 };
 
-const Roles = ({ id = "roles", content = {} }) => {
-  const data = useMemo(() => normalizeRoles(content), [content]);
-  const [openKey, setOpenKey] = useState(null);
+const Pill = ({ children }) => <span className="roles__pill">{children}</span>;
+
+const RoleCard = ({ role }) => {
+  const [open, setOpen] = useState(false);
+
+  const hasDetails =
+    role.mission ||
+    role.responsibilities.length ||
+    role.rights.length ||
+    role.kpis.length ||
+    role.antiPatterns.length ||
+    role.owner ||
+    role.contacts.email ||
+    role.contacts.tg ||
+    role.contacts.phone;
 
   return (
-    <section id={id} className="section">
+    <li className={`roles__card ${open ? "is-open" : ""}`}>
+      <div className="roles__card-head" onClick={() => setOpen((s) => !s)}>
+        <h4 className="roles__title">{role.title}</h4>
+        <div className="roles__meta">
+          {role.owner && <Pill>Владелец: {role.owner}</Pill>}
+          {role.kpis[0] && <Pill>KPI: {role.kpis[0]}</Pill>}
+        </div>
+        <button
+          className="roles__toggle"
+          aria-expanded={open}
+          aria-label={open ? "Свернуть" : "Развернуть"}
+        >
+          {open ? "−" : "+"}
+        </button>
+      </div>
+
+      {open && hasDetails && (
+        <div className="roles__card-body">
+          {role.mission && (
+            <div className="roles__block">
+              <div className="roles__block-title">Миссия</div>
+              <p className="roles__text">{role.mission}</p>
+            </div>
+          )}
+
+          {role.responsibilities.length > 0 && (
+            <div className="roles__block">
+              <div className="roles__block-title">Обязанности</div>
+              <ul className="roles__list">
+                {role.responsibilities.map((t, i) => (
+                  <li key={i} className="roles__li">
+                    {t}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+
+          {role.rights.length > 0 && (
+            <div className="roles__block">
+              <div className="roles__block-title">Полномочия</div>
+              <ul className="roles__list">
+                {role.rights.map((t, i) => (
+                  <li key={i} className="roles__li">
+                    {t}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+
+          {role.kpis.length > 0 && (
+            <div className="roles__block">
+              <div className="roles__block-title">KPI</div>
+              <ul className="roles__list">
+                {role.kpis.map((t, i) => (
+                  <li key={i} className="roles__li">
+                    {t}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+
+          {role.antiPatterns.length > 0 && (
+            <div className="roles__block">
+              <div className="roles__block-title">Антипаттерны</div>
+              <ul className="roles__list roles__list--warn">
+                {role.antiPatterns.map((t, i) => (
+                  <li key={i} className="roles__li">
+                    {t}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+
+          {(role.contacts.email || role.contacts.tg || role.contacts.phone) && (
+            <div className="roles__block roles__block--contacts">
+              <div className="roles__block-title">Контакты</div>
+              <ul className="roles__list">
+                {role.contacts.email && (
+                  <li className="roles__li">
+                    Email: <a href={`mailto:${role.contacts.email}`}>{role.contacts.email}</a>
+                  </li>
+                )}
+                {role.contacts.tg && (
+                  <li className="roles__li">
+                    TG: <a href={role.contacts.tg}>{role.contacts.tg}</a>
+                  </li>
+                )}
+                {role.contacts.phone && <li className="roles__li">Телефон: {role.contacts.phone}</li>}
+              </ul>
+            </div>
+          )}
+        </div>
+      )}
+    </li>
+  );
+};
+
+const Roles = ({ id = "roles", content = {} }) => {
+  const data = useMemo(() => normalize(content), [content]);
+
+  return (
+    <section id={id} className="section roles">
       <div className="container">
         <header className="section__header">
           <h2 className="section__title">{data.title}</h2>
           {data.subtitle && <p className="section__subtitle">{data.subtitle}</p>}
         </header>
 
-        <ul className="list">
-          {data.roles.map((r) => {
-            const open = openKey === r.key;
-            return (
-              <li key={r.key} className="item">
-                <div className="card" onClick={() => setOpenKey(open ? null : r.key)}>
-                  <div className="card__header">
-                    <h4>{r.title}</h4>
-                    {r.owner ? <span className="meta">Владелец: {r.owner}</span> : null}
-                  </div>
-
-                  {open && (
-                    <div className="card__body">
-                      {r.mission && (
-                        <>
-                          <div className="meta-title">Миссия</div>
-                          <p>{r.mission}</p>
-                        </>
-                      )}
-
-                      {r.responsibilities.length > 0 && (
-                        <>
-                          <div className="meta-title">Обязанности</div>
-                          <ul className="list">
-                            {r.responsibilities.map((t, i) => (
-                              <li key={i}>{t}</li>
-                            ))}
-                          </ul>
-                        </>
-                      )}
-
-                      {r.rights.length > 0 && (
-                        <>
-                          <div className="meta-title">Полномочия</div>
-                          <ul className="list">
-                            {r.rights.map((t, i) => (
-                              <li key={i}>{t}</li>
-                            ))}
-                          </ul>
-                        </>
-                      )}
-
-                      {r.kpis.length > 0 && (
-                        <>
-                          <div className="meta-title">KPI</div>
-                          <ul className="list">
-                            {r.kpis.map((t, i) => (
-                              <li key={i}>{t}</li>
-                            ))}
-                          </ul>
-                        </>
-                      )}
-
-                      {r.antiPatterns.length > 0 && (
-                        <>
-                          <div className="meta-title">Антипаттерны</div>
-                          <ul className="list">
-                            {r.antiPatterns.map((t, i) => (
-                              <li key={i}>{t}</li>
-                            ))}
-                          </ul>
-                        </>
-                      )}
-
-                      {(r.contacts.email || r.contacts.tg || r.contacts.phone) && (
-                        <>
-                          <div className="meta-title">Контакты</div>
-                          <ul className="list">
-                            {r.contacts.email && (
-                              <li>
-                                Email: <a href={`mailto:${r.contacts.email}`}>{r.contacts.email}</a>
-                              </li>
-                            )}
-                            {r.contacts.tg && (
-                              <li>
-                                TG: <a href={r.contacts.tg}>{r.contacts.tg}</a>
-                              </li>
-                            )}
-                            {r.contacts.phone && <li>Телефон: {r.contacts.phone}</li>}
-                          </ul>
-                        </>
-                      )}
-                    </div>
-                  )}
-                </div>
-              </li>
-            );
-          })}
+        <ul className="roles__grid">
+          {data.roles.map((r) => (
+            <RoleCard key={r.key} role={r} />
+          ))}
         </ul>
+
+        <div className="roles__hint">
+          Данные: <code>content.sections.roles.roles</code> или <code>content.roles.roles</code>.
+        </div>
       </div>
     </section>
   );

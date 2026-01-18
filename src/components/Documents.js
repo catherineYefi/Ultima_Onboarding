@@ -1,6 +1,10 @@
 import React, { useMemo } from "react";
 
-// Обязательные материалы — из твоего сообщения
+/**
+ * Документы — классы documents__*
+ * Включает обязательные ссылки из ТЗ, дубликаты по link удаляются.
+ */
+
 const REQUIRED_DOCS = [
   {
     title: "Инструкция по подготовке к СС",
@@ -21,7 +25,7 @@ const REQUIRED_DOCS = [
   {
     title: "Шаблон презентации для видеовизитки к СС",
     description: "Слайды для короткой видеовизитки команды",
-    link: "https://docs.google.com/presentation/d/1brgQbqOdak24-CHKzmBDt-3GuZWCT43T0er1JiMwFKQ/edit?slide=id.g2bc4dd5ad13_0_0#slide=id.g2bc4dd5ad13_0_0",
+    link: "https://docs.google.com/presentation/d/1brgQbQOdak24-CHKzmBDt-3GuZWCT43T0er1JiMwFKQ/edit?slide=id.g2bc4dd5ad13_0_0#slide=id.g2bc4dd5ad13_0_0",
     fileType: "Slides",
     required: false,
     tags: ["template", "presentation"],
@@ -98,14 +102,8 @@ const normalize = (content) => {
   const modernItems = content?.documents?.items;
 
   if (Array.isArray(modernGroups) && modernGroups.length) {
-    // Докидываем обязательные материалы в отдельную группу (без дублей)
     const merged = [...modernGroups];
-    merged.push({
-      key: "required-ultima",
-      label: "Материалы ULTIMA",
-      items: REQUIRED_DOCS,
-    });
-    // плоская нормализация
+    merged.push({ key: "ultima", label: "Материалы ULTIMA", items: REQUIRED_DOCS });
     return merged
       .filter((g) => Array.isArray(g?.items))
       .map((g, idx) => ({
@@ -132,22 +130,16 @@ const DocCard = ({ doc }) => {
   const isRequired = !!doc?.required;
 
   return (
-    <li className="item">
-      <div className="card" style={{ border: "1px solid #eee", borderRadius: 12, padding: 14 }}>
-        <div style={{ display: "flex", gap: 8, alignItems: "baseline", flexWrap: "wrap" }}>
-          <h4 style={{ margin: 0 }}>{title}</h4>
-          {fileType ? (
-            <span style={{ marginLeft: "auto", fontSize: 12, color: "rgba(0,0,0,0.55)" }}>{fileType}</span>
-          ) : null}
-          {isRequired ? (
-            <span style={{ fontSize: 11, background: "#111", color: "#fff", padding: "2px 8px", borderRadius: 999 }}>
-              must
-            </span>
-          ) : null}
-        </div>
-
-        {description && <p style={{ margin: "6px 0 8px", color: "rgba(0,0,0,0.72)" }}>{description}</p>}
-
+    <li className="doc-card">
+      <div className="doc-card__head">
+        <h4 className="doc-card__title">
+          {title}
+          {isRequired && <span className="doc-card__badge">must</span>}
+        </h4>
+        {fileType && <span className="doc-card__type">{fileType}</span>}
+      </div>
+      {description && <p className="doc-card__desc">{description}</p>}
+      <div className="doc-card__actions">
         <a
           href={href}
           className="btn btn--primary"
@@ -156,7 +148,6 @@ const DocCard = ({ doc }) => {
           onClick={(e) => {
             if (href === "#") e.preventDefault();
           }}
-          style={{ textDecoration: "none" }}
         >
           Открыть
         </a>
@@ -169,7 +160,7 @@ const Documents = ({ id = "documents", content = {} }) => {
   const groups = useMemo(() => normalize(content), [content]);
 
   return (
-    <section id={id} className="section">
+    <section id={id} className="section documents">
       <div className="container">
         <header className="section__header">
           <h2 className="section__title">Документы</h2>
@@ -177,9 +168,9 @@ const Documents = ({ id = "documents", content = {} }) => {
         </header>
 
         {groups.map((g) => (
-          <div key={g.key} style={{ margin: "18px 0" }}>
-            <h3 style={{ marginTop: 0 }}>{g.label}</h3>
-            <ul className="list" style={{ display: "grid", gap: 12 }}>
+          <div key={g.key} className="documents__group">
+            <h3 className="documents__group-title">{g.label}</h3>
+            <ul className="documents__list">
               {g.items.map((doc, i) => (
                 <DocCard key={`${g.key}-${i}`} doc={doc} />
               ))}

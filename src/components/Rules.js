@@ -1,5 +1,9 @@
 import React, { useMemo } from "react";
 
+/**
+ * Правила — классы rules__*
+ */
+
 const normalize = (content = {}) => {
   const a = content?.sections?.rules || {};
   const b = content?.rules || {};
@@ -26,17 +30,7 @@ const normalize = (content = {}) => {
         {
           title: "Ответственность и роли",
           text:
-            "Каждая задача имеет назначенного ответственного и критерии готовности (Definition of Done).",
-        },
-        {
-          title: "Рабочий контур",
-          text:
-            "Встречи проходят по ритму программы. Материалы, артефакты и доступы поддерживаются в актуальном состоянии.",
-        },
-        {
-          title: "Конфиденциальность",
-          text:
-            "Информация, помеченная как конфиденциальная, не передается третьим лицам без согласия сторон.",
+            "Каждая задача имеет назначенного ответственного и критерии готовности (DoD).",
         },
       ];
 
@@ -48,28 +42,33 @@ const Rules = ({ id = "rules", content = {} }) => {
   const data = useMemo(() => normalize(content), [content]);
 
   return (
-    <section id={id} className="section">
+    <section id={id} className="section rules">
       <div className="container">
         <header className="section__header">
           <h2 className="section__title">{data.title}</h2>
           {data.subtitle && <p className="section__subtitle">{data.subtitle}</p>}
         </header>
 
-        <ol className="list" style={{ paddingLeft: 18 }}>
+        <ol className="rules__list">
           {data.items.map((it, i) => (
-            <li key={i} style={{ marginBottom: 10 }}>
-              <div style={{ fontWeight: 600 }}>{it?.title || "Правило"}</div>
-              {it?.text && <div style={{ marginTop: 4 }}>{it.text}</div>}
+            <li key={i} className="rules__item">
+              <div className="rules__index">{i + 1 < 10 ? `0${i + 1}` : i + 1}</div>
+              <div className="rules__body">
+                <h4 className="rules__title">{it?.title || "Правило"}</h4>
+                {it?.text && <p className="rules__text">{it.text}</p>}
+              </div>
             </li>
           ))}
         </ol>
 
         {data.notes.length > 0 && (
-          <div style={{ marginTop: 12 }}>
-            <div style={{ fontWeight: 600, marginBottom: 6 }}>Примечания</div>
-            <ul className="list" style={{ paddingLeft: 18 }}>
+          <div className="rules__notes">
+            <h5 className="rules__notes-title">Примечания</h5>
+            <ul className="rules__notes-list">
               {data.notes.map((n, i) => (
-                <li key={i}>{n}</li>
+                <li key={i} className="rules__note">
+                  {n}
+                </li>
               ))}
             </ul>
           </div>
