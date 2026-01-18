@@ -1,118 +1,143 @@
-import React, { useMemo } from "react";
+import React from "react";
+import { Target, TrendingUp, Calendar, CheckCircle, AlertCircle } from "lucide-react";
 
 /**
- * WIG Declaration — под твои классы wig__*
+ * WIGDeclaration компонент - работа с декларацией главной цели
+ * VERSION 1.0 - НОВЫЙ КОМПОНЕНТ
+ * 
+ * Props:
+ * - id: ID секции для якорей
+ * - content: объект content из content.js
  */
-
-const normalize = (content = {}) => {
-  const a = content?.sections?.wigDeclaration || {};
-  const b = content?.wigDeclaration || {};
-  const src = Object.keys(a).length ? a : b;
-
-  const title = src?.title || "WIG — Декларация сверхважной цели";
-  const subtitle =
-    src?.subtitle ||
-    "Фокус на одной-двух целях, определяющих успех на горизонте месяцев.";
-
-  const intro =
-    src?.intro ||
-    "WIG должна быть чёткой, измеримой и иметь владельца и ритм контроля.";
-
-  const template =
-    src?.template ||
-    "Увеличить/Снизить <Метрика> с <Текущее> до <Целевое> к <Дата> за счёт <Инициатива>.";
-
-  const examples =
-    Array.isArray(src?.examples) && src.examples.length
-      ? src.examples
-      : [
-          "Увеличить DAU с 1 500 до 4 000 за 3 месяца за счёт рефералок и e-mail активации.",
-          "Сократить время релиза с 5 дней до 1 дня к 31 мая через CI/CD.",
-        ];
-
-  const rules =
-    Array.isArray(src?.rules) && src.rules.length
-      ? src.rules
-      : [
-          "Не более двух WIG на команду.",
-          "Формулировка с метрикой, текущим и целевым значением, сроком.",
-          "Определён владелец и ритм контроля.",
-        ];
-
-  const cadence =
-    Array.isArray(src?.cadence) && src.cadence.length
-      ? src.cadence
-      : ["Еженедельный синк по метрике", "Ежемесячная ревизия плана/рисков"];
-
-  const checkpoints =
-    Array.isArray(src?.checkpoints) && src.checkpoints.length
-      ? src.checkpoints
-      : ["30% / 60% / 90% от цели", "Фиксируем препятствия и корректируем план"];
-
-  return { title, subtitle, intro, template, examples, rules, cadence, checkpoints };
-};
-
-const List = ({ items = [], className = "" }) =>
-  !items.length ? null : (
-    <ul className={`wig__list ${className}`.trim()}>
-      {items.map((t, i) => (
-        <li key={i} className="wig__li">
-          {t}
-        </li>
-      ))}
-    </ul>
-  );
-
-const WIGDeclaration = ({ id = "wig-declaration", content = {} }) => {
-  const data = useMemo(() => normalize(content), [content]);
+export default function WIGDeclaration({ id = "wig-declaration", content }) {
+  const wigDeclaration = content?.wigDeclaration || {};
 
   return (
-    <section id={id} className="section wig">
+    <section id={id} className="section">
       <div className="container">
-        <header className="section__header">
-          <h2 className="section__title">{data.title}</h2>
-          {data.subtitle && <p className="section__subtitle">{data.subtitle}</p>}
-        </header>
-
-        <div className="wig__intro">
-          <p className="wig__text">{data.intro}</p>
+        {/* Заголовок секции */}
+        <div className="section-header fade-in">
+          <Target size={32} className="section-icon" />
+          <h2>{wigDeclaration?.title || "Работа с декларацией WIG"}</h2>
+          <p className="section-subtitle">
+            {wigDeclaration?.subtitle || "Как формулировать и отслеживать главную цель"}
+          </p>
         </div>
 
-        <div className="wig__block">
-          <div className="wig__block-title">Шаблон формулировки</div>
-          <pre className="wig__template">
-{data.template}
-          </pre>
-        </div>
+        {/* Что такое WIG */}
+        {wigDeclaration?.definition && (
+          <div className="wig-definition fade-in">
+            <h3>Что такое WIG?</h3>
+            <p>{wigDeclaration.definition}</p>
+          </div>
+        )}
 
-        <div className="wig__grid">
-          <div className="wig__col">
-            <div className="wig__block">
-              <div className="wig__block-title">Примеры</div>
-              <List items={data.examples} />
+        {/* Формула WIG */}
+        {wigDeclaration?.formula && (
+          <div className="wig-formula fade-in">
+            <div className="wig-formula-header">
+              <Target size={24} className="wig-formula-icon" />
+              <h3>{wigDeclaration.formula.title || "Формула WIG"}</h3>
             </div>
-
-            <div className="wig__block">
-              <div className="wig__block-title">Правила</div>
-              <List items={data.rules} />
+            <div className="wig-formula-content">
+              {wigDeclaration.formula.template && (
+                <div className="wig-formula-template">
+                  {wigDeclaration.formula.template}
+                </div>
+              )}
+              {wigDeclaration.formula.example && (
+                <div className="wig-formula-example">
+                  <strong>Пример:</strong> {wigDeclaration.formula.example}
+                </div>
+              )}
             </div>
           </div>
+        )}
 
-          <div className="wig__col">
-            <div className="wig__block">
-              <div className="wig__block-title">Ритм и контроль</div>
-              <List items={data.cadence} />
-            </div>
-
-            <div className="wig__block">
-              <div className="wig__block-title">Чекпоинты</div>
-              <List items={data.checkpoints} />
+        {/* Критерии хорошего WIG */}
+        {wigDeclaration?.criteria && wigDeclaration.criteria.length > 0 && (
+          <div className="wig-criteria fade-in">
+            <h3>Критерии хорошего WIG</h3>
+            <div className="wig-criteria-grid">
+              {wigDeclaration.criteria.map((criterion, idx) => (
+                <div key={idx} className="wig-criterion-card">
+                  <CheckCircle size={20} className="wig-criterion-icon" />
+                  <div className="wig-criterion-content">
+                    <h4>{criterion.title}</h4>
+                    <p>{criterion.description}</p>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
-        </div>
+        )}
+
+        {/* Lead/Lag показатели */}
+        {wigDeclaration?.leadLag && (
+          <div className="wig-leadlag fade-in">
+            <h3>Lead и Lag показатели</h3>
+            <div className="wig-leadlag-grid">
+              {/* Lead показатели */}
+              {wigDeclaration.leadLag.lead && (
+                <div className="wig-leadlag-card lead">
+                  <div className="wig-leadlag-header">
+                    <TrendingUp size={24} />
+                    <h4>{wigDeclaration.leadLag.lead.title || "Lead (опережающие)"}</h4>
+                  </div>
+                  <p className="wig-leadlag-description">
+                    {wigDeclaration.leadLag.lead.description}
+                  </p>
+                  {wigDeclaration.leadLag.lead.examples && (
+                    <ul className="wig-leadlag-examples">
+                      {wigDeclaration.leadLag.lead.examples.map((example, idx) => (
+                        <li key={idx}>{example}</li>
+                      ))}
+                    </ul>
+                  )}
+                </div>
+              )}
+
+              {/* Lag показатели */}
+              {wigDeclaration.leadLag.lag && (
+                <div className="wig-leadlag-card lag">
+                  <div className="wig-leadlag-header">
+                    <Calendar size={24} />
+                    <h4>{wigDeclaration.leadLag.lag.title || "Lag (результирующие)"}</h4>
+                  </div>
+                  <p className="wig-leadlag-description">
+                    {wigDeclaration.leadLag.lag.description}
+                  </p>
+                  {wigDeclaration.leadLag.lag.examples && (
+                    <ul className="wig-leadlag-examples">
+                      {wigDeclaration.leadLag.lag.examples.map((example, idx) => (
+                        <li key={idx}>{example}</li>
+                      ))}
+                    </ul>
+                  )}
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* Частые ошибки */}
+        {wigDeclaration?.mistakes && wigDeclaration.mistakes.length > 0 && (
+          <div className="wig-mistakes fade-in">
+            <div className="wig-mistakes-header">
+              <AlertCircle size={24} className="wig-mistakes-icon" />
+              <h3>Частые ошибки при формулировке WIG</h3>
+            </div>
+            <ul className="wig-mistakes-list">
+              {wigDeclaration.mistakes.map((mistake, idx) => (
+                <li key={idx} className="wig-mistake-item">
+                  <AlertCircle size={18} className="wig-mistake-icon" />
+                  <span>{mistake}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
       </div>
     </section>
   );
-};
-
-export default WIGDeclaration;
+}
