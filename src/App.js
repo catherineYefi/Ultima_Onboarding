@@ -17,7 +17,7 @@ import Documents from "./components/Documents";
 import Rules from "./components/Rules";
 import Formula from "./components/Formula";
 import PrepToSS from "./components/PrepToSS";
-import SSOffline from "./components/SSOffline";
+import StartCC from "./components/StartCC";
 import MainCycle from "./components/MainCycle";
 import Final from "./components/Final";
 import FooterCTA from "./components/FooterCTA";
