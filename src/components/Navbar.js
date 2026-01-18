@@ -1,90 +1,96 @@
 import React, { useState, useEffect } from "react";
-// Если у вас установлен lucide-react — можно оставить иконки. Если нет, удалите импорт и JSX с иконками.
-import { Menu as MenuIcon, X as CloseIcon } from "lucide-react";
+import { Menu, X } from "lucide-react";
 
 /**
- * Унифицированная навигация под новые ID секций
- * Принимает:
- * - activeSection: string — текущая активная секция (из App)
- * - scrollToSection: (id: string) => void — плавный скролл (из App)
+ * Navbar компонент - sticky навигация с 3 основными разделами + бургер-меню
+ * 
+ * Props:
+ * - activeSection: текущая активная секция (для подсвечивания)
+ * - scrollToSection: функция для скролла к секции
  */
-const Navbar = ({ activeSection = "hero", scrollToSection = () => {} }) => {
-  const [opened, setOpened] = useState(false);
-  const [elevated, setElevated] = useState(false);
+export default function Navbar({ activeSection, scrollToSection }) {
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-  // Набор пунктов верхнего меню (лаконично, без перегруза)
-  const links = [
-    { id: "about-program", label: "О программе" },
-    { id: "roadmap", label: "Дорожная карта" },
-    { id: "checklist", label: "Чек-лист" },
-    { id: "prep-start-cc", label: "Подготовка" },
-    { id: "meetings-rhythm", label: "Ритм" },
-    { id: "roles", label: "Роли" },
-    { id: "tools-hub", label: "Инструменты" },
-    { id: "documents", label: "Документы" },
+  // Главные разделы (3 кнопки в навбаре)
+  const mainSections = [
+    { id: "onboarding", label: "Онбординг" },
+    { id: "about", label: "О программе" },
+    { id: "documents-nda", label: "Документы" },
   ];
 
+  // Отслеживание скролла для sticky поведения
   useEffect(() => {
-    const onScroll = () => setElevated(window.scrollY > 4);
-    window.addEventListener("scroll", onScroll);
-    return () => window.removeEventListener("scroll", onScroll);
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 50);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const go = (id) => {
-    setOpened(false);
-    scrollToSection(id);
+  // Обработчик клика на раздел
+  const handleSectionClick = (sectionId) => {
+    scrollToSection(sectionId);
+    setIsMobileMenuOpen(false);
   };
 
   return (
-    <header className={`navbar ${elevated ? "navbar--elevated" : ""}`}>
-      <div className="navbar__inner">
-        {/* Лого/бренд */}
-        <div className="navbar__brand" onClick={() => go("hero")} role="button" tabIndex={0}>
-          <span className="navbar__logo">ULTIMA 9.0</span>
+    <nav className={`navbar ${isScrolled ? "navbar-scrolled" : ""}`}>
+      <div className="navbar-container">
+        {/* Логотип */}
+        <div 
+          className="navbar-logo"
+          onClick={() => scrollToSection("hero")}
+          role="button"
+          tabIndex="0"
+        >
+          ULTIMA 9.0
         </div>
 
-        {/* Десктоп-меню */}
-        <nav className="navbar__links">
-          {links.map((l) => (
-            <button
-              key={l.id}
-              className={`nav-link ${activeSection === l.id ? "active" : ""}`}
-              onClick={() => go(l.id)}
-            >
-              {l.label}
-            </button>
+        {/* Desktop меню */}
+        <ul className="navbar-menu">
+          {mainSections.map((section) => (
+            <li key={section.id}>
+              <button
+                className={`navbar-link ${
+                  activeSection === section.id ? "active" : ""
+                }`}
+                onClick={() => handleSectionClick(section.id)}
+              >
+                {section.label}
+              </button>
+            </li>
           ))}
-        </nav>
+        </ul>
 
-        {/* Бургер для мобилок */}
+        {/* Mobile меню кнопка */}
         <button
-          className="navbar__burger"
-          aria-label={opened ? "Закрыть меню" : "Открыть меню"}
-          onClick={() => setOpened((s) => !s)}
+          className="navbar-mobile-toggle"
+          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+          aria-label={isMobileMenuOpen ? "Закрыть меню" : "Открыть меню"}
+          aria-expanded={isMobileMenuOpen}
         >
-          {opened ? <CloseIcon size={20} /> : <MenuIcon size={20} />}
+          {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
         </button>
       </div>
 
-      {/* Мобильное выезжающее меню */}
-      {opened && (
-        <div className="navbar__drawer">
-          {links.map((l) => (
+      {/* Mobile меню */}
+      {isMobileMenuOpen && (
+        <div className="navbar-mobile-menu">
+          {mainSections.map((section) => (
             <button
-              key={l.id}
-              className={`nav-link nav-link--drawer ${activeSection === l.id ? "active" : ""}`}
-              onClick={() => go(l.id)}
+              key={section.id}
+              className={`navbar-mobile-link ${
+                activeSection === section.id ? "active" : ""
+              }`}
+              onClick={() => handleSectionClick(section.id)}
             >
-              {l.label}
+              {section.label}
             </button>
           ))}
-          <button className="nav-link nav-link--drawer" onClick={() => go("final-cc")}>
-            Завершение
-          </button>
         </div>
       )}
-    </header>
+    </nav>
   );
-};
-
-export default Navbar;
+}

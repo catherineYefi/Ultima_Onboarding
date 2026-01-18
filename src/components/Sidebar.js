@@ -1,99 +1,112 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React from "react";
+import { Check } from "lucide-react";
 
-const Sidebar = ({
-  activeSection = "hero",
-  progress = 0,
-  scrollToSection = () => {},
-}) => {
-  const [pinned, setPinned] = useState(true);
-
-  const groups = useMemo(
-    () => [
-      { title: "Старт", items: [
-        { id: "hero", label: "Вступление" },
+/**
+ * Sidebar компонент - боковая навигация с якорями
+ * VERSION 2.0 - Новая структура по 5 секциям
+ * 
+ * Props:
+ * - activeSection: текущая активная секция
+ * - scrollToSection: функция для скролла к секции
+ * - progress: прогресс (0-100%)
+ */
+export default function Sidebar({ activeSection, scrollToSection, progress = 0 }) {
+  // ═══════════════════════════════════════════════════════════
+  // НОВАЯ СТРУКТУРА НАВИГАЦИИ (5 СЕКЦИЙ)
+  // ═══════════════════════════════════════════════════════════
+  
+  const sectionGroups = [
+    {
+      title: "📍 ОНБОРДИНГ",
+      sections: [
+        { id: "hero", label: "Главная" },
         { id: "glossary", label: "Глоссарий" },
-      ]},
-      { title: "Онбординг", items: [
         { id: "about-program", label: "О программе" },
         { id: "roadmap", label: "Дорожная карта" },
         { id: "checklist", label: "Чек-лист" },
-        { id: "org-steps", label: "Орг. шаги" },
-        { id: "prep-start-cc", label: "Подготовка к Start-CC" },
-      ]},
-      { title: "Программа", items: [
-        { id: "start-cc", label: "Start-CC" },
+        { id: "org-steps", label: "Организационные шаги" },
+        { id: "prep-start-cc", label: "Подготовка к Start-СС" },
+      ],
+    },
+    {
+      title: "📍 ПРОГРАММА",
+      sections: [
+        { id: "start-cc", label: "Start-СС" },
         { id: "meetings-rhythm", label: "Ритм встреч" },
-        { id: "meeting-cycle", label: "Цикл встречи" },
+        { id: "meeting-cycle", label: "Цикл разбора" },
         { id: "roles", label: "Роли" },
-        { id: "wig-declaration", label: "WIG-декларация" },
-        { id: "control-panel", label: "Панель контроля" },
-      ]},
-      { title: "Инструменты", items: [
-        { id: "tools-hub", label: "Каталог инструментов" },
-        { id: "calendar", label: "Календарь (оверлей)" }, // клик — откроет модалку
-      ]},
-      { title: "Документы и правила", items: [
-        { id: "documents", label: "Документы" },
+        { id: "wig-declaration", label: "Декларация WIG" },
+        { id: "control-panel", label: "Приборы контроля" },
+      ],
+    },
+    {
+      title: "📍 ИНСТРУМЕНТЫ",
+      sections: [
+        { id: "tools-hub", label: "Калькуляторы" },
+        { id: "templates", label: "Шаблоны" },
+        { id: "calendar", label: "Календарь" },
+      ],
+    },
+    {
+      title: "📍 ДОКУМЕНТЫ",
+      sections: [
+        { id: "documents", label: "NDA" },
+        { id: "documents-presentation", label: "Презентации" },
         { id: "rules", label: "Правила" },
-      ]},
-      { title: "Завершение", items: [{ id: "final-cc", label: "Завершение CC" }]},
-    ],
-    []
-  );
-
-  useEffect(() => {
-    const onKey = (e) => { if (e.key === "Escape") setPinned(true); };
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, []);
-
-  const go = (id) => scrollToSection(id);
+        { id: "ai-mentor", label: "AI-наставник" },
+      ],
+    },
+    {
+      title: "📍 ЗАВЕРШЕНИЕ",
+      sections: [
+        { id: "final-cc", label: "Final-СС" },
+      ],
+    },
+  ];
 
   return (
-    <aside className={`sidebar ${pinned ? "sidebar--pinned" : "sidebar--floating"}`}>
-      <div className="sidebar__top">
-        <button
-          className="sidebar__pin"
-          onClick={() => setPinned((s) => !s)}
-          aria-label={pinned ? "Открепить сайдбар" : "Закрепить сайдбар"}
-          title={pinned ? "Открепить" : "Закрепить"}
-        >
-          {pinned ? "⧉" : "📌"}
-        </button>
-
-        <div className="sidebar__progress" aria-label="Прогресс страницы">
-          <div className="sidebar__progress-track">
-            <div className="sidebar__progress-bar" style={{ width: `${Math.max(0, Math.min(100, progress))}%` }} />
-          </div>
-          <span className="sidebar__progress-label">{Math.round(progress)}%</span>
-        </div>
-      </div>
-
-      <nav className="sidebar__nav" aria-label="Навигация по разделам">
-        {groups.map((g) => (
-          <div key={g.title} className="sidebar__group">
-            <div className="sidebar__group-title">{g.title}</div>
-            <ul className="sidebar__list">
-              {g.items.map((it) => {
-                const isActive = activeSection === it.id;
-                return (
-                  <li key={it.id} className="sidebar__item">
-                    <button
-                      className={`sidebar__link ${isActive ? "active" : ""}`}
-                      onClick={() => go(it.id)}
-                      aria-current={isActive ? "location" : undefined}
-                    >
-                      {it.label}
-                    </button>
-                  </li>
-                );
-              })}
+    <aside className="sidebar">
+      <div className="sidebar-content">
+        {/* Группы секций */}
+        {sectionGroups.map((group, groupIdx) => (
+          <div key={groupIdx} className="sidebar-group">
+            <h3 className="sidebar-group-title">{group.title}</h3>
+            <ul className="sidebar-list">
+              {group.sections.map((section) => (
+                <li key={section.id}>
+                  <button
+                    className={`sidebar-link ${
+                      activeSection === section.id ? "active" : ""
+                    }`}
+                    onClick={() => scrollToSection(section.id)}
+                  >
+                    <span className="sidebar-link-icon">
+                      {activeSection === section.id ? (
+                        <Check size={16} />
+                      ) : (
+                        <span className="sidebar-dot" />
+                      )}
+                    </span>
+                    <span>{section.label}</span>
+                  </button>
+                </li>
+              ))}
             </ul>
           </div>
         ))}
-      </nav>
+
+        {/* Прогресс-бар */}
+        <div className="sidebar-progress">
+          <div className="sidebar-progress-label">Прогресс</div>
+          <div className="sidebar-progress-bar">
+            <div
+              className="sidebar-progress-fill"
+              style={{ width: `${progress}%` }}
+            />
+          </div>
+          <div className="sidebar-progress-text">{progress}%</div>
+        </div>
+      </div>
     </aside>
   );
-};
-
-export default Sidebar;
+}
