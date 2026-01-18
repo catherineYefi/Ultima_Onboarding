@@ -1,27 +1,5 @@
 import React, { useMemo } from "react";
 
-/**
- * Организационные шаги перед стартом — якорь id="org-steps"
- *
- * Поддерживаем несколько возможных структур входных данных:
- *  A) content.sections.organizationalSteps = {
- *       title?, subtitle?, steps?: Step[]
- *     }
- *  Б) content.organizationalSteps = { ... } (альтернативный корневой путь)
- *
- * Step:
- *  {
- *    title?: string,
- *    description?: string,
- *    bullets?: string[]         // список пунктов (синоним: items)
- *    items?: string[],          // то же, что bullets
- *    action?: {
- *      text?: string,           // текст кнопки (важно: рендерим ТОЛЬКО .text, не объект)
- *      link?: string            // "#id" (внутр. якорь) или внешний URL
- *    }
- *  }
- */
-
 const normalizeSteps = (content = {}) => {
   const fromSections = content?.sections?.organizationalSteps || {};
   const fromRoot = content?.organizationalSteps || {};
@@ -51,7 +29,6 @@ const normalizeSteps = (content = {}) => {
         },
       ];
 
-  // Нормализуем bullets/items
   const normalized = steps.map((s) => ({
     title: s?.title || "Шаг",
     description: s?.description || "",
@@ -78,10 +55,8 @@ const StepCard = ({ step, onAction }) => {
     const href = step?.action?.link || "#";
     if (isInternal) {
       e.preventDefault();
-      // ожидаем, что onAction выполнит плавный скролл
       onAction?.(href.replace(/^#/, ""));
     }
-    // для внешних ссылок — стандартное поведение <a target="_blank">
   };
 
   return (
@@ -104,7 +79,7 @@ const StepCard = ({ step, onAction }) => {
         <div className="orgsteps__actions">
           {isInternal ? (
             <a href={step.action.link} className="btn btn--secondary" onClick={handleClick}>
-              {step.action.text /* ВАЖНО: рендерим ТОЛЬКО текст, не объект */}
+              {step.action.text}
             </a>
           ) : (
             <a
@@ -147,11 +122,6 @@ const OrganizationalSteps = ({
             <StepCard key={i} step={s} onAction={scrollToSection} />
           ))}
         </ul>
-
-        <div className="orgsteps__hint">
-          Подсказка: заполняйте данные в <code>content.sections.organizationalSteps.steps</code>.
-          Для кнопки используйте только <code>action.text</code> и <code>action.link</code>.
-        </div>
       </div>
     </section>
   );

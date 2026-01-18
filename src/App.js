@@ -17,7 +17,6 @@ import StartCC from "./components/StartCC";
 import MainCycle from "./components/MainCycle";
 import Final from "./components/Final";
 import FooterCTA from "./components/FooterCTA";
-import CalendarSection from "./components/CalendarSection";
 import OrganizationalSteps from "./components/OrganizationalSteps";
 import MeetingCycle from "./components/MeetingCycle";
 import Roles from "./components/Roles";
@@ -25,10 +24,12 @@ import WIGDeclaration from "./components/WIGDeclaration";
 import ControlPanel from "./components/ControlPanel";
 import ToolsHub from "./components/ToolsHub";
 
-// СТИЛИ: Единый объединённый CSS файл (Phase 2 - Unified)
+// Calendar overlay (твоя версия)
+import CalendarOverlay from "./components/CalendarOverlay";
+
 import "./styles-unified.css";
 
-// --- безопасная нормализация контента (как у нас было ранее) ---
+// --- безопасная нормализация контента (без изменений) ---
 function normalizeContent(raw) {
   const safe = (v, fb) => (v === undefined || v === null ? fb : v);
 
@@ -136,7 +137,7 @@ function normalizeContent(raw) {
 export default function App() {
   const content = normalizeContent(rawContent);
 
-  // Состояния
+  // состояния
   const [activeSection, setActiveSection] = useState("hero");
   const [progress, setProgress] = useState(0);
   const [openAccordions, setOpenAccordions] = useState({});
@@ -144,10 +145,17 @@ export default function App() {
   const [activeTab, setActiveTab] = useState("bi-meetings");
   const [promptExpanded, setPromptExpanded] = useState(false);
 
-  // Все секции для отслеживания (унифицировано по спецификации)
-  const sectionIds = ["hero","glossary","about-program","roadmap","checklist","org-steps","prep-start-cc","start-cc","meetings-rhythm","meeting-cycle","roles","wig-declaration","control-panel","tools-hub","calendar","documents","rules","final-cc","footer"];
+  // модальный календарь (оверлей)
+  const [calendarOpen, setCalendarOpen] = useState(false);
 
-  // Отслеживание активной секции при скролле
+  // список секций (без секционной версии календаря)
+  const sectionIds = [
+    "hero","glossary","about-program","roadmap","checklist","org-steps","prep-start-cc",
+    "start-cc","meetings-rhythm","meeting-cycle","roles","wig-declaration","control-panel",
+    "tools-hub","documents","rules","final-cc","footer"
+  ];
+
+  // отслеживание активной секции и прогресса
   useEffect(() => {
     const handleScroll = () => {
       let currentSection = "hero";
@@ -155,17 +163,15 @@ export default function App() {
         const element = document.getElementById(sectionId);
         if (element) {
           const rect = element.getBoundingClientRect();
-          // Если секция в верхней части viewport (с офсетом для navbar)
           if (rect.top <= 150 && rect.bottom >= 150) {
             currentSection = sectionId;
             break;
           }
         }
       }
-      
+
       setActiveSection(currentSection);
 
-      // Обновление прогресса
       const windowHeight = window.innerHeight;
       const documentHeight = document.documentElement.scrollHeight;
       const scrollTop = window.pageYOffset;
@@ -181,12 +187,14 @@ export default function App() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Плавный скролл к секции
+  // плавный скролл; спец-обработка календаря — открываем модалку
   const scrollToSection = (sectionId) => {
-    const element = document.getElementById(sectionId);
-    if (element) {
-      element.scrollIntoView({ behavior: "smooth" });
+    if (sectionId === "calendar") {
+      setCalendarOpen(true);
+      return;
     }
+    const element = document.getElementById(sectionId);
+    if (element) element.scrollIntoView({ behavior: "smooth" });
   };
 
   const toggleAccordion = (idx) =>
@@ -216,20 +224,20 @@ export default function App() {
 
   return (
     <div className="app premium">
-      {/* Navbar */}
+      {/* Навигация */}
       <Navbar activeSection={activeSection} scrollToSection={scrollToSection} />
-
-      {/* Sidebar */}
-      <Sidebar activeSection={activeSection} scrollToSection={scrollToSection} progress={progress} />
-
-      {/* Scroll to Top Button */}
+      <Sidebar
+        activeSection={activeSection}
+        scrollToSection={scrollToSection}
+        progress={progress}
+      />
       <ScrollToTop />
 
       {/* Контент */}
       <div className="main-content">
         <Hero id="hero" content={content} scrollToSection={scrollToSection} />
 
-        {/* ОНБОРДИНГ */}
+        {/* Онбординг */}
         <Glossary id="glossary" content={content} />
         <AboutUltima id="about-program" content={content} />
         <Roadmap id="roadmap" content={content} />
@@ -247,7 +255,7 @@ export default function App() {
           downloadPrompt={downloadPrompt}
         />
 
-        {/* ПРОГРАММА */}
+        {/* Программа */}
         <StartCC id="start-cc" content={content} />
         <MainCycle id="meetings-rhythm" content={content} />
         <MeetingCycle id="meeting-cycle" content={content} />
@@ -255,16 +263,23 @@ export default function App() {
         <WIGDeclaration id="wig-declaration" content={content} />
         <ControlPanel id="control-panel" content={content} />
 
-        {/* ИНСТРУМЕНТЫ */}
+        {/* Инструменты */}
         <ToolsHub id="tools-hub" content={content} />
-        <CalendarSection />
 
-        {/* ДОКУМЕНТЫ / ПРАВИЛА / ФИНАЛ */}
+        {/* Документы / Правила / Финал */}
         <Documents id="documents" content={content} />
         <Rules id="rules" content={content} />
         <Final id="final-cc" content={content} scrollToSection={scrollToSection} />
-        <FooterCTA id="footer" content={content} scrollToSection={scrollToSection} setActiveTab={setActiveTab} />
+        <FooterCTA
+          id="footer"
+          content={content}
+          scrollToSection={scrollToSection}
+          setActiveTab={setActiveTab}
+        />
       </div>
+
+      {/* Модальный календарь (твоя реализация, рендерим только когда открыт) */}
+      {calendarOpen && <CalendarOverlay onClose={() => setCalendarOpen(false)} />}
     </div>
   );
 }
