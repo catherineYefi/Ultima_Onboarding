@@ -223,45 +223,59 @@ const content = {
     subtitle: "Качество сессии определяется подготовкой к ней",
     why: "Без фактов, цифр и конкретики Start-СС превращается в пустой разговор. Подготовка — это 80% успеха стратегической сессии.",
     
-    phases: [
-      {
-        title: "Встреча БИ #1: Сбор фактов",
-        duration: "60 минут",
-        goal: "Собрать текущие цифры бизнеса",
-        deliverables: [
-          "P&L за последние 3 месяца",
-          "Основные метрики (выручка, прибыль, unit-экономика)",
-          "Структура команды и ключевые роли",
-          "Текущие узкие места и проблемы"
-        ]
-      },
-      {
-        title: "Встреча БИ #2: Проработка точки Б",
-        duration: "60 минут",
-        goal: "Определить цели на 6 месяцев",
-        deliverables: [
-          "Желаемая выручка и прибыль через 6 месяцев",
-          "Ключевые изменения в бизнес-модели",
-          "Необходимые изменения в команде",
-          "Приоритетные направления роста"
-        ]
-      },
-      {
-        title: "Встреча БИ #3: Финализация",
-        duration: "60 минут",
-        goal: "Подготовить материалы для Start-СС",
-        deliverables: [
-          "Презентация бизнеса (визитка)",
-          "Заполненная форма 'Точка А и Точка Б'",
-          "Список вопросов и гипотез",
-          "Предварительный WIG"
-        ]
-      }
-    ],
+    biMeetings: {
+      title: "Встречи с БИ (Бизнес-Инженером)",
+      description: "3 встречи с Бизнес-Инженером для подготовки группы к Start-СС",
+      note: "Время встреч будет определено на организационном звонке",
+      meetings: [
+        {
+          number: 1,
+          name: "Встреча БИ #1: Сбор фактов",
+          duration: "60 минут",
+          goal: "Собрать текущие цифры бизнеса",
+          deliverables: [
+            "P&L за последние 3 месяца",
+            "Основные метрики (выручка, прибыль, unit-экономика)",
+            "Структура команды и ключевые роли",
+            "Текущие узкие места и проблемы"
+          ]
+        },
+        {
+          number: 2,
+          name: "Встреча БИ #2: Проработка точки Б",
+          duration: "60 минут",
+          goal: "Определить цели на 6 месяцев",
+          deliverables: [
+            "Желаемая выручка и прибыль через 6 месяцев",
+            "Ключевые изменения в бизнес-модели",
+            "Необходимые изменения в команде",
+            "Приоритетные направления роста"
+          ]
+        },
+        {
+          number: 3,
+          name: "Встреча БИ #3: Финализация",
+          duration: "60 минут",
+          goal: "Подготовить материалы для Start-СС",
+          deliverables: [
+            "Презентация бизнеса (видео-визитка)",
+            "Заполненная форма 'Точка А и Точка Б'",
+            "Список вопросов и гипотез",
+            "Предварительный WIG"
+          ]
+        }
+      ]
+    },
+
+    aiAssistant: {
+      title: "AI-ассистент для подготовки",
+      description: "Параллельная самостоятельная работа с AI-наставником для проработки продукта, экономики и стратегии",
+      note: "AI-наставник = твой персональный «строгий трекер» для подготовки к стратегической сессии. Его задача — провести тебя по каждому из 17 слайдов, проверить качество на трёх уровнях и не пустить дальше, пока всё не идеально."
+    },
 
     booster: {
       title: "Pre-Ultima Booster",
-      description: "Параллельная самостоятельная работа с AI-наставником для проработки продукта, экономики и стратегии",
+      description: "Мини-курс для прояснения продукта, экономики и стратегии",
       link: "https://nkl6yv.csb.app/"
     },
 
@@ -269,19 +283,40 @@ const content = {
       title: "Документы и шаблоны",
       items: [
         {
-          title: "Точка А и Б",
-          description: "Шаблон для анализа текущей ситуации и целей",
-          link: "https://docs.google.com/document/d/your-doc"
+          title: "Инструкция по подготовке к СС",
+          description: "Полное руководство",
+          link: "https://drive.google.com/file/d/1jTvD3JntNpZz5YZSpFKtevAc2YDPCXXC/view",
+          type: "external"
         },
         {
-          title: "Презентация для Start-СС",
-          description: "Шаблон визитки бизнеса (10-15 слайдов)",
-          link: "https://docs.google.com/presentation/d/your-presentation"
+          title: "Гайд «Как провести стратсессию»",
+          description: "PDF-презентация",
+          link: "https://docs.google.com/presentation/d/13QR3jl9IwIkM5Ij5kx1Yf9en62k5mCoQxr_6jLMFQKY/edit?slide=id.g381bf69af62_0_11#slide=id.g381bf69af62_0_11",
+          type: "external"
         },
         {
-          title: "Форма WIG",
-          description: "Декларация главной цели",
-          link: "https://docs.google.com/document/d/your-wig"
+          title: "Шаблон презентации для видеовизитки к СС",
+          description: "Google Slides шаблон",
+          link: "https://docs.google.com/presentation/d/1brgQbqOdak24-CHKzmBDt-3GuZWCT43T0er1JiMwFKQ/edit?slide=id.g2bc4dd5ad13_0_0#slide=id.g2bc4dd5ad13_0_0",
+          type: "external"
+        },
+        {
+          title: "Шаблон «Точка А и Б» для видеокружочка",
+          description: "PPTX шаблон",
+          link: "https://docs.google.com/presentation/d/1z_oHesd8fBq88aRzIpjaTCGa8-yCgw8ViFpYUsNJIAY/edit?usp=drive_link",
+          type: "external"
+        },
+        {
+          title: "Чек-лист места проведения СС",
+          description: "Excel таблица",
+          link: "https://docs.google.com/spreadsheets/d/1uqT4Xu3s5jy3XceaJg1izrJ5cfV-pu3shSRsue74sw4/edit?usp=drive_link",
+          type: "external"
+        },
+        {
+          title: "Шаблон декларации",
+          description: "PDF документ",
+          link: "https://drive.google.com/file/d/1dB1SPS8zETaqiCC7RPpXFM5PvSlXkZE7/view?usp=drive_link",
+          type: "external"
         }
       ]
     }
@@ -406,7 +441,7 @@ const content = {
   meetingCycle: {
     title: "Структура еженедельной встречи",
     subtitle: "Как проходит разбор каждого участника",
-    overview: "60 минут на участника. Чёткая структура для максимальной эффективности.",
+    overview: "30-45 минут на участника. Чёткая структура для максимальной эффективности.",
     
     stages: [
       {
@@ -512,7 +547,6 @@ const content = {
         responsibilities: [
           "Протоколирование встреч",
           "Контроль сроков и дедлайнов",
-          "Ведение дашборда группы",
           "Техническая поддержка",
           "Напоминания о важных событиях"
         ]
@@ -715,16 +749,16 @@ const content = {
         items: [
           {
             icon: "Calculator",
-            title: "ROI калькулятор",
-            description: "Расчёт возврата инвестиций",
-            link: "https://your-calculator.com",
+            title: "ROI симулятор",
+            description: "Расчёт возврата инвестиций и здоровья бизнеса",
+            link: "https://huggingface.co/spaces/CatherineYefi/4.0_AI_Business_Health_ROI_Simulator",
             linkText: "Открыть"
           },
           {
             icon: "BarChart",
-            title: "P&L калькулятор",
-            description: "Быстрый расчёт прибыли и убытков",
-            link: "https://your-pl-calc.com",
+            title: "LTV калькулятор",
+            description: "Расчёт пожизненной ценности клиента",
+            link: "https://huggingface.co/spaces/CatherineYefi/4_0_ultima-ltv",
             linkText: "Открыть"
           }
         ]
@@ -983,9 +1017,10 @@ const content = {
         ]
       }
     },
-    prepToSS: {
+    prepSS: {
       title: "Подготовка к Start-СС",
-      phases: [
+      why: "Без фактов, цифр и конкретики Start-СС превращается в пустой разговор. Подготовка — это 80% успеха стратегической сессии.",
+      biMeetings: [
         {
           name: "Встреча БИ #1: Сбор фактов",
           duration: "60 минут",
@@ -993,14 +1028,40 @@ const content = {
           deliverables: [
             "P&L за последние 3 месяца",
             "Основные метрики",
-            "Структура команды"
+            "Структура команды",
+            "Текущие узкие места"
+          ]
+        },
+        {
+          name: "Встреча БИ #2: Проработка точки Б",
+          duration: "60 минут",
+          goal: "Определить цели на 6 месяцев",
+          deliverables: [
+            "Желаемая выручка и прибыль",
+            "Ключевые изменения",
+            "Изменения в команде",
+            "Направления роста"
+          ]
+        },
+        {
+          name: "Встреча БИ #3: Финализация",
+          duration: "60 минут",
+          goal: "Подготовить материалы",
+          deliverables: [
+            "Презентация бизнеса",
+            "Форма 'Точка А и Б'",
+            "Список вопросов",
+            "Предварительный WIG"
           ]
         }
       ],
-      aiBooster: {
-        title: "Pre-Ultima Booster",
+      booster: {
         description: "AI-наставник для проработки стратегии",
         link: "https://nkl6yv.csb.app/"
+      },
+      aiMentor: {
+        title: "AI-ассистент",
+        description: "Персональный строгий трекер для подготовки"
       }
     }
   },
