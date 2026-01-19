@@ -12,6 +12,7 @@ import Checklist from "./components/Checklist";
 import OrganizationalSteps from "./components/OrganizationalSteps"; // :contentReference[oaicite:12]{index=12}
 import PrepToSS from "./components/PrepToSS";
 import StartCC from "./components/StartCC";
+import FourDX from "./components/FourDX"; 
 import MainCycle from "./components/MainCycle";
 import MeetingCycle from "./components/MeetingCycle";
 import Roles from "./components/Roles";             // :contentReference[oaicite:13]{index=13}
@@ -42,6 +43,7 @@ const SECTION_IDS = [
   "meetings-rhythm",
   "meeting-cycle",
   "roles",
+  "4dx",
   "wig-declaration",
   "control-panel",
   "tools-hub",
@@ -183,6 +185,7 @@ export default function App() {
 
         {/* Программа */}
         <StartCC id="start-cc" content={content} />
+        <FourDX id="4dx" content={content} scrollToSection={scrollToSection} />
         <MainCycle id="meetings-rhythm" content={content} />
         <MeetingCycle id="meeting-cycle" content={content} />
         <Roles id="roles" content={content} />
