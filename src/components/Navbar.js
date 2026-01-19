@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Menu, X } from "lucide-react";
+import { Menu, X, Calendar } from "lucide-react";
 
 /**
  * Navbar компонент - sticky навигация с 3 основными разделами + бургер-меню
@@ -62,6 +62,16 @@ export default function Navbar({ activeSection, scrollToSection }) {
               </button>
             </li>
           ))}
+          <li>
+            <button
+              className="navbar-calendar-btn"
+              onClick={() => scrollToSection("__open_calendar__")}
+              aria-label="Открыть календарь"
+              title="Календарь программы"
+            >
+              <Calendar size={20} />
+            </button>
+          </li>
         </ul>
 
         {/* Mobile меню кнопка */}
@@ -89,6 +99,13 @@ export default function Navbar({ activeSection, scrollToSection }) {
               {section.label}
             </button>
           ))}
+          <button
+            className="navbar-mobile-link calendar-link"
+            onClick={() => handleSectionClick("__open_calendar__")}
+            aria-label="Открыть календарь"
+          >
+            <Calendar size={20} /> Календарь
+          </button>
         </div>
       )}
     </nav>

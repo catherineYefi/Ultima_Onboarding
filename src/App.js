@@ -165,12 +165,12 @@ export default function App() {
         <Glossary id="glossary" content={content} />
         <AboutUltima id="about-program" content={content} />
         <Roadmap id="roadmap" content={content} />
-        <Checklist id="checklist" content={content} />
         <OrganizationalSteps
           id="org-steps"
           content={content}
           scrollToSection={scrollToSection}
         />
+        <Checklist id="checklist" content={content} />
         <PrepToSS
           id="prep-start-cc"
           content={content}
