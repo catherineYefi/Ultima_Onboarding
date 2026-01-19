@@ -21,7 +21,7 @@ export default function FooterCTA({ id = "footer", content, scrollToSection, set
             </a>
             <button
               onClick={() => {
-                scrollToSection("prep-ss");
+                scrollToSection("ai-mentor-block");
                 setActiveTab("ai-mentor");
               }}
               className="cta-button secondary large"

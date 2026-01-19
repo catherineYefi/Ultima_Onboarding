@@ -76,10 +76,10 @@ export default function Hero({ id = "hero", content, scrollToSection }) {
                 {primaryCTA.label} <ArrowRight size={20} />
               </button>
               <button 
-                className="btn btn-secondary btn-lg" 
+                className="btn btn-primary btn-lg" 
                 onClick={() => handleCTAClick(secondaryCTA.href)}
               >
-                {secondaryCTA.label}
+                {secondaryCTA.label} <ArrowRight size={20} />
               </button>
             </div>
           </div>

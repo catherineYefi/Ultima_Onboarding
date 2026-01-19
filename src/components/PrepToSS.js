@@ -188,7 +188,7 @@ export default function PrepToSS({
           </div>
 
           {/* Step 3: AI Mentor */}
-          <div className="prep-step highlight">
+          <div className="prep-step highlight" id="ai-mentor-block">
             <div className="step-header">
               <div className="step-number">3</div>
               <Brain size={32} className="step-icon" />
