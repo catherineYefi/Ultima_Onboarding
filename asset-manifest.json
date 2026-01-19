@@ -1,13 +1,13 @@
 {
   "files": {
-    "main.css": "/Ultima_Onboarding/static/css/main.9bbceefa.css",
+    "main.css": "/Ultima_Onboarding/static/css/main.d7f9792d.css",
     "main.js": "/Ultima_Onboarding/static/js/main.e2fa1a73.js",
     "index.html": "/Ultima_Onboarding/index.html",
-    "main.9bbceefa.css.map": "/Ultima_Onboarding/static/css/main.9bbceefa.css.map",
+    "main.d7f9792d.css.map": "/Ultima_Onboarding/static/css/main.d7f9792d.css.map",
     "main.e2fa1a73.js.map": "/Ultima_Onboarding/static/js/main.e2fa1a73.js.map"
   },
   "entrypoints": [
-    "static/css/main.9bbceefa.css",
+    "static/css/main.d7f9792d.css",
     "static/js/main.e2fa1a73.js"
   ]
 }
