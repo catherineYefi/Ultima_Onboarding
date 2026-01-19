@@ -169,7 +169,7 @@ const content = {
         action: {
           type: "download",
           text: "Скачать NDA",
-          link: "#documents"
+          link: "https://drive.google.com/file/d/1loZLTyAOv4n86nBAZN3OTWQf_3yv7oYn/view?usp=sharing"
         }
       },
       {
@@ -770,14 +770,14 @@ const content = {
             icon: "FileText",
             title: "Точка А и Б",
             description: "Шаблон анализа текущей ситуации",
-            link: "https://docs.google.com/document/d/your-template",
+            link: "https://docs.google.com/presentation/d/1g7NZV2lvlfkXnySvihsKBoGekXe5MUhxJPlcOTckb-Y/edit?usp=sharing",
             linkText: "Скачать"
           },
           {
             icon: "FileText",
             title: "WIG декларация",
             description: "Форма для записи главной цели",
-            link: "https://docs.google.com/document/d/your-wig",
+            link: "https://drive.google.com/file/d/1MeHWRtXSbyIWCnRbivavWwMpczksymHC/view?usp=sharing",
             linkText: "Скачать"
           }
         ]
@@ -821,7 +821,7 @@ const content = {
             icon: "FileText",
             title: "NDA",
             description: "Соглашение о конфиденциальности",
-            link: "https://docs.google.com/document/d/your-nda",
+            link: "https://drive.google.com/file/d/1loZLTyAOv4n86nBAZN3OTWQf_3yv7oYn/view?usp=sharing",
             linkText: "Скачать"
           }
         ]
@@ -852,7 +852,7 @@ const content = {
             icon: "File",
             title: "Презентация для Start-СС",
             description: "Шаблон визитки бизнеса",
-            link: "https://docs.google.com/presentation/d/your-template",
+            link: "https://docs.google.com/presentation/d/14r8dRcQ3CIgffQKekfcSM7_tOjLOu5o5UAXYWfsGKko/edit?usp=sharing",
             linkText: "Скачать"
           },
           {

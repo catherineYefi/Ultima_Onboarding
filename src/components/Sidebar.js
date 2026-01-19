@@ -51,7 +51,6 @@ export default function Sidebar({ activeSection, scrollToSection, progress = 0 }
       title: "📍 ДОКУМЕНТЫ",
       sections: [
         { id: "documents", label: "NDA" },
-        { id: "documents-presentation", label: "Презентации" },
         { id: "rules", label: "Правила" },
         { id: "ai-mentor", label: "AI-наставник" },
       ],
