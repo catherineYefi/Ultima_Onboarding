@@ -45,7 +45,8 @@ export default function MainCycle({ id = "main-cycle", content, scrollToSection 
   };
 
   return (
-    <section id={id} className="section container main-cycle">
+    <section id={id} className="section main-cycle">
+      <div className="container">
       <div className="section-header fade-in">
         <h2>{title}</h2>
         <p className="section-subtitle">{lead}</p>
@@ -151,6 +152,7 @@ export default function MainCycle({ id = "main-cycle", content, scrollToSection 
           </div>
         </div>
       )}
+      </div>
     </section>
   );
 }

@@ -11039,3 +11039,23 @@ a:hover, .inline-link:hover {
     padding: 1.25rem 1.5rem;
   }
 }
+/* FIX: MainCycle + Roles grids should not be overridden by premium 3-col layout */
+/* Base grids: mobile + tablet (<=1023px): 1 column */
+.main-cycle .rhythm-grid {
+  grid-template-columns: 1fr;
+}
+
+.cards-grid.roles-grid {
+  grid-template-columns: 1fr;
+}
+
+/* Desktop (>=1024px): 2 columns */
+@media (min-width: 1024px) {
+  .main-cycle .rhythm-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .cards-grid.roles-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
