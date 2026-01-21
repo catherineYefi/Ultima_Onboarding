@@ -719,17 +719,17 @@ const content = {
       {
         title: "P&L Dashboard",
         description: "Еженедельный отчёт о прибылях и убытках",
-        link: "https://docs.google.com/spreadsheets/d/your-pl-template"
+        link: "https://docs.google.com/spreadsheets/d/1aoNaD2_l8vhGPHdfm2uZTA6-vI_ueZNg2exyNk8jcEY/edit?gid=1150867648#gid=1150867648"
       },
       {
         title: "Marketing Dashboard",
         description: "Метрики по каналам привлечения",
-        link: "https://docs.google.com/spreadsheets/d/your-marketing-template"
+        link: "https://docs.google.com/spreadsheets/d/1w-SxeowrdCPUE_nGa8trGRPUot0eV7DW5HZt8Ohl3pE/edit?gid=1864750681#gid=1864750681"
       },
       {
         title: "Sales Dashboard",
         description: "Воронка продаж и конверсии",
-        link: "https://docs.google.com/spreadsheets/d/your-sales-template"
+        link: "https://docs.google.com/spreadsheets/d/1w-SxeowrdCPUE_nGa8trGRPUot0eV7DW5HZt8Ohl3pE/edit?gid=1864750681#gid=1864750681"
       }
     ],
 
