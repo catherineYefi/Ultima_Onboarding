@@ -10,8 +10,8 @@ import { X, ExternalLink, Copy, Download } from "lucide-react";
 const NOTION_GUIDE =
   "https://vagabond-cadmium-aba.notion.site/AI-277308771f1a8080afdbeb807f819be8?source=copy_link";
 
-export default function AIMentorOverlay({ content, onClose }) {
-  const prompt = String(content?.aiMentorPrompt || content?.aiNastavnikPrompt || "");
+export default function AIMentorOverlay({ content, promptText, onClose }) {
+  const prompt = String(promptText || content?.aiMentorPrompt || content?.aiNastavnikPrompt || "");
 
   useEffect(() => {
     const handleEsc = (e) => e.key === "Escape" && onClose?.();
@@ -37,7 +37,7 @@ export default function AIMentorOverlay({ content, onClose }) {
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = "СС-НАСТАВНИК_Ultima.txt";
+    a.download = "СС-НАСТАВНИК_Ultima_v3.0.txt";
     a.click();
     URL.revokeObjectURL(url);
   };
@@ -56,7 +56,7 @@ export default function AIMentorOverlay({ content, onClose }) {
         <div className="overlay-body">
           <p>
             <strong>AI-наставник = твой персональный «строгий трекер» для подготовки к стратегической сессии.</strong>
-            Его задача — провести тебя по каждому из 17 слайдов, проверить качество на трёх уровнях и не пустить дальше,
+            Его задача — провести тебя по каждому из 20 слайдов, проверить качество на трёх уровнях и не пустить дальше,
             пока всё не идеально. В финале он проверит PDF-версию и даст вердикт: «ГОТОВО» или список правок.
           </p>
 

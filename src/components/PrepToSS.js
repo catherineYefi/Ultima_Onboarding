@@ -27,6 +27,10 @@ export default function PrepToSS({
   copiedPrompt,
   copyPrompt,
   downloadPrompt,
+  aiPromptShort,
+  aiPromptFull,
+  aiPromptLoading,
+  aiPromptError,
 }) {
   // Безопасные геттеры/дефолты
   const prep = content?.sections?.prepSS ?? {};
@@ -51,7 +55,9 @@ export default function PrepToSS({
     modules: Array.isArray(prep?.booster?.modules) ? prep.booster.modules : [],
   };
   const aiPrompt =
-    content?.aiMentorPrompt ??
+    (aiPromptFull && String(aiPromptFull)) ||
+    (aiPromptShort && String(aiPromptShort)) ||
+    content?.aiMentorPrompt ||
     `Я — AI-наставник ULTIMA. Помоги подготовиться к Start-СС:
 — собери P&L за 3 месяца,
 — выпиши ключевые метрики,
@@ -62,7 +68,7 @@ export default function PrepToSS({
   const aiIntro =
     "AI-наставник = твой персональный «строгий трекер» для подготовки к стратегической сессии.";
   const aiDetails =
-    "Его задача — провести тебя по каждому из 17 слайдов, проверить качество на трёх уровнях и не пустить дальше, пока всё не идеально. В финале он проверит PDF-версию и даст вердикт: «ГОТОВО» или список правок.";
+    "Его задача — провести тебя по каждому из 20 слайдов, проверить качество на трёх уровнях и не пустить дальше, пока всё не идеально. В финале он проверит PDF-версию и даст вердикт: «ГОТОВО» или список правок.";
 
   return (
     <section id={id} className="section highlight-section">
@@ -230,7 +236,13 @@ export default function PrepToSS({
                 <h5>Промпт AI-наставника:</h5>
                 <div className={`prompt-box ${promptExpanded ? "expanded" : "collapsed"}`}>
                   <pre>
-                    {promptExpanded ? aiPrompt : aiPrompt.substring(0, 300) + "..."}
+                    {aiPromptLoading
+                      ? "Загрузка промпта…"
+                      : aiPromptError
+                      ? `⚠️ ${aiPromptError}`
+                      : promptExpanded
+                      ? (aiPromptFull || aiPrompt)
+                      : (aiPromptShort || aiPrompt.substring(0, 300) + "...")}
                   </pre>
                   {!promptExpanded && (
                     <p className="prompt-hint">
