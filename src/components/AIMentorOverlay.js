@@ -4,14 +4,14 @@ import { X, ExternalLink, Copy, Download } from "lucide-react";
 /**
  * Оверлей "AI-наставник"
  * - Полная инструкция (из ТЗ)
- * - Полный промпт (берём из content.aiMentorPrompt или aiNastavnikPrompt)
+ * - Полный промпт (подгружается в App из public/prompts)
  * - Кнопка на Notion
  */
 const NOTION_GUIDE =
   "https://vagabond-cadmium-aba.notion.site/AI-277308771f1a8080afdbeb807f819be8?source=copy_link";
 
-export default function AIMentorOverlay({ content, promptText, onClose }) {
-  const prompt = String(promptText || content?.aiMentorPrompt || content?.aiNastavnikPrompt || "");
+export default function AIMentorOverlay({ promptText, promptLoading, promptError, onClose }) {
+  const prompt = String(promptText || "");
 
   useEffect(() => {
     const handleEsc = (e) => e.key === "Escape" && onClose?.();
@@ -56,7 +56,7 @@ export default function AIMentorOverlay({ content, promptText, onClose }) {
         <div className="overlay-body">
           <p>
             <strong>AI-наставник = твой персональный «строгий трекер» для подготовки к стратегической сессии.</strong>
-            Его задача — провести тебя по каждому из 20 слайдов, проверить качество на трёх уровнях и не пустить дальше,
+            Его задача — провести тебя по каждому из 17 слайдов, проверить качество на трёх уровнях и не пустить дальше,
             пока всё не идеально. В финале он проверит PDF-версию и даст вердикт: «ГОТОВО» или список правок.
           </p>
 
@@ -118,7 +118,7 @@ export default function AIMentorOverlay({ content, promptText, onClose }) {
           </div>
 
           <h3>Промпт «СС-НАСТАВНИК (Ultima)»</h3>
-          <pre className="prompt-pre">{prompt || "Промпт будет добавлен позже."}</pre>
+          <pre className="prompt-pre">{promptLoading ? "Загружаем промпт…" : promptError ? promptError : prompt || "Промпт недоступен. Откройте Notion."}</pre>
         </div>
       </div>
     </div>

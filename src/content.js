@@ -1163,17 +1163,20 @@ const content = {
   },
 
   // ═══════════════════════════════════════════════════════════
-  // AI MENTOR PROMPT
+  // AI MENTOR PROMPT (Single source of truth)
   // ═══════════════════════════════════════════════════════════
   aiMentorPromptSource: "public/prompts",
   aiMentorPromptFiles: {
     short: "prompts/ss-mentor-short-v3.md",
-    full: "prompts/ss-mentor-full-v3.md"
+    full: "prompts/ss-mentor-full-v3.md",
   },
   aiMentorPromptDescription:
-    "Единый источник промпта СС-НАСТАВНИКА — файлы в public/prompts (short/full v3). Не храните полный промпт в content.js; здесь только метаданные и короткий fallback.",
+    "СС-НАСТАВНИК v3.0 (20 слайдов). Полный промпт загружается из public/prompts и доступен через кнопки «Скопировать/Скачать». Подробная инструкция и полная версия — в Notion.",
+  aiMentorNotionUrl: "https://vagabond-cadmium-aba.notion.site/AI-277308771f1a8080afdbeb807f819be8?source=copy_link",
+
+  // Minimal fallback used only if prompt files are not доступен (e.g., 404)
   aiMentorPrompt:
-    "СС-НАСТАВНИК (v3): промпт хранится в public/prompts/ss-mentor-short-v3.md и public/prompts/ss-mentor-full-v3.md. Откройте эти файлы и скопируйте актуальную версию."
+    "СС-НАСТАВНИК v3.0: полный промпт доступен по кнопкам «Скопировать/Скачать» или в Notion (ссылка в блоке «Подробная инструкция»).",
 
 };
 

@@ -7,8 +7,6 @@ import {
   Brain,
   CheckCircle2,
   ExternalLink,
-  ChevronDown,
-  ChevronUp,
   Copy,
   Download,
 } from "lucide-react";
@@ -22,15 +20,13 @@ export default function PrepToSS({
   content,
   activeTab,
   setActiveTab,
-  promptExpanded,
-  setPromptExpanded,
-  copiedPrompt,
-  copyPrompt,
-  downloadPrompt,
-  aiPromptShort,
+  aiPromptPreview,
   aiPromptFull,
   aiPromptLoading,
   aiPromptError,
+  copiedPrompt,
+  copyPrompt,
+  downloadPrompt,
 }) {
   // Безопасные геттеры/дефолты
   const prep = content?.sections?.prepSS ?? {};
@@ -54,21 +50,15 @@ export default function PrepToSS({
       "Мини-курс для прояснения продукта, экономики и стратегии.",
     modules: Array.isArray(prep?.booster?.modules) ? prep.booster.modules : [],
   };
-  const aiPrompt =
-    (aiPromptFull && String(aiPromptFull)) ||
-    (aiPromptShort && String(aiPromptShort)) ||
-    content?.aiMentorPrompt ||
-    `Я — AI-наставник ULTIMA. Помоги подготовиться к Start-СС:
-— собери P&L за 3 месяца,
-— выпиши ключевые метрики,
-— зафиксируй WIG/OKR и приборы контроля.`;
+  const promptPreview = String(aiPromptPreview || "").trim();
+  const fullReady = Boolean(String(aiPromptFull || "").trim());
   const aiMentor = prep?.aiMentor ?? {};
 
   // Новый текст про AI-наставника — как просил(а)
   const aiIntro =
     "AI-наставник = твой персональный «строгий трекер» для подготовки к стратегической сессии.";
   const aiDetails =
-    "Его задача — провести тебя по каждому из 20 слайдов, проверить качество на трёх уровнях и не пустить дальше, пока всё не идеально. В финале он проверит PDF-версию и даст вердикт: «ГОТОВО» или список правок.";
+    "Его задача — провести тебя по каждому из 17 слайдов, проверить качество на трёх уровнях и не пустить дальше, пока всё не идеально. В финале он проверит PDF-версию и даст вердикт: «ГОТОВО» или список правок.";
 
   return (
     <section id={id} className="section highlight-section">
@@ -232,50 +222,43 @@ export default function PrepToSS({
                 </div>
               )}
 
+              
               <div className="prompt-section">
                 <h5>Промпт AI-наставника:</h5>
-                <div className={`prompt-box ${promptExpanded ? "expanded" : "collapsed"}`}>
+
+                <div className="prompt-box collapsed">
                   <pre>
                     {aiPromptLoading
-                      ? "Загрузка промпта…"
+                      ? "Загружаем промпт…"
                       : aiPromptError
-                      ? `⚠️ ${aiPromptError}`
-                      : promptExpanded
-                      ? (aiPromptFull || aiPrompt)
-                      : (aiPromptShort || aiPrompt.substring(0, 300) + "...")}
+                      ? aiPromptError
+                      : promptPreview || "Превью промпта недоступно."}
                   </pre>
-                  {!promptExpanded && (
-                    <p className="prompt-hint">
-                      Показан фрагмент. Полная версия — по кнопке.
-                    </p>
-                  )}
+                  <p className="prompt-hint">
+                    Полная версия доступна по кнопкам «Скопировать» и «Скачать», а также в Notion.
+                  </p>
                 </div>
 
                 <div className="prompt-actions">
                   <button
-                    onClick={() => setPromptExpanded?.(!promptExpanded)}
-                    className="expand-button"
+                    onClick={copyPrompt}
+                    className="cta-button secondary"
+                    disabled={!fullReady || aiPromptLoading}
+                    title={!fullReady ? "Полная версия промпта не загружена" : ""}
                   >
-                    {promptExpanded ? (
-                      <>
-                        <ChevronUp size={16} /> Свернуть
-                      </>
-                    ) : (
-                      <>
-                        <ChevronDown size={16} /> Показать полностью
-                      </>
-                    )}
-                  </button>
-
-                  <button onClick={copyPrompt} className="cta-button secondary">
                     {copiedPrompt ? "Скопировано!" : "Скопировать промпт"}
+                    <Copy size={16} />
                   </button>
 
-                  <button onClick={downloadPrompt} className="cta-button secondary">
-                    Скачать .txt
+                  <button
+                    onClick={downloadPrompt}
+                    className="cta-button secondary"
+                    disabled={!fullReady || aiPromptLoading}
+                    title={!fullReady ? "Полная версия промпта не загружена" : ""}
+                  >
+                    Скачать .txt <Download size={16} />
                   </button>
 
-                  {/* Новая кнопка: подробная инструкция */}
                   <a
                     href={AI_NOTION}
                     target="_blank"
@@ -286,7 +269,6 @@ export default function PrepToSS({
                   </a>
                 </div>
               </div>
-
             </div>
           </div>
         </div>
